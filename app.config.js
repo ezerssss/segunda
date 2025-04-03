@@ -50,6 +50,6 @@ export default {
                 projectId: "0f7f8ef2-5949-474a-9a3b-c2a5c8b6503c",
             },
         },
-        owner: "dioskor0",
+        owner: "segunda",
     },
 };
