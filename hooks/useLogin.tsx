@@ -1,35 +1,38 @@
-import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import { useState } from "react";
 import * as WebBrowser from "expo-web-browser";
-import * as Google from "expo-auth-session/providers/google";
-import auth from "@/firebase/auth";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import auth from "@react-native-firebase/auth";
+
+GoogleSignin.configure({
+    webClientId:
+        "856598904366-71ebnp3j3e3fdq4vtjv0pa85ccm2rkck.apps.googleusercontent.com",
+});
 
 WebBrowser.maybeCompleteAuthSession();
 
 function useLogin() {
     const [isLoading, setIsLoading] = useState(false);
-    const [request, response, promptAsync] = Google.useAuthRequest({
-        androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
-    });
 
     async function handleLogin() {
         try {
             setIsLoading(true);
-            const res = await promptAsync();
 
-            if (res.type === "success") {
-                const idToken = res.authentication?.idToken;
+            await GoogleSignin.hasPlayServices({
+                showPlayServicesUpdateDialog: true,
+            });
+            const res = await GoogleSignin.signIn();
 
-                if (!idToken) throw new Error("Login failed.");
-
-                const credential = GoogleAuthProvider.credential(idToken);
-
-                const authRes = await signInWithCredential(auth, credential);
-                const { user } = authRes;
-                console.log(user);
-            } else {
-                throw new Error("Login failed.");
+            const idToken = res.data?.idToken;
+            if (!idToken) {
+                throw new Error("Id token not found.");
             }
+
+            const googleCredential =
+                auth.GoogleAuthProvider.credential(idToken);
+
+            const signInRes =
+                await auth().signInWithCredential(googleCredential);
+            console.log(signInRes);
         } catch (error) {
             console.error(error);
         } finally {
