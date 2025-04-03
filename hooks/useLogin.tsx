@@ -1,14 +1,11 @@
 import { useState } from "react";
-import * as WebBrowser from "expo-web-browser";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import auth from "@react-native-firebase/auth";
+import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
+import { auth } from "@/firebase";
 
 GoogleSignin.configure({
-    webClientId:
-        "856598904366-71ebnp3j3e3fdq4vtjv0pa85ccm2rkck.apps.googleusercontent.com",
+    webClientId: process.env.EXPO_PUBLIC_CLIENT_ID,
 });
-
-WebBrowser.maybeCompleteAuthSession();
 
 function useLogin() {
     const [isLoading, setIsLoading] = useState(false);
@@ -16,10 +13,8 @@ function useLogin() {
     async function handleLogin() {
         try {
             setIsLoading(true);
-
-            await GoogleSignin.hasPlayServices({
-                showPlayServicesUpdateDialog: true,
-            });
+            await GoogleSignin.signOut();
+            await GoogleSignin.hasPlayServices();
             const res = await GoogleSignin.signIn();
 
             const idToken = res.data?.idToken;
@@ -27,12 +22,13 @@ function useLogin() {
                 throw new Error("Id token not found.");
             }
 
-            const googleCredential =
-                auth.GoogleAuthProvider.credential(idToken);
+            const googleCredential = GoogleAuthProvider.credential(idToken);
 
-            const signInRes =
-                await auth().signInWithCredential(googleCredential);
-            console.log(signInRes);
+            const signInRes = await signInWithCredential(
+                auth,
+                googleCredential,
+            );
+            console.log(signInRes.user.email);
         } catch (error) {
             console.error(error);
         } finally {
