@@ -1,4 +1,4 @@
-## Issue Link
+## Issue
 <!-- Paste the Link or refer to it using #issue_numer -->
 
 ## What does this PR do?
