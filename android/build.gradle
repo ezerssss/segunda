@@ -19,7 +19,6 @@ buildscript {
         classpath('com.android.tools.build:gradle')
         classpath('com.facebook.react:react-native-gradle-plugin')
         classpath('org.jetbrains.kotlin:kotlin-gradle-plugin')
-        implementation("androidx.activity:activity:1.9.+")
     }
 }
 
