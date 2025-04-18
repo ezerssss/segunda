@@ -5,18 +5,22 @@
     },
     "build": {
         "development": {
-            "gradleCommand": ":app:assembleDebug",
-            "credentialsSource": "remote",
-            "developmentClient": true,
-            "environment": "development",
+            "android": {
+                "gradleCommand": ":app:assembleDebug",
+                "credentialsSource": "remote",
+                "developmentClient": true
+            },
+            "env": {
+                "GOOGLE_SERVICES_JSON": "{{GOOGLE_SERVICES_JSON}}"
+            },
             "distribution": "internal"
         },
         "production": {
             "environment": "production",
-            "autoIncrement": true
-        },
-        "env": {
-            "GOOGLE_SERVICES_JSON": "{{GOOGLE_SERVICES_JSON}}"
+            "autoIncrement": true,
+            "env": {
+                "GOOGLE_SERVICES_JSON": "{{GOOGLE_SERVICES_JSON}}"
+            }
         }
     },
     "submit": {
