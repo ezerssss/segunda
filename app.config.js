@@ -36,6 +36,13 @@ export default {
                     backgroundColor: "#ffffff",
                 },
             ],
+            [
+                "expo-image-picker",
+                {
+                    photosPermission:
+                        "Allow $(PRODUCT_NAME) to access your photos",
+                },
+            ],
             "@react-native-firebase/app",
             "@react-native-firebase/auth",
         ],

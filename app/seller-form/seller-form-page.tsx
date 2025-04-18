@@ -1,4 +1,11 @@
-import { View, Text, TextInput, Button, TouchableOpacity } from "react-native";
+import {
+    View,
+    Text,
+    TextInput,
+    Button,
+    TouchableOpacity,
+    Image,
+} from "react-native";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useState, useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -9,11 +16,17 @@ const SellerFormPage = () => {
     const openImageLibrary = async () => {
         try {
             let res = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ["images", "videos"],
                 allowsEditing: true,
+                aspect: [4, 3],
                 quality: 1,
             });
             console.log(res);
-        } catch(e){
+
+            if (!res.canceled) {
+                setImage(res.assets[0].uri);
+            }
+        } catch (e) {
             console.log("Error: ", e);
         }
     };
@@ -51,6 +64,12 @@ const SellerFormPage = () => {
                     onPress={openImageLibrary}
                 >
                     <Text>Open Image Library</Text>
+                    {image && (
+                        <Image
+                            source={{ uri: image }}
+                            className="h-10 w-10 flex-1 items-center justify-center"
+                        />
+                    )}
                 </TouchableOpacity>
             </View>
 
