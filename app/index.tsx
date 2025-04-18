@@ -1,7 +1,7 @@
 import { testOnCall } from "@/firebase/functions";
 import useLogin from "@/hooks/useLogin";
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
-import { Href, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 
 export default function Home() {
     const { isLoading, handleLogin } = useLogin();

@@ -1,5 +1,10 @@
-import { firebase } from "@react-native-firebase/functions";
+import { GenericReturnMessage } from "@/types/return_message";
+import { getFunctions, httpsCallable } from "@react-native-firebase/functions";
+import app from ".";
 
-const fn = firebase.app().functions("asia-southeast1");
+const functions = getFunctions(app, "asia-southeast1");
 
-export const testOnCall = fn.httpsCallable<never, never>("testOnCall");
+export const testOnCall = httpsCallable<never, GenericReturnMessage>(
+    functions,
+    "testOnCall",
+);
