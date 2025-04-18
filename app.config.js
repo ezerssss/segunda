@@ -16,8 +16,7 @@ export default {
                 foregroundImage: "./assets/images/adaptive-icon.png",
                 backgroundColor: "#ffffff",
             },
-            googleServicesFile:
-                process.env.GOOGLE_SERVICES_JSON ?? "./google-services.json",
+            googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
             package: "com.dioskor0.segunda",
         },
         web: {
