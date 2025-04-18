@@ -1,6 +1,3 @@
-import { getFunctions, httpsCallable } from "firebase/functions";
-import app from ".";
+import functions from "@react-native-firebase/functions";
 
-const functions = getFunctions(app, "asia-southeast1");
-
-export const testOnCall = httpsCallable<never, never>(functions, "testOnCall");
+export const testOnCall = functions().httpsCallable<never, never>("testOnCall");
