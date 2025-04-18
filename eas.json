@@ -13,19 +13,13 @@
             "env": {
                 "GOOGLE_SERVICES_JSON": "{{GOOGLE_SERVICES_JSON}}"
             },
-            "distribution": "internal",
-            "hooks": {
-                "prebuild": "./eas-hooks/prebuild.sh"
-            }
+            "distribution": "internal"
         },
         "production": {
             "environment": "production",
             "autoIncrement": true,
             "env": {
                 "GOOGLE_SERVICES_JSON": "{{GOOGLE_SERVICES_JSON}}"
-            },
-            "hooks": {
-                "prebuild": "./eas-hooks/prebuild.sh"
             }
         }
     },
