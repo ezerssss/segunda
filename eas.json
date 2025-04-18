@@ -5,6 +5,8 @@
     },
     "build": {
         "development": {
+            "gradleCommand": ":app:assembleDebug",
+            "credentialsSource": "remote",
             "developmentClient": true,
             "environment": "development",
             "distribution": "internal"
@@ -12,6 +14,9 @@
         "production": {
             "environment": "production",
             "autoIncrement": true
+        },
+        "env": {
+            "GOOGLE_SERVICES_JSON": "{{GOOGLE_SERVICES_JSON}}"
         }
     },
     "submit": {
