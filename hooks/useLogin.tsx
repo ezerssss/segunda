@@ -1,7 +1,9 @@
-import { useState } from "react";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
-import auth from "@/firebase/auth";
+import { useEffect, useState } from "react";
+import {
+    GoogleSignin,
+    isSuccessResponse,
+} from "@react-native-google-signin/google-signin";
+import auth from "@react-native-firebase/auth";
 
 GoogleSignin.configure({
     webClientId: process.env.EXPO_PUBLIC_CLIENT_ID,
@@ -10,6 +12,14 @@ GoogleSignin.configure({
 function useLogin() {
     const [isLoading, setIsLoading] = useState(false);
 
+    useEffect(() => {
+        const unsubscribe = auth().onAuthStateChanged((user) => {
+            console.log(user);
+        });
+
+        return unsubscribe;
+    }, []);
+
     async function handleLogin() {
         try {
             setIsLoading(true);
@@ -17,18 +27,11 @@ function useLogin() {
             await GoogleSignin.hasPlayServices();
             const res = await GoogleSignin.signIn();
 
-            const idToken = res.data?.idToken;
-            if (!idToken) {
-                throw new Error("Id token not found.");
+            if (isSuccessResponse(res)) {
+                console.log(res.data.user);
+            } else {
+                throw new Error("Sign in was cancelled by user");
             }
-
-            const googleCredential = GoogleAuthProvider.credential(idToken);
-
-            const signInRes = await signInWithCredential(
-                auth,
-                googleCredential,
-            );
-            console.log(signInRes.user.email);
         } catch (error) {
             console.error(error);
         } finally {

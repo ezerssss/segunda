@@ -42,6 +42,7 @@ export default {
                         "Allow $(PRODUCT_NAME) to access your photos",
                 },
             ],
+            "@react-native-google-signin/google-signin",
             "@react-native-firebase/app",
             "@react-native-firebase/auth",
         ],

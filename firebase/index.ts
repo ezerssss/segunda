@@ -1,16 +1,7 @@
-import { FirebaseApp, getApps, initializeApp } from "firebase/app";
+import { getApp, initializeApp } from "@react-native-firebase/app";
 import { Platform } from "react-native";
 
 let appId = "";
-if (Platform.OS === "web") {
-    appId = process.env.EXPO_PUBLIC_FIREBASE_WEB_APP_ID ?? "";
-} else if (Platform.OS === "android") {
-    appId = process.env.EXPO_PUBLIC_FIREBASE_ANDROID_APP_ID ?? "";
-} else {
-    throw new Error(
-        `Unsupported platform: ${Platform.OS}. Please ensure your platform is supported.`,
-    );
-}
 
 const firebaseConfig = {
     apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY ?? "",
@@ -22,12 +13,18 @@ const firebaseConfig = {
     appId: appId,
 };
 
-let app: FirebaseApp;
-const apps = getApps();
-if (apps.length < 1) {
-    app = initializeApp(firebaseConfig);
+if (Platform.OS === "web") {
+    appId = process.env.EXPO_PUBLIC_FIREBASE_WEB_APP_ID ?? "";
+
+    initializeApp(firebaseConfig);
+} else if (Platform.OS === "android") {
+    appId = process.env.EXPO_PUBLIC_FIREBASE_ANDROID_APP_ID ?? "";
 } else {
-    app = apps[0];
+    throw new Error(
+        `Unsupported platform: ${Platform.OS}. Please ensure your platform is supported.`,
+    );
 }
+
+const app = getApp();
 
 export default app;
