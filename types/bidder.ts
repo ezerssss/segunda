@@ -1,17 +1,21 @@
 import { z } from "zod";
 import { CampusEnum } from "../enums/campus";
+import { BidTypeEnum } from "../enums/bid";
 
-export const UserDataSchema = z.object({
+export const BidderSchema = z.object({
     id: z.string().min(1),
-    email: z.string().email(),
+    userId: z.string().min(1),
+    itemId: z.string().min(1),
+    postId: z.string().min(1),
     name: z
         .string()
         .trim()
         .min(1, { message: "Name is required" })
         .max(100, { message: "Name can only be 100 letters long." }),
-    imageUrl: z.string().url().nullable(),
     campus: CampusEnum,
+    price: z.number().nonnegative(),
+    type: BidTypeEnum,
+    isConfirmed: z.boolean(),
     dateCreated: z.string().datetime(),
-    dateUpdated: z.string().datetime(),
 });
-export type UserDataType = z.infer<typeof UserDataSchema>;
+export type BidderType = z.infer<typeof BidderSchema>;
