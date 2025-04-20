@@ -50,9 +50,3 @@ export const ItemFormSchema = ItemSchema.omit({
 });
 export type ItemFormType = z.infer<typeof ItemFormSchema>;
 
-// for dynamic size array
-export const ItemFormArraySchema = z.object({
-    items: z.array(ItemFormSchema),
-});
-
-export type ItemFormArrayType = z.infer<typeof ItemFormArraySchema>;
