@@ -49,3 +49,10 @@ export const ItemFormSchema = ItemSchema.omit({
     price: z.coerce.number().nonnegative(),
 });
 export type ItemFormType = z.infer<typeof ItemFormSchema>;
+
+// for dynamic size array
+export const ItemFormArraySchema = z.object({
+    items: z.array(ItemFormSchema),
+});
+
+export type ItemFormArrayType = z.infer<typeof ItemFormArraySchema>;

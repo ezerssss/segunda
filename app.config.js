@@ -40,6 +40,8 @@ export default {
                 {
                     photosPermission:
                         "Allow $(PRODUCT_NAME) to access your photos",
+                    cameraPermission:
+                        "Allow $(PRODUCT_NAME) to access your camera",
                 },
             ],
             "@react-native-google-signin/google-signin",
