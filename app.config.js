@@ -5,7 +5,7 @@ export default {
         version: "1.0.0",
         orientation: "portrait",
         icon: "./assets/images/icon.png",
-        scheme: "myapp",
+        scheme: "segunda",
         userInterfaceStyle: "automatic",
         newArchEnabled: true,
         ios: {
@@ -16,8 +16,7 @@ export default {
                 foregroundImage: "./assets/images/adaptive-icon.png",
                 backgroundColor: "#ffffff",
             },
-            googleServicesFile:
-                process.env.GOOGLE_SERVICES_JSON ?? "./google-services.json",
+            googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
             package: "com.dioskor0.segunda",
         },
         web: {
@@ -36,6 +35,16 @@ export default {
                     backgroundColor: "#ffffff",
                 },
             ],
+            [
+                "expo-image-picker",
+                {
+                    photosPermission:
+                        "Allow $(PRODUCT_NAME) to access your photos",
+                    cameraPermission:
+                        "Allow $(PRODUCT_NAME) to access your camera",
+                },
+            ],
+            "@react-native-google-signin/google-signin",
             "@react-native-firebase/app",
             "@react-native-firebase/auth",
         ],
