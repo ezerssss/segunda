@@ -14,6 +14,7 @@ export const PostSchema = z.object({
             message: "Caption can only be 500 letters long.",
         }),
     tags: z.array(PostTagsEnum),
+    likes: z.number().nonnegative(),
     imageUrls: z.array(z.string().url()),
     dateCreated: z.string().datetime(),
     dateUpdated: z.string().datetime(),
@@ -38,6 +39,7 @@ This looks like:
 export const PostFormSchema = PostSchema.omit({
     id: true,
     userId: true,
+    likes: true,
     imageUrls: true,
     dateCreated: true,
     dateUpdated: true,
