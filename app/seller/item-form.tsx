@@ -2,7 +2,6 @@ import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import { Control, Controller, UseFieldArrayRemove } from "react-hook-form";
 import { PostFormType } from "@/types/post";
 
-
 interface ItemFormProps {
     control: Control<PostFormType>;
     index: number;
@@ -16,18 +15,20 @@ interface ItemFormProps {
     fieldsLength: number;
 }
 
-function ItemForm({
-    control,
-    index,
-    field,
-    errors,
-    remove,
-    images,
-    setImages,
-    openImageLibrary,
-    openCamera,
-    fieldsLength,
-}: ItemFormProps) {
+function ItemForm(props: ItemFormProps) {
+    const {
+        control,
+        index,
+        field,
+        errors,
+        remove,
+        images,
+        setImages,
+        openImageLibrary,
+        openCamera,
+        fieldsLength,
+    } = props;
+
     function handleRemoveImage() {
         setImages((prevImages) => {
             const newImages = { ...prevImages };
@@ -44,7 +45,6 @@ function ItemForm({
             return newImages;
         });
     }
-
 
     return (
         <View key={field.id} className="mb-6 border-b pb-4">
