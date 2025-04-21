@@ -15,3 +15,10 @@ export const UserDataSchema = z.object({
     dateUpdated: z.string().datetime(),
 });
 export type UserDataType = z.infer<typeof UserDataSchema>;
+
+export const SetUpUserRequestSchema = UserDataSchema.omit({
+    id: true,
+    dateCreated: true,
+    dateUpdated: true,
+});
+export type SetUpUserRequestType = z.infer<typeof SetUpUserRequestSchema>;
