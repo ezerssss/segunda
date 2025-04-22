@@ -1,28 +1,17 @@
-import { testOnCall } from "@/firebase/functions";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 
 export default function Home() {
     const router = useRouter();
 
-    async function test() {
-        console.log(await testOnCall());
-    }
-
     return (
         <View className="flex-1">
             <Text className="mb-5 text-2xl font-bold">Hello World</Text>
             <TouchableOpacity
                 className="self-baseline rounded border px-4 py-2"
-                onPress={() => router.push("/login/login")}
+                onPress={() => router.push("/login")}
             >
                 <Text>Go to Login page</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                className="self-baseline rounded border px-4 py-2"
-                onPress={() => test()}
-            >
-                <Text>Test Cloud Functions</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 className="self-baseline rounded border px-4 py-2"

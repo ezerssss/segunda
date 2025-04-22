@@ -59,7 +59,7 @@ function SellerFormPage() {
                 }));
             }
         } catch (error) {
-            console.error
+            console.error;
         }
     }
 
