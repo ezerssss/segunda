@@ -1,10 +1,8 @@
 import { testOnCall } from "@/firebase/functions";
-import useLogin from "@/hooks/useLogin";
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 
 export default function Home() {
-    const { isLoading, handleLogin } = useLogin();
     const router = useRouter();
 
     async function test() {
@@ -16,14 +14,9 @@ export default function Home() {
             <Text className="mb-5 text-2xl font-bold">Hello World</Text>
             <TouchableOpacity
                 className="self-baseline rounded border px-4 py-2"
-                onPress={handleLogin}
-                disabled={isLoading}
+                onPress={() => router.push("/login/login")}
             >
-                {isLoading ? (
-                    <ActivityIndicator />
-                ) : (
-                    <Text>Sign in using Google</Text>
-                )}
+                <Text>Go to Login page</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 className="self-baseline rounded border px-4 py-2"
