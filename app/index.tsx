@@ -1,6 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import useLogin from "@/hooks/useLogin";
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 
 export default function Home() {
