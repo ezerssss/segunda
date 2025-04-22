@@ -4,7 +4,6 @@ import {
     TextInput,
     Button,
     TouchableOpacity,
-    Image,
     ScrollView,
 } from "react-native";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
@@ -59,7 +58,7 @@ function SellerFormPage() {
                 }));
             }
         } catch (error) {
-            console.error
+            console.error(error);
         }
     }
 
@@ -78,7 +77,7 @@ function SellerFormPage() {
                 }));
             }
         } catch (error) {
-            console.error;
+            console.error(error);
         }
     }
 

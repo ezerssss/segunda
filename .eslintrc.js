@@ -1,6 +1,7 @@
 module.exports = {
+    parser: "@typescript-eslint/parser",
     extends: ["expo", "prettier"],
-    plugins: ["prettier", "react"],
+    plugins: ["prettier", "react", "unused-imports", "@typescript-eslint"],
     rules: {
         "prettier/prettier": [
             "error",
@@ -8,5 +9,6 @@ module.exports = {
                 endOfLine: "auto",
             },
         ],
+        "@typescript-eslint/no-unused-vars": "error",
     },
 };
