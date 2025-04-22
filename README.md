@@ -1,6 +1,15 @@
-# Welcome to your Expo app 👋
+# Segunda
+Segunda is a student-first marketplace app designed for college communities in the Philippines. Tired of cluttered Facebook groups and irrelevant listings on mainstream platforms? Segunda gives students a trusted, university-exclusive space to buy, sell, and trade second-hand items, dorm essentials, handmade goods, and more.
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Built with features tailored to student life—like the "Mine/Steal" reservation system, verified university-only access, and a familiar, mobile-first UI—Segunda makes it easier (and safer) for students to declutter, hustle, and save money.
+
+## Tech Stack
+- React Native using Expo
+- Firebase
+- TailwindCSS
+- Algolia
+- Typescript
+- Zod
 
 ## Get started
 
@@ -10,41 +19,32 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npm install
    ```
 
-2. Start the app
+2. Install eas
+
+   ```bash
+   npm install -g eas-cli
+   ```
+
+3. Log in with your [Expo account](https://expo.dev/)
+   
+   ```bash
+   eas login
+   ```
+
+4. Pull env variables using eas
+
+   ```bash
+   eas env:pull --environment development
+   ```
+
+5. Download the [latest](https://expo.dev/accounts/segunda/projects/segunda/development-builds) development build
+
+6. Start the app
 
    ```bash
     npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+## How to install packages?
+https://docs.expo.dev/workflow/using-libraries/
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
