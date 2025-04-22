@@ -56,9 +56,9 @@ function useLogin() {
         } catch (error) {
             const status = getErrorStatus(error?.message);
             if (status === "INVALID_ARGUMENT") {
-                setIsInternalError(true);
                 handleShowError();
             } else if (status === "INTERNAL") {
+                setIsInternalError(true);
                 handleShowError();
             }
 
