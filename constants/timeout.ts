@@ -1,0 +1,1 @@
+export const ERROR_MESSAGE_TIMEOUT = 2000;
