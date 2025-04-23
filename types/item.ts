@@ -39,13 +39,18 @@ export const ItemFormSchema = ItemSchema.omit({
     userId: true,
     postId: true,
     price: true,
-    imageUrl: true, // In the form schema the URL is not yet present
+    imageUrl: true,
     miner: true,
     confirmedBidder: true,
     dateCreated: true,
     dateUpdated: true,
     isDeleted: true,
 }).extend({
-    price: z.coerce.number().nonnegative(),
+    price: z.coerce.number().min(1, "Price must be greater than 0."),
+    imageUrl: z
+        .string()
+        .refine((val) => val === "" || /^https?:\/\/\S+$/.test(val), {
+            message: "Image must be a valid URL",
+        }),
 });
 export type ItemFormType = z.infer<typeof ItemFormSchema>;

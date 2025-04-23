@@ -24,7 +24,7 @@ export function useUploadImage() {
             await reference.putFile(uri);
 
             const url = await getDownloadURL(reference);
-            console.log("Uploaded successfully\turl:", url);
+            console.log("Uploaded successfully!");
 
             return url;
         } catch (err) {

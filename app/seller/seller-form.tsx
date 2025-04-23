@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     ScrollView,
 } from "react-native";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { PostFormSchema, PostFormType, PostRequestType } from "@/types/post";
@@ -23,16 +23,24 @@ function SellerFormPage() {
 
     const {
         control,
-        watch,
         handleSubmit,
         setValue,
         formState: { errors },
+        setError,
     } = useForm<PostFormType>({
         resolver: zodResolver(PostFormSchema),
         defaultValues: {
             caption: "",
             tags: [],
-            items: [{ name: "", price: 0, description: "", index: 0 }],
+            items: [
+                {
+                    name: "",
+                    price: 0,
+                    description: "",
+                    index: 0,
+                    imageUrl: "",
+                },
+            ],
         },
     });
 
@@ -41,7 +49,7 @@ function SellerFormPage() {
         name: "items",
     });
 
-    const items = watch("items");
+    const items = useWatch({ control, name: "items" });
 
     useEffect(() => {
         const localImages = [...images];
@@ -52,36 +60,52 @@ function SellerFormPage() {
     }, [items]);
 
     async function onSubmit(data: PostFormType) {
-        const imageKeys = Object.keys(images);
-
         let post: PostRequestType = {
             caption: data.caption,
             tags: data.tags,
             items: [],
         };
 
+        for (let i = 0; i < images.length; i++) {
+            if (!images[i]) {
+                setError(`items.${i}.imageUrl`, {
+                    type: "manual",
+                    message: "Item image is required.",
+                });
+                return;
+            }
+        }
+
         for (let i = 0; i < data.items.length; i++) {
             let item = {
                 ...data.items[i],
-                imageUrl: "",
             };
 
             try {
-                item.imageUrl = await uploadImage(images[imageKeys[i]]);
+                item.imageUrl = await uploadImage(images[i]);
+                post.items.push(item);
             } catch (error) {
-                console.error(error);
+                console.error("Upload failed or returned bad URL:", error);
+                setError(`items.${i}.imageUrl`, {
+                    type: "manual",
+                    message: "Image upload failed",
+                });
+                return;
             }
-
-            post.items.push(item);
         }
 
-        createPost(post);
+        try {
+            const result = await createPost(post);
+            console.log("Post Success:", result);
+        } catch (error) {
+            console.error("Post Failed:", error);
+        }
     }
 
     async function openImageLibrary(index: number) {
         try {
             let res = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ["images", "videos"],
+                mediaTypes: ["images"],
                 allowsMultipleSelection: false,
                 aspect: [9, 16],
                 quality: 1,
@@ -100,7 +124,7 @@ function SellerFormPage() {
     async function openCamera(index: number) {
         try {
             let res = await ImagePicker.launchCameraAsync({
-                mediaTypes: ["images", "videos"],
+                mediaTypes: ["images"],
                 aspect: [9, 16],
                 quality: 1,
             });
@@ -121,6 +145,7 @@ function SellerFormPage() {
             price: 0,
             description: "",
             index: fields.length,
+            imageUrl: "",
         });
     }
 

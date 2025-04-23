@@ -153,6 +153,11 @@ function ItemForm(props: ItemFormProps) {
                     </View>
                 )}
             </View>
+            {errors.items?.[index]?.imageUrl && (
+                <Text className="mt-1 text-red-500">
+                    {errors.items[index]?.imageUrl?.message}
+                </Text>
+            )}
         </View>
     );
 }
