@@ -142,8 +142,8 @@ function SellerFormPage() {
         });
     }, [fields, setValue]);
 
-    const disabledButtonClassName = clsx(
-        `mb-4 rounded bg-blue-500 px-4 py-2 ${isLoading ? "opacity-50" : ""}`,
+    const addNewItemButtonClassName = clsx(
+        "mb-4 rounded bg-blue-500 px-4 py-2",{"opacity-50" : isLoading}
     );
 
     return (
@@ -220,7 +220,7 @@ function SellerFormPage() {
 
                     <TouchableOpacity
                         disabled={isLoading}
-                        className={disabledButtonClassName}
+                        className={addNewItemButtonClassName}
                         onPress={handleAddNewItem}
                     >
                         <Text className="text-center text-white">
