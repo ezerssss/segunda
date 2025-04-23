@@ -5,6 +5,7 @@ import {
     Button,
     TouchableOpacity,
     ScrollView,
+    Alert,
 } from "react-native";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
@@ -16,22 +17,28 @@ import { MultiSelect } from "react-native-element-dropdown";
 import ItemForm from "./item-form";
 import useUploadImage from "@/hooks/useUploadImage";
 import { createPost } from "@/firebase/functions";
+import clsx from "clsx";
 
 function SellerFormPage() {
-    const [images, setImages] = useState<Record<string, string>>({});
+    const [isLoading, setIsLoading] = useState(false);
     const { uploadImage } = useUploadImage();
 
     const {
         control,
+        watch,
         handleSubmit,
         setValue,
         formState: { errors },
+        setError,
+        reset,
     } = useForm<PostFormType>({
         resolver: zodResolver(PostFormSchema),
         defaultValues: {
             caption: "",
             tags: [],
-            items: [{ name: "", price: 0, description: "", index: 0 }],
+            items: [
+                { name: "", price: 0, description: "", index: 0, imageUrl: "" },
+            ],
         },
     });
 
@@ -40,8 +47,10 @@ function SellerFormPage() {
         name: "items",
     });
 
+    const items = watch("items");
+
     async function onSubmit(data: PostFormType) {
-        const imageKeys = Object.keys(images);
+        setIsLoading(true);
 
         let post: PostRequestType = {
             caption: data.caption,
@@ -49,38 +58,47 @@ function SellerFormPage() {
             items: [],
         };
 
-        for (let i = 0; i < data.items.length; i++) {
+        for (const itemData of data.items) {
             let item = {
-                ...data.items[i],
-                imageUrl: "",
+                ...itemData,
             };
 
             try {
-                item.imageUrl = await uploadImage(images[imageKeys[i]]);
+                item.imageUrl = await uploadImage(item.imageUrl);
+                post.items.push(item);
             } catch (error) {
-                console.error(error);
+                console.error("Upload failed or returned bad URL:", error);
+                setError(`items.${item.index}.imageUrl`, {
+                    type: "manual",
+                    message: "Image upload failed",
+                });
+                setIsLoading(false);
+                return;
             }
-
-            post.items.push(item);
         }
 
-        createPost(post);
+        try {
+            await createPost(post);
+            Alert.alert("Success", "Your post was created!");
+            reset();
+        } catch (error) {
+            console.error("Post Failed:", error);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     async function openImageLibrary(index: number) {
         try {
             let res = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ["images", "videos"],
+                mediaTypes: ["images"],
                 allowsMultipleSelection: false,
                 aspect: [9, 16],
                 quality: 1,
             });
 
             if (!res.canceled) {
-                setImages((prev) => ({
-                    ...prev,
-                    [index]: res.assets[0].uri,
-                }));
+                setValue(`items.${index}.imageUrl`, res.assets[0].uri);
             }
         } catch (error) {
             console.error(error);
@@ -90,16 +108,13 @@ function SellerFormPage() {
     async function openCamera(index: number) {
         try {
             let res = await ImagePicker.launchCameraAsync({
-                mediaTypes: ["images", "videos"],
+                mediaTypes: ["images"],
                 aspect: [9, 16],
                 quality: 1,
             });
 
             if (!res.canceled) {
-                setImages((prev) => ({
-                    ...prev,
-                    [index]: res.assets[0].uri,
-                }));
+                setValue(`items.${index}.imageUrl`, res.assets[0].uri);
             }
         } catch (error) {
             console.error(error);
@@ -112,6 +127,7 @@ function SellerFormPage() {
             price: 0,
             description: "",
             index: fields.length,
+            imageUrl: "",
         });
     }
 
@@ -125,6 +141,10 @@ function SellerFormPage() {
             setValue(`items.${idx}.index`, idx);
         });
     }, [fields, setValue]);
+
+    const addNewItemButtonClassName = clsx(
+        "mb-4 rounded bg-blue-500 px-4 py-2",{"opacity-50" : isLoading}
+    );
 
     return (
         <>
@@ -188,11 +208,10 @@ function SellerFormPage() {
                             key={field.id}
                             control={control}
                             index={index}
-                            field={field}
                             errors={errors}
+                            item={items[index]}
                             remove={remove}
-                            images={images}
-                            setImages={setImages}
+                            setValue={setValue}
                             openImageLibrary={openImageLibrary}
                             openCamera={openCamera}
                             fieldsLength={fields.length}
@@ -200,7 +219,8 @@ function SellerFormPage() {
                     ))}
 
                     <TouchableOpacity
-                        className="mb-4 rounded bg-blue-500 px-4 py-2"
+                        disabled={isLoading}
+                        className={addNewItemButtonClassName}
                         onPress={handleAddNewItem}
                     >
                         <Text className="text-center text-white">
@@ -210,7 +230,8 @@ function SellerFormPage() {
 
                     <View className="mt-4">
                         <Button
-                            title="Post Items"
+                            disabled={isLoading}
+                            title={isLoading ? "Posting..." : "Post Items"}
                             onPress={handleSubmit(onSubmit)}
                         />
                     </View>

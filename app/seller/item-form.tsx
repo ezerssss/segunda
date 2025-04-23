@@ -1,15 +1,20 @@
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
-import { Control, Controller, UseFieldArrayRemove } from "react-hook-form";
+import {
+    Control,
+    Controller,
+    UseFieldArrayRemove,
+    UseFormSetValue,
+} from "react-hook-form";
+import { ItemFormType } from "@/types/item";
 import { PostFormType } from "@/types/post";
 
 interface ItemFormProps {
     control: Control<PostFormType>;
     index: number;
-    field: Record<string, any>;
     errors: any;
+    item: ItemFormType;
     remove: UseFieldArrayRemove;
-    images: Record<string, string>;
-    setImages: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+    setValue: UseFormSetValue<PostFormType>;
     openImageLibrary: (index: number) => Promise<void>;
     openCamera: (index: number) => Promise<void>;
     fieldsLength: number;
@@ -19,35 +24,25 @@ function ItemForm(props: ItemFormProps) {
     const {
         control,
         index,
-        field,
         errors,
+        item,
         remove,
-        images,
-        setImages,
+        setValue,
         openImageLibrary,
         openCamera,
         fieldsLength,
     } = props;
 
     function handleRemoveImage() {
-        setImages((prevImages) => {
-            const newImages = { ...prevImages };
-            delete newImages[index];
-            return newImages;
-        });
+        setValue(`items.${index}.imageUrl`, "");
     }
 
     function handleRemoveItem() {
         remove(index);
-        setImages((prevImages) => {
-            const newImages = { ...prevImages };
-            delete newImages[index];
-            return newImages;
-        });
     }
 
     return (
-        <View key={field.id} className="mb-6 border-b pb-4">
+        <View className="mb-6 border-b pb-4">
             <Text className="mb-1 font-bold">Item</Text>
 
             <Controller
@@ -141,10 +136,10 @@ function ItemForm(props: ItemFormProps) {
             </View>
 
             <View className="mt-2 flex flex-row flex-wrap justify-center">
-                {images[index] && (
+                {!!item.imageUrl && (
                     <View>
                         <Image
-                            source={{ uri: images[index] }}
+                            source={{ uri: item.imageUrl }}
                             className="h-20 w-20"
                         />
                         <TouchableOpacity
@@ -156,6 +151,11 @@ function ItemForm(props: ItemFormProps) {
                     </View>
                 )}
             </View>
+            {errors.items?.[index]?.imageUrl && (
+                <Text className="mt-1 text-red-500">
+                    {errors.items[index]?.imageUrl?.message}
+                </Text>
+            )}
         </View>
     );
 }
