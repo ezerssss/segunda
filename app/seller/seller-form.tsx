@@ -16,10 +16,11 @@ import { MultiSelect } from "react-native-element-dropdown";
 import ItemForm from "./item-form";
 
 function SellerFormPage() {
-    const [images, setImages] = useState<Record<string, string>>({});
+    const [images, setImages] = useState<string[]>([]);
 
     const {
         control,
+        watch,
         handleSubmit,
         setValue,
         formState: { errors },
@@ -37,12 +38,22 @@ function SellerFormPage() {
         name: "items",
     });
 
+    const items = watch("items");
+
+    useEffect(() => {
+        const localImages = [...images];
+        while (items.length > localImages.length) {
+            localImages.push("");
+        }
+        setImages(localImages);
+    }, [items]);
+
     function onSubmit(data: PostFormType) {
         console.log("Form Data: ", data);
         console.log("imgs: ", images);
     }
 
-    async function openImageLibrary(fieldId: string) {
+    async function openImageLibrary(index: number) {
         try {
             let res = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ["images", "videos"],
@@ -52,17 +63,16 @@ function SellerFormPage() {
             });
 
             if (!res.canceled) {
-                setImages((prev) => ({
-                    ...prev,
-                    [fieldId]: res.assets[0].uri,
-                }));
+                const localImages = [...images];
+                localImages[index] = res.assets[0].uri;
+                setImages(localImages);
             }
         } catch (error) {
             console.error(error);
         }
     }
 
-    async function openCamera(fieldId: string) {
+    async function openCamera(index: number) {
         try {
             let res = await ImagePicker.launchCameraAsync({
                 mediaTypes: ["images", "videos"],
@@ -71,10 +81,9 @@ function SellerFormPage() {
             });
 
             if (!res.canceled) {
-                setImages((prev) => ({
-                    ...prev,
-                    [fieldId]: res.assets[0].uri,
-                }));
+                const localImages = [...images];
+                localImages[index] = res.assets[0].uri;
+                setImages(localImages);
             }
         } catch (error) {
             console.error(error);
@@ -163,7 +172,6 @@ function SellerFormPage() {
                             key={field.id}
                             control={control}
                             index={index}
-                            field={field}
                             errors={errors}
                             remove={remove}
                             images={images}
