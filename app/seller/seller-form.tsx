@@ -7,7 +7,7 @@ import {
     ScrollView,
     Alert,
 } from "react-native";
-import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { PostFormSchema, PostFormType, PostRequestType } from "@/types/post";
@@ -20,11 +20,12 @@ import { createPost } from "@/firebase/functions";
 import clsx from "clsx";
 
 function SellerFormPage() {
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const { uploadImage } = useUploadImage();
 
     const {
         control,
+        watch,
         handleSubmit,
         setValue,
         formState: { errors },
@@ -46,10 +47,10 @@ function SellerFormPage() {
         name: "items",
     });
 
-    const items = useWatch({ control, name: "items" });
+    const items = watch("items");
 
     async function onSubmit(data: PostFormType) {
-        setLoading(true);
+        setIsLoading(true);
 
         let post: PostRequestType = {
             caption: data.caption,
@@ -71,7 +72,7 @@ function SellerFormPage() {
                     type: "manual",
                     message: "Image upload failed",
                 });
-                setLoading(false);
+                setIsLoading(false);
                 return;
             }
         }
@@ -83,7 +84,7 @@ function SellerFormPage() {
         } catch (error) {
             console.error("Post Failed:", error);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     }
 
@@ -141,10 +142,9 @@ function SellerFormPage() {
         });
     }, [fields, setValue]);
 
-    const signInBarClassName = clsx(
-        "mt-8 w-2/3 items-center rounded px-4 py-2",
-        { border: !loading },
-    );
+    const addNewItemButtonClass = clsx("mb-4 rounded bg-blue-500 px-4 py-2", {
+        "opacity-50": isLoading,
+    });
 
     return (
         <>
@@ -219,8 +219,8 @@ function SellerFormPage() {
                     ))}
 
                     <TouchableOpacity
-                        disabled={loading}
-                        className={signInBarClassName}
+                        disabled={isLoading}
+                        className={addNewItemButtonClass}
                         onPress={handleAddNewItem}
                     >
                         <Text className="text-center text-white">
@@ -230,8 +230,8 @@ function SellerFormPage() {
 
                     <View className="mt-4">
                         <Button
-                            disabled={loading}
-                            title={loading ? "Posting..." : "Post Items"}
+                            disabled={isLoading}
+                            title={isLoading ? "Posting..." : "Post Items"}
                             onPress={handleSubmit(onSubmit)}
                         />
                     </View>
