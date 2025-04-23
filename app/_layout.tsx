@@ -6,10 +6,12 @@ import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import "../global.css";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ThemeProvider } from "@react-navigation/native";
-import { SegundaTheme } from "@/constants/theme";
 import { UserContext } from "../contexts/userContext";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import * as eva from "@eva-design/eva";
+import { ApplicationProvider } from "@ui-kitten/components";
+import { default as theme } from "../custom-theme.json";
+// import { default as mapping } from "../mapping.json";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,13 +33,13 @@ export default function RootLayout() {
     }
 
     return (
-        <UserContext.Provider value={{ user, setUser }}>
-            <ThemeProvider value={SegundaTheme}>
+        <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
+            <UserContext.Provider value={{ user, setUser }}>
                 <StatusBar style="auto" />
                 <SafeAreaView className="flex-1 px-4">
                     <Stack screenOptions={{ headerShown: false }} />
                 </SafeAreaView>
-            </ThemeProvider>
-        </UserContext.Provider>
+            </UserContext.Provider>
+        </ApplicationProvider>
     );
 }
