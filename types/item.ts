@@ -47,10 +47,6 @@ export const ItemFormSchema = ItemSchema.omit({
     isDeleted: true,
 }).extend({
     price: z.coerce.number().nonnegative("Price must be nonnegative."),
-    imageUrl: z
-        .string()
-        .refine((val) => val === "" || /^https?:\/\/\S+$/.test(val), {
-            message: "Image must be a valid URL",
-        }),
+    imageUrl: z.string().min(1, { message: "Item image is required." }),
 });
 export type ItemFormType = z.infer<typeof ItemFormSchema>;

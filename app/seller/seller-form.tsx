@@ -7,7 +7,7 @@ import {
     ScrollView,
     Alert,
 } from "react-native";
-import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { PostFormSchema, PostFormType, PostRequestType } from "@/types/post";
@@ -20,7 +20,6 @@ import { createPost } from "@/firebase/functions";
 
 function SellerFormPage() {
     const [loading, setLoading] = useState(false);
-    const [images, setImages] = useState<string[]>([]);
     const { uploadImage } = useUploadImage();
 
     const {
@@ -36,13 +35,7 @@ function SellerFormPage() {
             caption: "",
             tags: [],
             items: [
-                {
-                    name: "",
-                    price: 0,
-                    description: "",
-                    index: 0,
-                    imageUrl: "",
-                },
+                { name: "", price: 0, description: "", index: 0, imageUrl: "" },
             ],
         },
     });
@@ -51,16 +44,6 @@ function SellerFormPage() {
         control,
         name: "items",
     });
-
-    const items = useWatch({ control, name: "items" });
-
-    useEffect(() => {
-        const localImages = [...images];
-        while (items.length > localImages.length) {
-            localImages.push("");
-        }
-        setImages(localImages);
-    }, [items]);
 
     async function onSubmit(data: PostFormType) {
         setLoading(true);
@@ -71,23 +54,13 @@ function SellerFormPage() {
             items: [],
         };
 
-        for (let i = 0; i < images.length; i++) {
-            if (!images[i]) {
-                setError(`items.${i}.imageUrl`, {
-                    type: "manual",
-                    message: "Item image is required.",
-                });
-                return;
-            }
-        }
-
         for (let i = 0; i < data.items.length; i++) {
             let item = {
                 ...data.items[i],
             };
 
             try {
-                item.imageUrl = await uploadImage(images[i]);
+                item.imageUrl = await uploadImage(item.imageUrl);
                 post.items.push(item);
             } catch (error) {
                 console.error("Upload failed or returned bad URL:", error);
@@ -111,7 +84,6 @@ function SellerFormPage() {
 
         Alert.alert("Success", "Your post was created!");
         reset();
-        setImages([]);
     }
 
     async function openImageLibrary(index: number) {
@@ -124,9 +96,7 @@ function SellerFormPage() {
             });
 
             if (!res.canceled) {
-                const localImages = [...images];
-                localImages[index] = res.assets[0].uri;
-                setImages(localImages);
+                setValue(`items.${index}.imageUrl`, res.assets[0].uri);
             }
         } catch (error) {
             console.error(error);
@@ -142,9 +112,7 @@ function SellerFormPage() {
             });
 
             if (!res.canceled) {
-                const localImages = [...images];
-                localImages[index] = res.assets[0].uri;
-                setImages(localImages);
+                setValue(`items.${index}.imageUrl`, res.assets[0].uri);
             }
         } catch (error) {
             console.error(error);
@@ -235,9 +203,9 @@ function SellerFormPage() {
                             control={control}
                             index={index}
                             errors={errors}
+                            item={field}
                             remove={remove}
-                            images={images}
-                            setImages={setImages}
+                            setValue={setValue}
                             openImageLibrary={openImageLibrary}
                             openCamera={openCamera}
                             fieldsLength={fields.length}
