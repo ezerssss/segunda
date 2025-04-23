@@ -5,11 +5,10 @@ import { PostFormType } from "@/types/post";
 interface ItemFormProps {
     control: Control<PostFormType>;
     index: number;
-    field: Record<string, any>;
     errors: any;
     remove: UseFieldArrayRemove;
-    images: Record<string, string>;
-    setImages: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+    images: string[];
+    setImages: React.Dispatch<React.SetStateAction<string[]>>;
     openImageLibrary: (index: number) => Promise<void>;
     openCamera: (index: number) => Promise<void>;
     fieldsLength: number;
@@ -19,7 +18,6 @@ function ItemForm(props: ItemFormProps) {
     const {
         control,
         index,
-        field,
         errors,
         remove,
         images,
@@ -30,24 +28,23 @@ function ItemForm(props: ItemFormProps) {
     } = props;
 
     function handleRemoveImage() {
-        setImages((prevImages) => {
-            const newImages = { ...prevImages };
-            delete newImages[index];
-            return newImages;
-        });
+        setImages(
+            images.map((image, idx) => {
+                if (idx !== index) {
+                    return image;
+                }
+                return "";
+            }),
+        );
     }
 
     function handleRemoveItem() {
         remove(index);
-        setImages((prevImages) => {
-            const newImages = { ...prevImages };
-            delete newImages[index];
-            return newImages;
-        });
+        setImages((prevImages) => prevImages.splice(index, 1));
     }
 
     return (
-        <View key={field.id} className="mb-6 border-b pb-4">
+        <View className="mb-6 border-b pb-4">
             <Text className="mb-1 font-bold">Item</Text>
 
             <Controller
@@ -141,7 +138,7 @@ function ItemForm(props: ItemFormProps) {
             </View>
 
             <View className="mt-2 flex flex-row flex-wrap justify-center">
-                {images[index] && (
+                {!!images[index] && (
                     <View>
                         <Image
                             source={{ uri: images[index] }}

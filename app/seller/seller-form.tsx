@@ -18,11 +18,12 @@ import useUploadImage from "@/hooks/useUploadImage";
 import { createPost } from "@/firebase/functions";
 
 function SellerFormPage() {
-    const [images, setImages] = useState<Record<string, string>>({});
+    const [images, setImages] = useState<string[]>([]);
     const { uploadImage } = useUploadImage();
 
     const {
         control,
+        watch,
         handleSubmit,
         setValue,
         formState: { errors },
@@ -39,6 +40,16 @@ function SellerFormPage() {
         control,
         name: "items",
     });
+
+    const items = watch("items");
+
+    useEffect(() => {
+        const localImages = [...images];
+        while (items.length > localImages.length) {
+            localImages.push("");
+        }
+        setImages(localImages);
+    }, [items]);
 
     async function onSubmit(data: PostFormType) {
         const imageKeys = Object.keys(images);
@@ -77,10 +88,9 @@ function SellerFormPage() {
             });
 
             if (!res.canceled) {
-                setImages((prev) => ({
-                    ...prev,
-                    [index]: res.assets[0].uri,
-                }));
+                const localImages = [...images];
+                localImages[index] = res.assets[0].uri;
+                setImages(localImages);
             }
         } catch (error) {
             console.error(error);
@@ -96,10 +106,9 @@ function SellerFormPage() {
             });
 
             if (!res.canceled) {
-                setImages((prev) => ({
-                    ...prev,
-                    [index]: res.assets[0].uri,
-                }));
+                const localImages = [...images];
+                localImages[index] = res.assets[0].uri;
+                setImages(localImages);
             }
         } catch (error) {
             console.error(error);
@@ -188,7 +197,6 @@ function SellerFormPage() {
                             key={field.id}
                             control={control}
                             index={index}
-                            field={field}
                             errors={errors}
                             remove={remove}
                             images={images}
