@@ -80,3 +80,5 @@ export default function Login() {
         </View>
     );
 }
+
+export const signInBarClassName;

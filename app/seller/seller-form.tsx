@@ -17,6 +17,7 @@ import { MultiSelect } from "react-native-element-dropdown";
 import ItemForm from "./item-form";
 import useUploadImage from "@/hooks/useUploadImage";
 import { createPost } from "@/firebase/functions";
+import clsx from "clsx";
 
 function SellerFormPage() {
     const [loading, setLoading] = useState(false);
@@ -56,9 +57,9 @@ function SellerFormPage() {
             items: [],
         };
 
-        for (let i = 0; i < data.items.length; i++) {
+        for (const itemData of data.items) {
             let item = {
-                ...data.items[i],
+                ...itemData,
             };
 
             try {
@@ -66,7 +67,7 @@ function SellerFormPage() {
                 post.items.push(item);
             } catch (error) {
                 console.error("Upload failed or returned bad URL:", error);
-                setError(`items.${i}.imageUrl`, {
+                setError(`items.${item.index}.imageUrl`, {
                     type: "manual",
                     message: "Image upload failed",
                 });
@@ -76,16 +77,14 @@ function SellerFormPage() {
         }
 
         try {
-            const result = await createPost(post);
-            console.log("Post Success:", result);
+            await createPost(post);
+            Alert.alert("Success", "Your post was created!");
+            reset();
         } catch (error) {
             console.error("Post Failed:", error);
         } finally {
             setLoading(false);
         }
-
-        Alert.alert("Success", "Your post was created!");
-        reset();
     }
 
     async function openImageLibrary(index: number) {
@@ -141,6 +140,11 @@ function SellerFormPage() {
             setValue(`items.${idx}.index`, idx);
         });
     }, [fields, setValue]);
+
+    const signInBarClassName = clsx(
+        "mt-8 w-2/3 items-center rounded px-4 py-2",
+        { border: !loading },
+    );
 
     return (
         <>
@@ -216,9 +220,7 @@ function SellerFormPage() {
 
                     <TouchableOpacity
                         disabled={loading}
-                        className={`mb-4 rounded bg-blue-500 px-4 py-2 ${
-                            loading ? "opacity-50" : ""
-                        }`}
+                        className={signInBarClassName}
                         onPress={handleAddNewItem}
                     >
                         <Text className="text-center text-white">

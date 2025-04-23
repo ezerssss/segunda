@@ -18,13 +18,12 @@ export function useUploadImage() {
         try {
             const storage = getStorage(app);
             const fileName = `${uuid.v4()}`;
-            const path = `users/${user.uid}/${fileName}`;
+            const path = `users/${user.uid}/itemImages/${fileName}`;
             const reference = ref(storage, path);
 
             await reference.putFile(uri);
 
             const url = await getDownloadURL(reference);
-            console.log("Uploaded successfully!");
 
             return url;
         } catch (err) {
