@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import { View, TouchableOpacity, Image } from "react-native";
 import {
     Control,
     Controller,
@@ -7,6 +7,7 @@ import {
 } from "react-hook-form";
 import { ItemFormType } from "@/types/item";
 import { PostFormType } from "@/types/post";
+import { Input, Button, Text } from "@ui-kitten/components";
 
 interface ItemFormProps {
     control: Control<PostFormType>;
@@ -20,141 +21,169 @@ interface ItemFormProps {
     fieldsLength: number;
 }
 
-function ItemForm(props: ItemFormProps) {
-    const {
-        control,
-        index,
-        errors,
-        item,
-        remove,
-        setValue,
-        openImageLibrary,
-        openCamera,
-        fieldsLength,
-    } = props;
-
-    function handleRemoveImage() {
+function ItemForm({
+    control,
+    index,
+    errors,
+    item,
+    remove,
+    setValue,
+    openImageLibrary,
+    openCamera,
+    fieldsLength,
+}: ItemFormProps) {
+    const handleRemoveImage = () => {
         setValue(`items.${index}.imageUrl`, "");
-    }
+    };
 
-    function handleRemoveItem() {
+    const handleRemoveItem = () => {
         remove(index);
-    }
+    };
 
     return (
-        <View className="mb-6 border-b pb-4">
-            <Text className="mb-1 font-bold">Item</Text>
+        <View className="mb-6 border-b border-gray-200 px-4 pb-6">
+            {/* Upload Image */}
+            <Text category="label" className="mb-2 mt-4 font-semibold">
+                Upload Image
+            </Text>
 
+            <View className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-100">
+                {item.imageUrl ? (
+                    <Image
+                        source={{ uri: item.imageUrl }}
+                        className="h-full w-full"
+                        resizeMode="cover"
+                    />
+                ) : (
+                    <View className="absolute inset-0 items-center justify-center">
+                        <Text appearance="hint">Tap below to upload</Text>
+                    </View>
+                )}
+
+                {item.imageUrl && (
+                    <TouchableOpacity
+                        onPress={handleRemoveImage}
+                        className="absolute right-2 top-2 z-10 h-7 w-7 items-center justify-center rounded-full bg-black/70"
+                        style={{
+                            shadowColor: "#000",
+                            shadowOffset: { width: 0, height: 1 },
+                            shadowOpacity: 0.15,
+                            shadowRadius: 2,
+                            elevation: 2,
+                        }}
+                    >
+                        <Text className="text-sm font-semibold text-white">
+                            ✕
+                        </Text>
+                    </TouchableOpacity>
+                )}
+            </View>
+
+            <View className="mt-3 flex flex-row justify-between">
+                <Button
+                    size="small"
+                    appearance="outline"
+                    status="basic"
+                    onPress={() => openImageLibrary(index)}
+                    style={{ flex: 1, marginRight: 6 }}
+                >
+                    Gallery
+                </Button>
+                <Button
+                    size="small"
+                    appearance="outline"
+                    status="basic"
+                    onPress={() => openCamera(index)}
+                    style={{ flex: 1, marginLeft: 6 }}
+                >
+                    Camera
+                </Button>
+            </View>
+
+            {errors.items?.[index]?.imageUrl && (
+                <Text status="danger" category="c2" className="mt-1">
+                    {errors.items[index]?.imageUrl?.message}
+                </Text>
+            )}
+
+            {/* Item Name */}
+            <Text category="label" className="mb-2 mt-6 font-semibold">
+                Item Name
+            </Text>
             <Controller
                 control={control}
                 name={`items.${index}.name`}
                 render={({ field: { onChange, onBlur, value } }) => (
-                    <TextInput
-                        className="rounded-md bg-gray-300 px-3 py-1.5 text-base text-gray-900"
-                        placeholder="Item Name"
+                    <Input
+                        placeholder="Enter item name"
                         onBlur={onBlur}
                         onChangeText={onChange}
                         value={value}
+                        status={
+                            errors.items?.[index]?.name ? "danger" : "basic"
+                        }
+                        caption={errors.items?.[index]?.name?.message}
                     />
                 )}
             />
 
-            {errors.items?.[index]?.name && (
-                <Text className="mt-1 text-red-500">
-                    {errors.items[index]?.name?.message}
-                </Text>
-            )}
-
-            <Text className="mt-2 font-bold">Item Price</Text>
-
+            {/* Price */}
+            <Text category="label" className="mb-2 mt-6 font-semibold">
+                Price
+            </Text>
             <Controller
                 control={control}
                 name={`items.${index}.price`}
                 render={({ field: { onChange, onBlur, value } }) => (
-                    <TextInput
-                        className="rounded-md bg-gray-300 px-3 py-1.5 text-base text-gray-900"
-                        placeholder="Enter Price"
+                    <Input
+                        placeholder="0.00"
                         keyboardType="numeric"
                         onBlur={onBlur}
                         onChangeText={onChange}
                         value={value === 0 ? "" : String(value)}
+                        status={
+                            errors.items?.[index]?.price ? "danger" : "basic"
+                        }
+                        caption={errors.items?.[index]?.price?.message}
                     />
                 )}
             />
-            {errors.items?.[index]?.price && (
-                <Text className="mt-1 text-red-500">
-                    {errors.items[index]?.price?.message}
-                </Text>
-            )}
 
-            <Text className="mt-2 font-bold">Description</Text>
+            <Text category="label" className="mb-2 mt-6 font-semibold">
+                Description
+            </Text>
             <Controller
                 control={control}
                 name={`items.${index}.description`}
                 render={({ field: { onChange, onBlur, value } }) => (
-                    <TextInput
-                        className="rounded-md bg-gray-300 px-3 py-1.5 text-base text-gray-900"
-                        placeholder="optional"
+                    <Input
+                        placeholder="Write a description..."
                         multiline
+                        textStyle={{ minHeight: 80 }}
                         onBlur={onBlur}
                         onChangeText={onChange}
                         value={value}
+                        status={
+                            errors.items?.[index]?.description
+                                ? "danger"
+                                : "basic"
+                        }
+                        caption={errors.items?.[index]?.description?.message}
+                        style={{ backgroundColor: "#f4f4f5" }}
                     />
                 )}
             />
-            {errors.items?.[index]?.description && (
-                <Text className="mt-1 text-red-500">
-                    {errors.items[index]?.description?.message}
-                </Text>
-            )}
 
+            {/* Remove Button */}
             {fieldsLength > 1 && (
-                <TouchableOpacity
-                    className="mt-2 rounded bg-red-500 px-3 py-1"
+                <Button
+                    status="danger"
+                    appearance="ghost"
                     onPress={handleRemoveItem}
+                    className="mt-6"
                 >
-                    <Text className="text-center text-white">Remove Item</Text>
-                </TouchableOpacity>
-            )}
-
-            <View className="mt-4">
-                <TouchableOpacity
-                    className="self-baseline rounded border px-4 py-2"
-                    onPress={() => openImageLibrary(index)}
-                >
-                    <Text>Open Image Library</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View className="mt-2">
-                <TouchableOpacity
-                    className="self-baseline rounded border px-4 py-2"
-                    onPress={() => openCamera(index)}
-                >
-                    <Text>Open Camera</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View className="mt-2 flex flex-row flex-wrap justify-center">
-                {!!item.imageUrl && (
-                    <View>
-                        <Image
-                            source={{ uri: item.imageUrl }}
-                            className="h-20 w-20"
-                        />
-                        <TouchableOpacity
-                            onPress={handleRemoveImage}
-                            className="absolute right-0 top-0 z-10 rounded-full bg-red-500 px-1"
-                        >
-                            <Text className="text-xs text-white">✕</Text>
-                        </TouchableOpacity>
-                    </View>
-                )}
-            </View>
-            {errors.items?.[index]?.imageUrl && (
-                <Text className="mt-1 text-red-500">
-                    {errors.items[index]?.imageUrl?.message}
-                </Text>
+                    Remove Item
+                </Button>
             )}
         </View>
     );
