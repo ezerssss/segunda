@@ -5,22 +5,32 @@ import {
     Button,
     TouchableOpacity,
     ScrollView,
+    Alert,
 } from "react-native";
-import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
-import { useEffect } from "react";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-import { PostFormSchema, PostFormType } from "@/types/post";
+import { PostFormSchema, PostFormType, PostRequestType } from "@/types/post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PostTagsEnum } from "@/enums/post";
 import { MultiSelect } from "react-native-element-dropdown";
 import ItemForm from "./item-form";
+import useUploadImage from "@/hooks/useUploadImage";
+import { createPost } from "@/firebase/functions";
+import clsx from "clsx";
 
 function SellerFormPage() {
+    const [isLoading, setIsLoading] = useState(false);
+    const { uploadImage } = useUploadImage();
+
     const {
         control,
+        watch,
         handleSubmit,
         setValue,
         formState: { errors },
+        setError,
+        reset,
     } = useForm<PostFormType>({
         resolver: zodResolver(PostFormSchema),
         defaultValues: {
@@ -37,16 +47,51 @@ function SellerFormPage() {
         name: "items",
     });
 
-    const items = useWatch({ control, name: "items" });
+    const items = watch("items");
 
-    function onSubmit(data: PostFormType) {
-        console.log("Form Data: ", data);
+    async function onSubmit(data: PostFormType) {
+        setIsLoading(true);
+
+        let post: PostRequestType = {
+            caption: data.caption,
+            tags: data.tags,
+            items: [],
+        };
+
+        for (const itemData of data.items) {
+            let item = {
+                ...itemData,
+            };
+
+            try {
+                item.imageUrl = await uploadImage(item.imageUrl);
+                post.items.push(item);
+            } catch (error) {
+                console.error("Upload failed or returned bad URL:", error);
+                setError(`items.${item.index}.imageUrl`, {
+                    type: "manual",
+                    message: "Image upload failed",
+                });
+                setIsLoading(false);
+                return;
+            }
+        }
+
+        try {
+            await createPost(post);
+            Alert.alert("Success", "Your post was created!");
+            reset();
+        } catch (error) {
+            console.error("Post Failed:", error);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     async function openImageLibrary(index: number) {
         try {
             let res = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ["images", "videos"],
+                mediaTypes: ["images"],
                 allowsMultipleSelection: false,
                 aspect: [9, 16],
                 quality: 1,
@@ -63,7 +108,7 @@ function SellerFormPage() {
     async function openCamera(index: number) {
         try {
             let res = await ImagePicker.launchCameraAsync({
-                mediaTypes: ["images", "videos"],
+                mediaTypes: ["images"],
                 aspect: [9, 16],
                 quality: 1,
             });
@@ -96,6 +141,10 @@ function SellerFormPage() {
             setValue(`items.${idx}.index`, idx);
         });
     }, [fields, setValue]);
+
+    const addNewItemButtonClassName = clsx(
+        "mb-4 rounded bg-blue-500 px-4 py-2",{"opacity-50" : isLoading}
+    );
 
     return (
         <>
@@ -170,7 +219,8 @@ function SellerFormPage() {
                     ))}
 
                     <TouchableOpacity
-                        className="mb-4 rounded bg-blue-500 px-4 py-2"
+                        disabled={isLoading}
+                        className={addNewItemButtonClassName}
                         onPress={handleAddNewItem}
                     >
                         <Text className="text-center text-white">
@@ -180,7 +230,8 @@ function SellerFormPage() {
 
                     <View className="mt-4">
                         <Button
-                            title="Post Items"
+                            disabled={isLoading}
+                            title={isLoading ? "Posting..." : "Post Items"}
                             onPress={handleSubmit(onSubmit)}
                         />
                     </View>
