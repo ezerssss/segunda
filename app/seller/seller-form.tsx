@@ -5,6 +5,7 @@ import {
     Button,
     TouchableOpacity,
     ScrollView,
+    Alert,
 } from "react-native";
 import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import { useEffect, useState } from "react";
@@ -94,9 +95,8 @@ function SellerFormPage() {
                     type: "manual",
                     message: "Image upload failed",
                 });
-                return;
-            } finally {
                 setLoading(false);
+                return;
             }
         }
 
@@ -105,8 +105,11 @@ function SellerFormPage() {
             console.log("Post Success:", result);
         } catch (error) {
             console.error("Post Failed:", error);
+        } finally {
+            setLoading(false);
         }
 
+        Alert.alert("Success", "Your post was created!");
         reset();
         setImages([]);
     }
@@ -242,7 +245,10 @@ function SellerFormPage() {
                     ))}
 
                     <TouchableOpacity
-                        className="mb-4 rounded bg-blue-500 px-4 py-2"
+                        disabled={loading}
+                        className={`mb-4 rounded bg-blue-500 px-4 py-2 ${
+                            loading ? "opacity-50" : ""
+                        }`}
                         onPress={handleAddNewItem}
                     >
                         <Text className="text-center text-white">

@@ -46,7 +46,7 @@ export const ItemFormSchema = ItemSchema.omit({
     dateUpdated: true,
     isDeleted: true,
 }).extend({
-    price: z.coerce.number().min(1, "Price must be greater than 0."),
+    price: z.coerce.number().nonnegative("Price must be nonnegative."),
     imageUrl: z
         .string()
         .refine((val) => val === "" || /^https?:\/\/\S+$/.test(val), {
