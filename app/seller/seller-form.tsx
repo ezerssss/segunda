@@ -39,7 +39,6 @@ function SellerFormPage() {
     });
 
     const items = watch("items");
-    const a = 1;
 
     useEffect(() => {
         const localImages = [...images];
