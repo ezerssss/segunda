@@ -7,7 +7,7 @@ import {
     ScrollView,
     Alert,
 } from "react-native";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { PostFormSchema, PostFormType, PostRequestType } from "@/types/post";
@@ -44,6 +44,8 @@ function SellerFormPage() {
         control,
         name: "items",
     });
+
+    const items = useWatch({ control, name: "items" });
 
     async function onSubmit(data: PostFormType) {
         setLoading(true);
@@ -203,7 +205,7 @@ function SellerFormPage() {
                             control={control}
                             index={index}
                             errors={errors}
-                            item={field}
+                            item={items[index]}
                             remove={remove}
                             setValue={setValue}
                             openImageLibrary={openImageLibrary}
