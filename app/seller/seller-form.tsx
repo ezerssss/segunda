@@ -9,14 +9,17 @@ import {
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-import { PostFormSchema, PostFormType } from "@/types/post";
+import { PostFormSchema, PostFormType, PostRequestType } from "@/types/post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PostTagsEnum } from "@/enums/post";
 import { MultiSelect } from "react-native-element-dropdown";
 import ItemForm from "./item-form";
+import useUploadImage from "@/hooks/useUploadImage";
+import { createPost } from "@/firebase/functions";
 
 function SellerFormPage() {
     const [images, setImages] = useState<Record<string, string>>({});
+    const { uploadImage } = useUploadImage();
 
     const {
         control,
@@ -37,12 +40,34 @@ function SellerFormPage() {
         name: "items",
     });
 
-    function onSubmit(data: PostFormType) {
-        console.log("Form Data: ", data);
-        console.log("imgs: ", images);
+    async function onSubmit(data: PostFormType) {
+        const imageKeys = Object.keys(images);
+
+        let post: PostRequestType = {
+            caption: data.caption,
+            tags: data.tags,
+            items: [],
+        };
+
+        for (let i = 0; i < data.items.length; i++) {
+            let item = {
+                ...data.items[i],
+                imageUrl: "",
+            };
+
+            try {
+                item.imageUrl = await uploadImage(images[imageKeys[i]]);
+            } catch (error) {
+                console.error(error);
+            }
+
+            post.items.push(item);
+        }
+
+        createPost(post);
     }
 
-    async function openImageLibrary(fieldId: string) {
+    async function openImageLibrary(index: number) {
         try {
             let res = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ["images", "videos"],
@@ -54,7 +79,7 @@ function SellerFormPage() {
             if (!res.canceled) {
                 setImages((prev) => ({
                     ...prev,
-                    [fieldId]: res.assets[0].uri,
+                    [index]: res.assets[0].uri,
                 }));
             }
         } catch (error) {
@@ -62,7 +87,7 @@ function SellerFormPage() {
         }
     }
 
-    async function openCamera(fieldId: string) {
+    async function openCamera(index: number) {
         try {
             let res = await ImagePicker.launchCameraAsync({
                 mediaTypes: ["images", "videos"],
@@ -73,7 +98,7 @@ function SellerFormPage() {
             if (!res.canceled) {
                 setImages((prev) => ({
                     ...prev,
-                    [fieldId]: res.assets[0].uri,
+                    [index]: res.assets[0].uri,
                 }));
             }
         } catch (error) {

@@ -10,8 +10,8 @@ interface ItemFormProps {
     remove: UseFieldArrayRemove;
     images: Record<string, string>;
     setImages: React.Dispatch<React.SetStateAction<Record<string, string>>>;
-    openImageLibrary: (fieldId: string) => Promise<void>;
-    openCamera: (fieldId: string) => Promise<void>;
+    openImageLibrary: (index: number) => Promise<void>;
+    openCamera: (index: number) => Promise<void>;
     fieldsLength: number;
 }
 
@@ -32,7 +32,7 @@ function ItemForm(props: ItemFormProps) {
     function handleRemoveImage() {
         setImages((prevImages) => {
             const newImages = { ...prevImages };
-            delete newImages[field.id];
+            delete newImages[index];
             return newImages;
         });
     }
@@ -41,7 +41,7 @@ function ItemForm(props: ItemFormProps) {
         remove(index);
         setImages((prevImages) => {
             const newImages = { ...prevImages };
-            delete newImages[field.id];
+            delete newImages[index];
             return newImages;
         });
     }
@@ -125,7 +125,7 @@ function ItemForm(props: ItemFormProps) {
             <View className="mt-4">
                 <TouchableOpacity
                     className="self-baseline rounded border px-4 py-2"
-                    onPress={() => openImageLibrary(field.id)}
+                    onPress={() => openImageLibrary(index)}
                 >
                     <Text>Open Image Library</Text>
                 </TouchableOpacity>
@@ -134,17 +134,17 @@ function ItemForm(props: ItemFormProps) {
             <View className="mt-2">
                 <TouchableOpacity
                     className="self-baseline rounded border px-4 py-2"
-                    onPress={() => openCamera(field.id)}
+                    onPress={() => openCamera(index)}
                 >
                     <Text>Open Camera</Text>
                 </TouchableOpacity>
             </View>
 
             <View className="mt-2 flex flex-row flex-wrap justify-center">
-                {images[field.id] && (
+                {images[index] && (
                     <View>
                         <Image
-                            source={{ uri: images[field.id] }}
+                            source={{ uri: images[index] }}
                             className="h-20 w-20"
                         />
                         <TouchableOpacity
