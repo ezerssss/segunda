@@ -141,9 +141,8 @@ function SellerFormPage() {
         });
     }, [fields, setValue]);
 
-    const signInBarClassName = clsx(
-        "mt-8 w-2/3 items-center rounded px-4 py-2",
-        { border: !loading },
+    const disabledButtonClassName = clsx(
+        `mb-4 rounded bg-blue-500 px-4 py-2 ${loading ? "opacity-50" : ""}`,
     );
 
     return (
@@ -220,7 +219,7 @@ function SellerFormPage() {
 
                     <TouchableOpacity
                         disabled={loading}
-                        className={signInBarClassName}
+                        className={disabledButtonClassName}
                         onPress={handleAddNewItem}
                     >
                         <Text className="text-center text-white">
