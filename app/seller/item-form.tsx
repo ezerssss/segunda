@@ -1,14 +1,20 @@
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
-import { Control, Controller, UseFieldArrayRemove } from "react-hook-form";
+import {
+    Control,
+    Controller,
+    UseFieldArrayRemove,
+    UseFormSetValue,
+} from "react-hook-form";
+import { ItemFormType } from "@/types/item";
 import { PostFormType } from "@/types/post";
 
 interface ItemFormProps {
     control: Control<PostFormType>;
     index: number;
     errors: any;
+    item: ItemFormType;
     remove: UseFieldArrayRemove;
-    images: string[];
-    setImages: React.Dispatch<React.SetStateAction<string[]>>;
+    setValue: UseFormSetValue<PostFormType>;
     openImageLibrary: (index: number) => Promise<void>;
     openCamera: (index: number) => Promise<void>;
     fieldsLength: number;
@@ -19,28 +25,20 @@ function ItemForm(props: ItemFormProps) {
         control,
         index,
         errors,
+        item,
         remove,
-        images,
-        setImages,
+        setValue,
         openImageLibrary,
         openCamera,
         fieldsLength,
     } = props;
 
     function handleRemoveImage() {
-        setImages(
-            images.map((image, idx) => {
-                if (idx !== index) {
-                    return image;
-                }
-                return "";
-            }),
-        );
+        setValue(`items.${index}.imageUrl`, "");
     }
 
     function handleRemoveItem() {
         remove(index);
-        setImages((prevImages) => prevImages.splice(index, 1));
     }
 
     return (
@@ -138,10 +136,10 @@ function ItemForm(props: ItemFormProps) {
             </View>
 
             <View className="mt-2 flex flex-row flex-wrap justify-center">
-                {!!images[index] && (
+                {!!item.imageUrl && (
                     <View>
                         <Image
-                            source={{ uri: images[index] }}
+                            source={{ uri: item.imageUrl }}
                             className="h-20 w-20"
                         />
                         <TouchableOpacity
