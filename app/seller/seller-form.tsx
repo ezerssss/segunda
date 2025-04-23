@@ -7,7 +7,7 @@ import {
     ScrollView,
 } from "react-native";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { PostFormSchema, PostFormType } from "@/types/post";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,11 +16,8 @@ import { MultiSelect } from "react-native-element-dropdown";
 import ItemForm from "./item-form";
 
 function SellerFormPage() {
-    const [images, setImages] = useState<string[]>([]);
-
     const {
         control,
-        watch,
         handleSubmit,
         setValue,
         formState: { errors },
@@ -29,7 +26,9 @@ function SellerFormPage() {
         defaultValues: {
             caption: "",
             tags: [],
-            items: [{ name: "", price: 0, description: "", index: 0 }],
+            items: [
+                { name: "", price: 0, description: "", index: 0, imageUrl: "" },
+            ],
         },
     });
 
@@ -38,19 +37,8 @@ function SellerFormPage() {
         name: "items",
     });
 
-    const items = watch("items");
-
-    useEffect(() => {
-        const localImages = [...images];
-        while (items.length > localImages.length) {
-            localImages.push("");
-        }
-        setImages(localImages);
-    }, [items]);
-
     function onSubmit(data: PostFormType) {
         console.log("Form Data: ", data);
-        console.log("imgs: ", images);
     }
 
     async function openImageLibrary(index: number) {
@@ -63,9 +51,7 @@ function SellerFormPage() {
             });
 
             if (!res.canceled) {
-                const localImages = [...images];
-                localImages[index] = res.assets[0].uri;
-                setImages(localImages);
+                setValue(`items.${index}.imageUrl`, res.assets[0].uri);
             }
         } catch (error) {
             console.error(error);
@@ -81,9 +67,7 @@ function SellerFormPage() {
             });
 
             if (!res.canceled) {
-                const localImages = [...images];
-                localImages[index] = res.assets[0].uri;
-                setImages(localImages);
+                setValue(`items.${index}.imageUrl`, res.assets[0].uri);
             }
         } catch (error) {
             console.error(error);
@@ -96,6 +80,7 @@ function SellerFormPage() {
             price: 0,
             description: "",
             index: fields.length,
+            imageUrl: "",
         });
     }
 
@@ -173,9 +158,9 @@ function SellerFormPage() {
                             control={control}
                             index={index}
                             errors={errors}
+                            item={field}
                             remove={remove}
-                            images={images}
-                            setImages={setImages}
+                            setValue={setValue}
                             openImageLibrary={openImageLibrary}
                             openCamera={openCamera}
                             fieldsLength={fields.length}
