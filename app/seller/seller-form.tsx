@@ -18,6 +18,7 @@ import useUploadImage from "@/hooks/useUploadImage";
 import { createPost } from "@/firebase/functions";
 
 function SellerFormPage() {
+    const [loading, setLoading] = useState(false);
     const [images, setImages] = useState<string[]>([]);
     const { uploadImage } = useUploadImage();
 
@@ -27,6 +28,7 @@ function SellerFormPage() {
         setValue,
         formState: { errors },
         setError,
+        reset,
     } = useForm<PostFormType>({
         resolver: zodResolver(PostFormSchema),
         defaultValues: {
@@ -60,6 +62,8 @@ function SellerFormPage() {
     }, [items]);
 
     async function onSubmit(data: PostFormType) {
+        setLoading(true);
+
         let post: PostRequestType = {
             caption: data.caption,
             tags: data.tags,
@@ -91,6 +95,8 @@ function SellerFormPage() {
                     message: "Image upload failed",
                 });
                 return;
+            } finally {
+                setLoading(false);
             }
         }
 
@@ -100,6 +106,9 @@ function SellerFormPage() {
         } catch (error) {
             console.error("Post Failed:", error);
         }
+
+        reset();
+        setImages([]);
     }
 
     async function openImageLibrary(index: number) {
@@ -243,7 +252,8 @@ function SellerFormPage() {
 
                     <View className="mt-4">
                         <Button
-                            title="Post Items"
+                            disabled={loading}
+                            title={loading ? "Posting..." : "Post Items"}
                             onPress={handleSubmit(onSubmit)}
                         />
                     </View>
