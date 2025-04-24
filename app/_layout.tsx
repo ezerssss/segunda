@@ -12,7 +12,7 @@ import * as eva from "@eva-design/eva";
 import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
 import { default as theme } from "../custom-theme.json";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
-// import { default as mapping } from "../mapping.json";
+import auth from "@/firebase/auth";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,6 +29,14 @@ export default function RootLayout() {
         }
     }, [loaded]);
 
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            setUser(user);
+        });
+
+        return unsubscribe;
+    }, []);
+
     if (!loaded) {
         return null;
     }
@@ -39,7 +47,7 @@ export default function RootLayout() {
             <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
                 <UserContext.Provider value={{ user, setUser }}>
                     <StatusBar style="auto" />
-                    <SafeAreaView className="flex-1 px-4">
+                    <SafeAreaView className="flex-1 bg-white px-4">
                         <Stack screenOptions={{ headerShown: false }} />
                     </SafeAreaView>
                 </UserContext.Provider>
