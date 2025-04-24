@@ -15,7 +15,6 @@ const multiSelectStyle = StyleSheet.create({
     hashtagChip: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "#e4e6eb",
         borderRadius: 20,
         paddingHorizontal: 12,
         paddingVertical: 6,
@@ -23,14 +22,13 @@ const multiSelectStyle = StyleSheet.create({
         marginTop: 8,
     },
     hashtagText: {
-        color: "#050505",
+        color: "white",
         fontWeight: "500",
         marginRight: 6,
     },
     hashtagClose: {
-        fontWeight: "bold",
-        color: "#65676b",
-        fontSize: 16,
+        color: "white",
+        fontSize: 18,
     },
 });
 

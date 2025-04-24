@@ -10,7 +10,14 @@ import ItemForm from "./item-form";
 import useUploadImage from "@/hooks/useUploadImage";
 import { createPost } from "@/firebase/functions";
 import clsx from "clsx";
-import { Button, Input, Avatar, Text, Divider } from "@ui-kitten/components";
+import {
+    Button,
+    Input,
+    Avatar,
+    Text,
+    Divider,
+    useTheme,
+} from "@ui-kitten/components";
 import multiSelectStyle from "@/styles/multiselect";
 import { UserContext } from "@/contexts/userContext";
 
@@ -139,6 +146,7 @@ function SellerFormPage() {
     }, [fields, setValue]);
 
     const addNewItemButtonClassName = clsx({ "opacity-50": isLoading });
+    const theme = useTheme();
 
     return (
         <ScrollView className="bg-white">
@@ -212,13 +220,17 @@ function SellerFormPage() {
                                 containerStyle={
                                     multiSelectStyle.dropdownContainer
                                 }
-                                activeColor="#e7f3ff"
+                                activeColor={theme["color-primary-100"]}
                                 selectedStyle={{ display: "none" }}
                                 selectedTextStyle={{ display: "none" }}
                                 renderSelectedItem={(item, unSelect) => (
                                     <View
                                         key={item.value}
-                                        style={multiSelectStyle.hashtagChip}
+                                        style={{
+                                            ...multiSelectStyle.hashtagChip,
+                                            backgroundColor:
+                                                theme["color-primary-500"],
+                                        }}
                                     >
                                         <Text
                                             style={multiSelectStyle.hashtagText}
