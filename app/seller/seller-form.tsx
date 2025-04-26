@@ -1,4 +1,4 @@
-import { View, ScrollView, Alert, ImageBackground } from "react-native";
+import { View, ScrollView, ToastAndroid, ImageBackground } from "react-native";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { useContext, useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -26,6 +26,7 @@ function SellerFormPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [hasAddedItem, setHasAddedItem] = useState(false);
     const { uploadImage } = useUploadImage();
+    const theme = useTheme();
 
     const {
         control,
@@ -81,7 +82,7 @@ function SellerFormPage() {
 
         try {
             await createPost(post);
-            Alert.alert("Success", "Your post was created!");
+            ToastAndroid.show("Your post was shared.", ToastAndroid.SHORT);
             reset();
         } catch (error) {
             console.error("Post Failed:", error);
@@ -145,9 +146,6 @@ function SellerFormPage() {
         });
     }, [fields, setValue]);
 
-    const addNewItemButtonClassName = clsx({ "opacity-50": isLoading });
-    const theme = useTheme();
-
     return (
         <ScrollView className="bg-white">
             <View className="flex-row items-center px-0 py-4">
@@ -183,6 +181,7 @@ function SellerFormPage() {
                     name="caption"
                     render={({ field: { onChange, onBlur, value } }) => (
                         <Input
+                            disabled={isLoading}
                             placeholder="Add caption to your post..."
                             multiline
                             textStyle={{
@@ -206,6 +205,7 @@ function SellerFormPage() {
                 />
                 <View className="mb-4 px-4">
                     <Controller
+                        disabled={isLoading}
                         control={control}
                         name="tags"
                         render={({ field: { onChange, value } }) => (
@@ -253,7 +253,7 @@ function SellerFormPage() {
                         )}
                     />
                     {errors.tags && (
-                        <Text className="mt-1 text-red-500">
+                        <Text status="danger" category="c2" className="mt-1">
                             {errors.tags.message}
                         </Text>
                     )}
@@ -272,13 +272,13 @@ function SellerFormPage() {
                         openImageLibrary={openImageLibrary}
                         openCamera={openCamera}
                         fieldsLength={fields.length}
+                        isLoading={isLoading}
                     />
                 ))}
             </View>
             <View className="px-4">
                 <Button
                     disabled={isLoading}
-                    className={addNewItemButtonClassName}
                     onPress={handleAddNewItem}
                     appearance="outline"
                 >

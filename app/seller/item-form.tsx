@@ -19,6 +19,7 @@ interface ItemFormProps {
     openImageLibrary: (index: number) => Promise<void>;
     openCamera: (index: number) => Promise<void>;
     fieldsLength: number;
+    isLoading: boolean;
 }
 
 function ItemForm(props: ItemFormProps) {
@@ -32,15 +33,16 @@ function ItemForm(props: ItemFormProps) {
         openImageLibrary,
         openCamera,
         fieldsLength,
+        isLoading,
     } = props;
 
-    const handleRemoveImage = () => {
+    function handleRemoveImage() {
         setValue(`items.${index}.imageUrl`, "");
-    };
+    }
 
-    const handleRemoveItem = () => {
+    function handleRemoveItem() {
         remove(index);
-    };
+    }
 
     return (
         <View className="mb-4">
@@ -74,6 +76,7 @@ function ItemForm(props: ItemFormProps) {
 
                 <View className="mt-3 flex flex-row justify-between">
                     <Button
+                        disabled={isLoading}
                         size="small"
                         appearance="outline"
                         status="basic"
@@ -83,6 +86,7 @@ function ItemForm(props: ItemFormProps) {
                         Gallery
                     </Button>
                     <Button
+                        disabled={isLoading}
                         size="small"
                         appearance="outline"
                         status="basic"
@@ -111,6 +115,7 @@ function ItemForm(props: ItemFormProps) {
                                 field: { onChange, onBlur, value },
                             }) => (
                                 <Input
+                                    disabled={isLoading}
                                     placeholder="Enter item name"
                                     onBlur={onBlur}
                                     onChangeText={onChange}
@@ -142,6 +147,7 @@ function ItemForm(props: ItemFormProps) {
                                 field: { onChange, onBlur, value },
                             }) => (
                                 <Input
+                                    disabled={isLoading}
                                     placeholder="0.00"
                                     keyboardType="numeric"
                                     onBlur={onBlur}
@@ -167,6 +173,7 @@ function ItemForm(props: ItemFormProps) {
                 name={`items.${index}.description`}
                 render={({ field: { onChange, onBlur, value } }) => (
                     <Input
+                        disabled={isLoading}
                         placeholder="Write a description..."
                         multiline
                         textStyle={{
@@ -195,6 +202,7 @@ function ItemForm(props: ItemFormProps) {
             {fieldsLength > 1 && (
                 <View className="mt-2 px-4">
                     <Button
+                        disabled={isLoading}
                         status="danger"
                         appearance="outline"
                         onPress={handleRemoveItem}
