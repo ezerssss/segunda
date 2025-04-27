@@ -20,7 +20,7 @@ import {
 import { UserContext } from "@/contexts/userContext";
 import MultiSelectTags from "@/components/seller/multiselect-tags";
 
-function SellerFormPage() {
+export default function SellerFormPage() {
     const { user } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(false);
     const { uploadImages, progress } = useUploadImage();
@@ -231,5 +231,3 @@ function SellerFormPage() {
         </ScrollView>
     );
 }
-
-export default SellerFormPage;
