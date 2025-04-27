@@ -5,7 +5,7 @@ import { FakeImport } from "../types/bidder";
 export default function Home() {
     const router = useRouter();
 
-    console.log(FakeImport, "HELLO");
+    console.log(FakeImport);
 
     return (
         <View className="flex-1 bg-white">
