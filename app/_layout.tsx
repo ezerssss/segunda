@@ -19,6 +19,9 @@ import { default as mapping } from "../custom-mapping.json";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import auth from "@/firebase/auth";
 import { cssInterop } from "nativewind";
+import { UserDataType } from "@/types/user";
+import { doc, getDoc } from "@react-native-firebase/firestore";
+import { usersCollectionRef } from "@/constants/collections";
 
 SplashScreen.preventAutoHideAsync();
 cssInterop(Input, {
@@ -33,7 +36,9 @@ export default function RootLayout() {
         SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     });
 
-    const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+    const [user, setUser] = useState<
+        (FirebaseAuthTypes.User & UserDataType) | null
+    >(null);
 
     useEffect(() => {
         if (loaded) {
@@ -43,7 +48,21 @@ export default function RootLayout() {
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((user) => {
-            setUser(user);
+            if (user === null) {
+                setUser(null);
+                return;
+            }
+
+            (async () => {
+                try {
+                    const userDocRef = doc(usersCollectionRef, user.uid);
+                    const userDoc = await getDoc(userDocRef);
+                    const userData = userDoc.data() as UserDataType;
+                    setUser({ ...user, ...userData });
+                } catch (error) {
+                    console.error(error);
+                }
+            })();
         });
 
         return unsubscribe;
