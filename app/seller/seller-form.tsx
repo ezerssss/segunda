@@ -1,14 +1,6 @@
-import {
-    View,
-    Text,
-    TextInput,
-    Button,
-    TouchableOpacity,
-    ScrollView,
-    Alert,
-} from "react-native";
+import { View, ScrollView, ToastAndroid, ImageBackground } from "react-native";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { PostFormSchema, PostFormType, PostRequestType } from "@/types/post";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,10 +10,23 @@ import ItemForm from "./item-form";
 import useUploadImage from "@/hooks/useUploadImage";
 import { createPost } from "@/firebase/functions";
 import clsx from "clsx";
+import {
+    Button,
+    Input,
+    Avatar,
+    Text,
+    Divider,
+    useTheme,
+} from "@ui-kitten/components";
+import multiSelectStyle from "@/styles/multiselect";
+import { UserContext } from "@/contexts/userContext";
 
 function SellerFormPage() {
+    const { user } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(false);
+    const [hasAddedItem, setHasAddedItem] = useState(false);
     const { uploadImage } = useUploadImage();
+    const theme = useTheme();
 
     const {
         control,
@@ -36,9 +41,7 @@ function SellerFormPage() {
         defaultValues: {
             caption: "",
             tags: [],
-            items: [
-                { name: "", price: 0, description: "", index: 0, imageUrl: "" },
-            ],
+            items: [],
         },
     });
 
@@ -79,7 +82,7 @@ function SellerFormPage() {
 
         try {
             await createPost(post);
-            Alert.alert("Success", "Your post was created!");
+            ToastAndroid.show("Your post was shared.", ToastAndroid.SHORT);
             reset();
         } catch (error) {
             console.error("Post Failed:", error);
@@ -122,6 +125,7 @@ function SellerFormPage() {
     }
 
     function handleAddNewItem() {
+        if (!hasAddedItem) setHasAddedItem(true);
         append({
             name: "",
             price: 0,
@@ -142,102 +146,148 @@ function SellerFormPage() {
         });
     }, [fields, setValue]);
 
-    const addNewItemButtonClassName = clsx(
-        "mb-4 rounded bg-blue-500 px-4 py-2",{"opacity-50" : isLoading}
-    );
-
     return (
-        <>
-            <View className="p-4">
-                <Text className="mb-1 font-bold">Caption</Text>
+        <ScrollView className="bg-white">
+            <View className="flex-row items-center px-0 py-4">
+                <Text className="flex-1 text-lg">Create Post</Text>
+                <Button
+                    disabled={isLoading}
+                    onPress={handleSubmit(onSubmit)}
+                    size="small"
+                >
+                    POST
+                </Button>
+            </View>
+            <Divider />
+
+            {!!user && (
+                <View className="flex-row items-center gap-4 p-4">
+                    <Avatar
+                        source={{ uri: user.photoURL ?? "" }}
+                        ImageComponent={ImageBackground}
+                        size="large"
+                    />
+                    <View>
+                        <Text category="h6">{user.displayName ?? ""}</Text>
+                        <Text category="c1">
+                            {new Date().toLocaleDateString()}
+                        </Text>
+                    </View>
+                </View>
+            )}
+            <View className="space-y-14 bg-white">
                 <Controller
                     control={control}
                     name="caption"
                     render={({ field: { onChange, onBlur, value } }) => (
-                        <TextInput
-                            className="rounded-md bg-gray-300 px-3 py-1.5 text-base text-gray-900"
-                            placeholder="Enter Caption"
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                        />
-                    )}
-                />
-                {errors.caption && (
-                    <Text className="mt-1 text-red-500">
-                        {errors.caption.message}
-                    </Text>
-                )}
-                <Text className="mt-2 font-bold">Tags</Text>
-                <Controller
-                    control={control}
-                    name="tags"
-                    render={({ field: { onChange, value } }) => (
-                        <MultiSelect
-                            style={{
-                                backgroundColor: "rgb(209, 213, 219)",
-                                borderRadius: 6,
-                                padding: 8,
-                                marginTop: 4,
-                            }}
-                            selectedTextStyle={{ color: "black" }}
-                            data={tags}
-                            labelField="label"
-                            valueField="value"
-                            placeholder="Select tags"
-                            value={value}
-                            onChange={onChange}
-                            selectedStyle={{
-                                borderRadius: 12,
-                                backgroundColor: "skyblue",
-                            }}
-                            activeColor="skyblue"
-                        />
-                    )}
-                />
-                {errors.tags && (
-                    <Text className="mt-1 text-red-500">
-                        {errors.tags.message}
-                    </Text>
-                )}
-            </View>
-            <ScrollView>
-                <View className="p-4">
-                    {fields.map((field, index) => (
-                        <ItemForm
-                            key={field.id}
-                            control={control}
-                            index={index}
-                            errors={errors}
-                            item={items[index]}
-                            remove={remove}
-                            setValue={setValue}
-                            openImageLibrary={openImageLibrary}
-                            openCamera={openCamera}
-                            fieldsLength={fields.length}
-                        />
-                    ))}
-
-                    <TouchableOpacity
-                        disabled={isLoading}
-                        className={addNewItemButtonClassName}
-                        onPress={handleAddNewItem}
-                    >
-                        <Text className="text-center text-white">
-                            Add Another Item
-                        </Text>
-                    </TouchableOpacity>
-
-                    <View className="mt-4">
-                        <Button
+                        <Input
                             disabled={isLoading}
-                            title={isLoading ? "Posting..." : "Post Items"}
-                            onPress={handleSubmit(onSubmit)}
+                            placeholder="Add caption to your post..."
+                            multiline
+                            textStyle={{
+                                outline: "none",
+                                textAlignVertical: "top",
+                            }}
+                            style={{
+                                backgroundColor: "transparent",
+                                borderWidth: 0,
+                                borderColor: "transparent",
+                            }}
+                            onBlur={onBlur}
+                            onChangeText={(text) => {
+                                onChange(text);
+                            }}
+                            value={value}
+                            status={errors.caption ? "danger" : "basic"}
+                            caption={errors.caption?.message}
                         />
-                    </View>
+                    )}
+                />
+                <View className="mb-4 px-4">
+                    <Controller
+                        disabled={isLoading}
+                        control={control}
+                        name="tags"
+                        render={({ field: { onChange, value } }) => (
+                            <MultiSelect
+                                data={tags}
+                                labelField="label"
+                                valueField="value"
+                                placeholder="Select tags"
+                                value={value}
+                                onChange={onChange}
+                                style={multiSelectStyle.dropdown}
+                                containerStyle={
+                                    multiSelectStyle.dropdownContainer
+                                }
+                                activeColor={theme["color-primary-100"]}
+                                selectedStyle={{ display: "none" }}
+                                selectedTextStyle={{ display: "none" }}
+                                renderSelectedItem={(item, unSelect) => (
+                                    <View
+                                        key={item.value}
+                                        style={{
+                                            ...multiSelectStyle.hashtagChip,
+                                            backgroundColor:
+                                                theme["color-primary-500"],
+                                        }}
+                                    >
+                                        <Text
+                                            style={multiSelectStyle.hashtagText}
+                                        >
+                                            #{item.label}
+                                        </Text>
+                                        <Text
+                                            onPress={() =>
+                                                unSelect && unSelect(item)
+                                            }
+                                            style={
+                                                multiSelectStyle.hashtagClose
+                                            }
+                                        >
+                                            ×
+                                        </Text>
+                                    </View>
+                                )}
+                            />
+                        )}
+                    />
+                    {errors.tags && (
+                        <Text status="danger" category="c2" className="mt-1">
+                            {errors.tags.message}
+                        </Text>
+                    )}
                 </View>
-            </ScrollView>
-        </>
+            </View>
+            <View className={clsx(hasAddedItem ? "flex" : "none")}>
+                {fields.map((field, index) => (
+                    <ItemForm
+                        key={field.id}
+                        control={control}
+                        index={index}
+                        errors={errors}
+                        item={items[index]}
+                        remove={remove}
+                        setValue={setValue}
+                        openImageLibrary={openImageLibrary}
+                        openCamera={openCamera}
+                        fieldsLength={fields.length}
+                        isLoading={isLoading}
+                    />
+                ))}
+            </View>
+            <View className="px-4">
+                <Button
+                    disabled={isLoading}
+                    onPress={handleAddNewItem}
+                    appearance="outline"
+                >
+                    + Add an item
+                </Button>
+            </View>
+
+            <View className="h-10"></View>
+        </ScrollView>
     );
 }
 

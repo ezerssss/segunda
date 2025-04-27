@@ -5,7 +5,7 @@ export default function Home() {
     const router = useRouter();
 
     return (
-        <View className="flex-1">
+        <View className="flex-1 bg-white">
             <Text className="mb-5 text-2xl font-bold">Hello World</Text>
             <TouchableOpacity
                 className="self-baseline rounded border px-4 py-2"
