@@ -5,8 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import { PostFormSchema, PostFormType, PostRequestType } from "@/types/post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PostTagsEnum } from "@/enums/post";
-import { MultiSelect } from "react-native-element-dropdown";
-import ItemForm from "./item-form";
+import ItemForm from "@/components/seller/item-form";
 import useUploadImage from "@/hooks/useUploadImage";
 import { createPost } from "@/firebase/functions";
 import clsx from "clsx";
@@ -16,17 +15,15 @@ import {
     Avatar,
     Text,
     Divider,
-    useTheme,
+    ProgressBar,
 } from "@ui-kitten/components";
-import multiSelectStyle from "@/styles/multiselect";
 import { UserContext } from "@/contexts/userContext";
+import MultiSelectTags from "@/components/seller/multiselect-tags";
 
-function SellerFormPage() {
+export default function SellerFormPage() {
     const { user } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(false);
-    const [hasAddedItem, setHasAddedItem] = useState(false);
-    const { uploadImage } = useUploadImage();
-    const theme = useTheme();
+    const { uploadImages, progress } = useUploadImage();
 
     const {
         control,
@@ -34,7 +31,6 @@ function SellerFormPage() {
         handleSubmit,
         setValue,
         formState: { errors },
-        setError,
         reset,
     } = useForm<PostFormType>({
         resolver: zodResolver(PostFormSchema),
@@ -43,6 +39,7 @@ function SellerFormPage() {
             tags: [],
             items: [],
         },
+        disabled: isLoading,
     });
 
     const { fields, append, remove } = useFieldArray({
@@ -55,32 +52,17 @@ function SellerFormPage() {
     async function onSubmit(data: PostFormType) {
         setIsLoading(true);
 
-        let post: PostRequestType = {
-            caption: data.caption,
-            tags: data.tags,
-            items: [],
-        };
-
-        for (const itemData of data.items) {
-            let item = {
-                ...itemData,
-            };
-
-            try {
-                item.imageUrl = await uploadImage(item.imageUrl);
-                post.items.push(item);
-            } catch (error) {
-                console.error("Upload failed or returned bad URL:", error);
-                setError(`items.${item.index}.imageUrl`, {
-                    type: "manual",
-                    message: "Image upload failed",
-                });
-                setIsLoading(false);
-                return;
-            }
-        }
-
         try {
+            const uris = data.items.map((item) => item.imageUrl);
+            const urls = await uploadImages(uris);
+            const post: PostRequestType = {
+                caption: data.caption,
+                tags: data.tags,
+                items: data.items.map((item, index) => ({
+                    ...item,
+                    imageUrl: urls[index],
+                })),
+            };
             await createPost(post);
             ToastAndroid.show("Your post was shared.", ToastAndroid.SHORT);
             reset();
@@ -125,7 +107,6 @@ function SellerFormPage() {
     }
 
     function handleAddNewItem() {
-        if (!hasAddedItem) setHasAddedItem(true);
         append({
             name: "",
             price: 0,
@@ -146,22 +127,27 @@ function SellerFormPage() {
         });
     }, [fields, setValue]);
 
+    function handlePost() {
+        if (items.length < 1) {
+            handleAddNewItem();
+        }
+        handleSubmit(onSubmit)();
+    }
+
     return (
-        <ScrollView className="bg-white">
+        <ScrollView className="bg-white" showsVerticalScrollIndicator={false}>
+            {isLoading && <ProgressBar progress={progress} />}
+
             <View className="flex-row items-center px-0 py-4">
                 <Text className="flex-1 text-lg">Create Post</Text>
-                <Button
-                    disabled={isLoading}
-                    onPress={handleSubmit(onSubmit)}
-                    size="small"
-                >
+                <Button disabled={isLoading} onPress={handlePost} size="small">
                     POST
                 </Button>
             </View>
             <Divider />
 
             {!!user && (
-                <View className="flex-row items-center gap-4 p-4">
+                <View className="flex-row items-center gap-4 px-2 py-4">
                     <Avatar
                         source={{ uri: user.photoURL ?? "" }}
                         ImageComponent={ImageBackground}
@@ -175,7 +161,7 @@ function SellerFormPage() {
                     </View>
                 </View>
             )}
-            <View className="space-y-14 bg-white">
+            <View className="space-y-14 bg-white px-2">
                 <Controller
                     control={control}
                     name="caption"
@@ -184,15 +170,6 @@ function SellerFormPage() {
                             disabled={isLoading}
                             placeholder="Add caption to your post..."
                             multiline
-                            textStyle={{
-                                outline: "none",
-                                textAlignVertical: "top",
-                            }}
-                            style={{
-                                backgroundColor: "transparent",
-                                borderWidth: 0,
-                                borderColor: "transparent",
-                            }}
                             onBlur={onBlur}
                             onChangeText={(text) => {
                                 onChange(text);
@@ -200,55 +177,21 @@ function SellerFormPage() {
                             value={value}
                             status={errors.caption ? "danger" : "basic"}
                             caption={errors.caption?.message}
+                            className="border-0 bg-white"
                         />
                     )}
                 />
-                <View className="mb-4 px-4">
+                <View className="mb-4">
                     <Controller
                         disabled={isLoading}
                         control={control}
                         name="tags"
                         render={({ field: { onChange, value } }) => (
-                            <MultiSelect
-                                data={tags}
-                                labelField="label"
-                                valueField="value"
-                                placeholder="Select tags"
-                                value={value}
+                            <MultiSelectTags
+                                tags={tags}
                                 onChange={onChange}
-                                style={multiSelectStyle.dropdown}
-                                containerStyle={
-                                    multiSelectStyle.dropdownContainer
-                                }
-                                activeColor={theme["color-primary-100"]}
-                                selectedStyle={{ display: "none" }}
-                                selectedTextStyle={{ display: "none" }}
-                                renderSelectedItem={(item, unSelect) => (
-                                    <View
-                                        key={item.value}
-                                        style={{
-                                            ...multiSelectStyle.hashtagChip,
-                                            backgroundColor:
-                                                theme["color-primary-500"],
-                                        }}
-                                    >
-                                        <Text
-                                            style={multiSelectStyle.hashtagText}
-                                        >
-                                            #{item.label}
-                                        </Text>
-                                        <Text
-                                            onPress={() =>
-                                                unSelect && unSelect(item)
-                                            }
-                                            style={
-                                                multiSelectStyle.hashtagClose
-                                            }
-                                        >
-                                            ×
-                                        </Text>
-                                    </View>
-                                )}
+                                value={value}
+                                isLoading={isLoading}
                             />
                         )}
                     />
@@ -258,25 +201,23 @@ function SellerFormPage() {
                         </Text>
                     )}
                 </View>
-            </View>
-            <View className={clsx(hasAddedItem ? "flex" : "none")}>
-                {fields.map((field, index) => (
-                    <ItemForm
-                        key={field.id}
-                        control={control}
-                        index={index}
-                        errors={errors}
-                        item={items[index]}
-                        remove={remove}
-                        setValue={setValue}
-                        openImageLibrary={openImageLibrary}
-                        openCamera={openCamera}
-                        fieldsLength={fields.length}
-                        isLoading={isLoading}
-                    />
-                ))}
-            </View>
-            <View className="px-4">
+                <View className={clsx(items.length > 0 ? "flex" : "none")}>
+                    {fields.map((field, index) => (
+                        <ItemForm
+                            key={field.id}
+                            control={control}
+                            index={index}
+                            errors={errors}
+                            item={items[index]}
+                            remove={remove}
+                            setValue={setValue}
+                            openImageLibrary={openImageLibrary}
+                            openCamera={openCamera}
+                            fieldsLength={fields.length}
+                            isLoading={isLoading}
+                        />
+                    ))}
+                </View>
                 <Button
                     disabled={isLoading}
                     onPress={handleAddNewItem}
@@ -290,5 +231,3 @@ function SellerFormPage() {
         </ScrollView>
     );
 }
-
-export default SellerFormPage;

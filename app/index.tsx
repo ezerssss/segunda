@@ -15,7 +15,7 @@ export default function Home() {
             </TouchableOpacity>
             <TouchableOpacity
                 className="self-baseline rounded border px-4 py-2"
-                onPress={() => router.push("/seller/seller-form")}
+                onPress={() => router.push("/seller/form")}
             >
                 <Text>Go to Seller Form</Text>
             </TouchableOpacity>

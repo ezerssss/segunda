@@ -1,0 +1,21 @@
+{
+    "components": {
+        "Input": {
+            "meta": {
+                "parameters": {},
+                "variantGroups": {},
+                "states": {},
+                "appearances": {},
+                "scope": "all"
+            },
+            "appearances": {
+                "default": {
+                    "mapping": {
+                        "paddingHorizontal": 0,
+                        "textMarginHorizontal": 0
+                    }
+                }
+            }
+        }
+    }
+}

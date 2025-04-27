@@ -2,7 +2,7 @@ import { z } from "zod";
 import { CampusEnum } from "../enums/campus";
 import { BidTypeEnum } from "../enums/bid";
 
-export const BidderSchema = z.object({
+export const BidSchema = z.object({
     id: z.string().min(1),
     userId: z.string().min(1),
     itemId: z.string().min(1),
@@ -18,4 +18,10 @@ export const BidderSchema = z.object({
     isConfirmed: z.boolean(),
     dateCreated: z.string().datetime(),
 });
-export type BidderType = z.infer<typeof BidderSchema>;
+export type BidType = z.infer<typeof BidSchema>;
+
+export const BidRequestSchema = z.object({
+    itemId: z.string().min(1),
+    price: z.number().nonnegative(),
+});
+export type BidRequestType = z.infer<typeof BidRequestSchema>;
