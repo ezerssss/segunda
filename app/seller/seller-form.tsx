@@ -5,8 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import { PostFormSchema, PostFormType, PostRequestType } from "@/types/post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PostTagsEnum } from "@/enums/post";
-import { MultiSelect } from "react-native-element-dropdown";
-import ItemForm from "./item-form";
+import ItemForm from "@/components/seller-form/item-form";
 import useUploadImage from "@/hooks/useUploadImage";
 import { createPost } from "@/firebase/functions";
 import clsx from "clsx";
@@ -17,16 +16,14 @@ import {
     Text,
     Divider,
     ProgressBar,
-    useTheme,
 } from "@ui-kitten/components";
-import multiSelectStyle from "@/styles/multiselect";
 import { UserContext } from "@/contexts/userContext";
+import MultiSelectTags from "@/components/seller-form/multiselect";
 
 function SellerFormPage() {
     const { user } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(false);
     const { uploadImages, progress } = useUploadImage();
-    const theme = useTheme();
 
     const {
         control,
@@ -42,6 +39,7 @@ function SellerFormPage() {
             tags: [],
             items: [],
         },
+        disabled: isLoading,
     });
 
     const { fields, append, remove } = useFieldArray({
@@ -189,46 +187,11 @@ function SellerFormPage() {
                         control={control}
                         name="tags"
                         render={({ field: { onChange, value } }) => (
-                            <MultiSelect
-                                data={tags}
-                                labelField="label"
-                                valueField="value"
-                                placeholder="Select tags"
-                                value={value}
+                            <MultiSelectTags
+                                tags={tags}
                                 onChange={onChange}
-                                style={multiSelectStyle.dropdown}
-                                containerStyle={
-                                    multiSelectStyle.dropdownContainer
-                                }
-                                activeColor={theme["color-primary-100"]}
-                                selectedStyle={{ display: "none" }}
-                                selectedTextStyle={{ display: "none" }}
-                                renderSelectedItem={(item, unSelect) => (
-                                    <View
-                                        key={item.value}
-                                        style={{
-                                            ...multiSelectStyle.hashtagChip,
-                                            backgroundColor:
-                                                theme["color-primary-500"],
-                                        }}
-                                    >
-                                        <Text
-                                            style={multiSelectStyle.hashtagText}
-                                        >
-                                            #{item.label}
-                                        </Text>
-                                        <Text
-                                            onPress={() =>
-                                                unSelect && unSelect(item)
-                                            }
-                                            style={
-                                                multiSelectStyle.hashtagClose
-                                            }
-                                        >
-                                            ×
-                                        </Text>
-                                    </View>
-                                )}
+                                value={value}
+                                isLoading={isLoading}
                             />
                         )}
                     />
