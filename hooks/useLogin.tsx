@@ -1,6 +1,5 @@
-import { useEffect, useState, useContext } from "react";
+import { useState } from "react";
 import { useRouter } from "expo-router";
-import { UserContext } from "@/contexts/userContext";
 
 import {
     GoogleSignin,
@@ -22,16 +21,7 @@ function useLogin() {
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
     const [isInternalError, setIsInternalError] = useState(false);
-    const { setUser } = useContext(UserContext);
     const router = useRouter();
-
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((user) => {
-            setUser(user);
-        });
-
-        return unsubscribe;
-    }, []);
 
     async function handleShowError() {
         setIsError(true);
