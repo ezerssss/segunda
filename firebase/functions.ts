@@ -3,6 +3,7 @@ import app from ".";
 import { SetUpUserRequestType } from "@/types/user";
 import { GenericResponseMessage } from "@/types/response";
 import { PostRequestType } from "@/types/post";
+import { BidRequestType } from "@/types/bidder";
 
 const functions = getFunctions(app, "asia-southeast1");
 export const setUpUser = httpsCallable<
@@ -14,3 +15,8 @@ export const createPost = httpsCallable<
     PostRequestType,
     GenericResponseMessage
 >(functions, "createPost");
+
+export const bidItem = httpsCallable<BidRequestType, GenericResponseMessage>(
+    functions,
+    "bidItem",
+);
