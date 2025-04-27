@@ -19,6 +19,7 @@ import {
 } from "@ui-kitten/components";
 import { UserContext } from "@/contexts/userContext";
 import MultiSelectTags from "@/components/seller/multiselect-tags";
+import { ITEM_IMAGES_FOLDER } from "@/constants/storage";
 
 export default function SellerFormPage() {
     const { user } = useContext(UserContext);
@@ -54,7 +55,7 @@ export default function SellerFormPage() {
 
         try {
             const uris = data.items.map((item) => item.imageUrl);
-            const urls = await uploadImages(uris);
+            const urls = await uploadImages(uris, ITEM_IMAGES_FOLDER);
             const post: PostRequestType = {
                 caption: data.caption,
                 tags: data.tags,

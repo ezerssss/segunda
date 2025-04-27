@@ -13,7 +13,10 @@ export function useUploadImage() {
     const { user } = useContext(UserContext);
     const [progress, setProgress] = useState(0);
 
-    async function uploadImages(imageUris: string[]): Promise<string[]> {
+    async function uploadImages(
+        imageUris: string[],
+        imageFolder: string,
+    ): Promise<string[]> {
         if (!user) throw new Error("User not authenticated");
 
         const storage = getStorage(app);
@@ -22,7 +25,7 @@ export function useUploadImage() {
         const uploadPromises = imageUris.map(async (uri, index) => {
             try {
                 const fileName = `${uuid.v4()}`;
-                const path = `users/${user.uid}/itemImages/${fileName}`;
+                const path = `users/${user.uid}/${imageFolder}/${fileName}`;
                 const reference = ref(storage, path);
 
                 const uploadTask = reference.putFile(uri);

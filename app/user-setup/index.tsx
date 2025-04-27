@@ -19,6 +19,7 @@ import {
     Image,
 } from "react-native";
 import { Divider } from "@ui-kitten/components";
+import { AVATAR_IMAGES_FOLDER } from "@/constants/storage";
 
 function UserSetupPage() {
     const { user } = useContext(UserContext);
@@ -91,7 +92,7 @@ function UserSetupPage() {
     async function handleSetupUser(data: SetUpUserRequestType) {
         setIsLoading(true);
         try {
-            await uploadImages([imageURI]);
+            await uploadImages([imageURI], AVATAR_IMAGES_FOLDER);
             await setUpUser(data);
             router.back();
         } catch (error) {
