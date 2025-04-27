@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { BidderSchema } from "./bidder";
+import { BidSchema } from "./bidder";
 
 export const ItemSchema = z.object({
     id: z.string().min(1),
@@ -17,8 +17,8 @@ export const ItemSchema = z.object({
         .trim()
         .max(500, { message: "Description can only be 500 letters long." }),
     imageUrl: z.string().url(),
-    miner: BidderSchema.nullable(),
-    confirmedBidder: BidderSchema.nullable(),
+    miner: BidSchema.nullable(),
+    confirmedBidder: BidSchema.nullable(),
     dateCreated: z.string().datetime(),
     dateUpdated: z.string().datetime(),
     isDeleted: z.boolean(),
