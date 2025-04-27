@@ -1,11 +1,8 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { FakeImport } from "../types/bidder";
 
 export default function Home() {
     const router = useRouter();
-
-    console.log(FakeImport, "TEST1");
 
     return (
         <View className="flex-1 bg-white">
