@@ -5,7 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import { PostFormSchema, PostFormType, PostRequestType } from "@/types/post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PostTagsEnum } from "@/enums/post";
-import ItemForm from "@/components/seller-form/item-form";
+import ItemForm from "@/components/seller/item-form";
 import useUploadImage from "@/hooks/useUploadImage";
 import { createPost } from "@/firebase/functions";
 import clsx from "clsx";
@@ -18,7 +18,7 @@ import {
     ProgressBar,
 } from "@ui-kitten/components";
 import { UserContext } from "@/contexts/userContext";
-import MultiSelectTags from "@/components/seller-form/multiselect";
+import MultiSelectTags from "@/components/seller/multiselect-tags";
 
 function SellerFormPage() {
     const { user } = useContext(UserContext);
