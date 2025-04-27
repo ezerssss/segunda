@@ -16,6 +16,7 @@ import {
     Avatar,
     Text,
     Divider,
+    ProgressBar,
     useTheme,
 } from "@ui-kitten/components";
 import multiSelectStyle from "@/styles/multiselect";
@@ -24,7 +25,7 @@ import { UserContext } from "@/contexts/userContext";
 function SellerFormPage() {
     const { user } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(false);
-    const { uploadImage } = useUploadImage();
+    const { uploadImages, progress } = useUploadImage();
     const theme = useTheme();
 
     const {
@@ -33,7 +34,6 @@ function SellerFormPage() {
         handleSubmit,
         setValue,
         formState: { errors },
-        setError,
         reset,
     } = useForm<PostFormType>({
         resolver: zodResolver(PostFormSchema),
@@ -54,32 +54,17 @@ function SellerFormPage() {
     async function onSubmit(data: PostFormType) {
         setIsLoading(true);
 
-        let post: PostRequestType = {
-            caption: data.caption,
-            tags: data.tags,
-            items: [],
-        };
-
-        for (const itemData of data.items) {
-            let item = {
-                ...itemData,
-            };
-
-            try {
-                item.imageUrl = await uploadImage(item.imageUrl);
-                post.items.push(item);
-            } catch (error) {
-                console.error("Upload failed or returned bad URL:", error);
-                setError(`items.${item.index}.imageUrl`, {
-                    type: "manual",
-                    message: "Image upload failed",
-                });
-                setIsLoading(false);
-                return;
-            }
-        }
-
         try {
+            const uris = data.items.map((item) => item.imageUrl);
+            const urls = await uploadImages(uris);
+            const post: PostRequestType = {
+                caption: data.caption,
+                tags: data.tags,
+                items: data.items.map((item, index) => ({
+                    ...item,
+                    imageUrl: urls[index],
+                })),
+            };
             await createPost(post);
             ToastAndroid.show("Your post was shared.", ToastAndroid.SHORT);
             reset();
@@ -153,6 +138,8 @@ function SellerFormPage() {
 
     return (
         <ScrollView className="bg-white" showsVerticalScrollIndicator={false}>
+            {isLoading && <ProgressBar progress={progress} />}
+
             <View className="flex-row items-center px-0 py-4">
                 <Text className="flex-1 text-lg">Create Post</Text>
                 <Button disabled={isLoading} onPress={handlePost} size="small">
