@@ -24,7 +24,6 @@ import { UserContext } from "@/contexts/userContext";
 function SellerFormPage() {
     const { user } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(false);
-    const [hasAddedItem, setHasAddedItem] = useState(false);
     const { uploadImage } = useUploadImage();
     const theme = useTheme();
 
@@ -125,7 +124,6 @@ function SellerFormPage() {
     }
 
     function handleAddNewItem() {
-        if (!hasAddedItem) setHasAddedItem(true);
         append({
             name: "",
             price: 0,
@@ -146,22 +144,25 @@ function SellerFormPage() {
         });
     }, [fields, setValue]);
 
+    function handlePost() {
+        if (items.length < 1) {
+            handleAddNewItem();
+        }
+        handleSubmit(onSubmit)();
+    }
+
     return (
-        <ScrollView className="bg-white">
+        <ScrollView className="bg-white" showsVerticalScrollIndicator={false}>
             <View className="flex-row items-center px-0 py-4">
                 <Text className="flex-1 text-lg">Create Post</Text>
-                <Button
-                    disabled={isLoading}
-                    onPress={handleSubmit(onSubmit)}
-                    size="small"
-                >
+                <Button disabled={isLoading} onPress={handlePost} size="small">
                     POST
                 </Button>
             </View>
             <Divider />
 
             {!!user && (
-                <View className="flex-row items-center gap-4 p-4">
+                <View className="flex-row items-center gap-4 px-2 py-4">
                     <Avatar
                         source={{ uri: user.photoURL ?? "" }}
                         ImageComponent={ImageBackground}
@@ -175,7 +176,7 @@ function SellerFormPage() {
                     </View>
                 </View>
             )}
-            <View className="space-y-14 bg-white">
+            <View className="space-y-14 bg-white px-2">
                 <Controller
                     control={control}
                     name="caption"
@@ -184,15 +185,6 @@ function SellerFormPage() {
                             disabled={isLoading}
                             placeholder="Add caption to your post..."
                             multiline
-                            textStyle={{
-                                outline: "none",
-                                textAlignVertical: "top",
-                            }}
-                            style={{
-                                backgroundColor: "transparent",
-                                borderWidth: 0,
-                                borderColor: "transparent",
-                            }}
                             onBlur={onBlur}
                             onChangeText={(text) => {
                                 onChange(text);
@@ -200,10 +192,11 @@ function SellerFormPage() {
                             value={value}
                             status={errors.caption ? "danger" : "basic"}
                             caption={errors.caption?.message}
+                            className="border-0 bg-white"
                         />
                     )}
                 />
-                <View className="mb-4 px-4">
+                <View className="mb-4">
                     <Controller
                         disabled={isLoading}
                         control={control}
@@ -258,25 +251,23 @@ function SellerFormPage() {
                         </Text>
                     )}
                 </View>
-            </View>
-            <View className={clsx(hasAddedItem ? "flex" : "none")}>
-                {fields.map((field, index) => (
-                    <ItemForm
-                        key={field.id}
-                        control={control}
-                        index={index}
-                        errors={errors}
-                        item={items[index]}
-                        remove={remove}
-                        setValue={setValue}
-                        openImageLibrary={openImageLibrary}
-                        openCamera={openCamera}
-                        fieldsLength={fields.length}
-                        isLoading={isLoading}
-                    />
-                ))}
-            </View>
-            <View className="px-4">
+                <View className={clsx(items.length > 0 ? "flex" : "none")}>
+                    {fields.map((field, index) => (
+                        <ItemForm
+                            key={field.id}
+                            control={control}
+                            index={index}
+                            errors={errors}
+                            item={items[index]}
+                            remove={remove}
+                            setValue={setValue}
+                            openImageLibrary={openImageLibrary}
+                            openCamera={openCamera}
+                            fieldsLength={fields.length}
+                            isLoading={isLoading}
+                        />
+                    ))}
+                </View>
                 <Button
                     disabled={isLoading}
                     onPress={handleAddNewItem}
