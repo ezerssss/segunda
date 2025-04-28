@@ -1,8 +1,7 @@
-import { Button, MenuItem, OverflowMenu } from "@ui-kitten/components";
-import Feather from "@expo/vector-icons/Feather";
 import { useState } from "react";
 
-import { Text } from "react-native";
+import { Button, MenuItem, OverflowMenu, Text } from "@ui-kitten/components";
+import Feather from "@expo/vector-icons/Feather";
 
 interface AvatarOptionProps {
     openImageLibrary: () => Promise<void>;

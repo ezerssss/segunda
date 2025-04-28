@@ -10,12 +10,12 @@ import { CampusEnum } from "@/enums/campus";
 import useUploadImage from "@/hooks/useUploadImage";
 import { useRouter } from "expo-router";
 import { AVATAR_IMAGES_FOLDER } from "@/constants/storage";
+import { STARTS_WITH_HTTPS } from "@/constants/regex";
 
-import { View, Text, ActivityIndicator, Image } from "react-native";
-import { Button, Divider, Input } from "@ui-kitten/components";
+import { View, ActivityIndicator, Image } from "react-native";
+import { Button, Divider, Input, Text } from "@ui-kitten/components";
 import AvatarOptions from "../../components/user/avatar-options";
 import CampusSelectionButtons from "../../components/user/campus-buttons";
-import { STARTS_WITH_HTTPS } from "@/constants/regex";
 
 function UserSetupPage() {
     const { user } = useContext(UserContext);
@@ -107,11 +107,9 @@ function UserSetupPage() {
 
     return (
         <View className="flex-1 bg-white">
-            <View className="flex-row justify-start">
-                <Text className="my-4 text-lg font-semibold">Setup User </Text>
-                <Text className="my-4 text-lg color-gray-400">
-                    (Step 1 out of 1)
-                </Text>
+            <View className="my-4 flex-row items-center justify-start">
+                <Text category="h6">Setup User </Text>
+                <Text appearance="hint">(Step 1 out of 1)</Text>
             </View>
             <Divider />
             <View className="my-5 flex items-center">
@@ -135,7 +133,7 @@ function UserSetupPage() {
             </View>
 
             <View className="mt-5">
-                <Text className="my-2 text-xl font-extrabold">
+                <Text category="h6" className="my-2">
                     Display name
                 </Text>
                 <Controller
@@ -154,11 +152,9 @@ function UserSetupPage() {
                     )}
                 />
             </View>
-            <View className="mb-2 mt-4 flex-row justify-start">
-                <Text className="text-xl font-extrabold">Campus </Text>
-                <Text className="text-xl color-gray-400">
-                    (preferred location)
-                </Text>
+            <View className="mb-2 mt-4 flex-row items-center justify-start">
+                <Text category="h6">Campus </Text>
+                <Text appearance="hint">(preferred location)</Text>
             </View>
             <View>
                 <CampusSelectionButtons
@@ -169,19 +165,20 @@ function UserSetupPage() {
             </View>
 
             <View className="mt-16 h-12 w-full justify-center">
-                {isLoading ? (
-                    <ActivityIndicator
-                        className="w-full color-blue-400"
-                        color="#60a5fa"
-                    />
-                ) : (
-                    <Button
-                        onPress={handleSubmit(handleSetupUser)}
-                        disabled={isLoading}
-                    >
-                        Proceed
-                    </Button>
-                )}
+                <Button
+                    onPress={
+                        isLoading ? undefined : handleSubmit(handleSetupUser)
+                    }
+                >
+                    {isLoading ? (
+                        <ActivityIndicator
+                            className="w-full color-blue-400"
+                            color="#60a5fa"
+                        />
+                    ) : (
+                        <Text>Proceed</Text>
+                    )}
+                </Button>
             </View>
         </View>
     );
