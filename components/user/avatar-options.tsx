@@ -15,18 +15,20 @@ function AvatarOptions(props: Readonly<AvatarOptionProps>) {
     const [visible, setVisible] = useState(false);
     const { openCamera, openImageLibrary, handleRemovePhoto, isLoading } =
         props;
-    const toggleOptionsButtone = () => (
-        <Button
-            onPress={handleSetVisible}
-            disabled={isLoading}
-            status="basic"
-            style={{ paddingHorizontal: 0, paddingVertical: 0 }}
-        >
-            <Text>
-                <Feather name="edit" size={16} color="black" /> Edit
-            </Text>
-        </Button>
-    );
+    function toggleOptionsButton() {
+        return (
+            <Button
+                onPress={handleSetVisible}
+                disabled={isLoading}
+                status="basic"
+                style={{ paddingHorizontal: 0, paddingVertical: 0 }}
+            >
+                <Text>
+                    <Feather name="edit" size={16} color="black" /> Edit
+                </Text>
+            </Button>
+        );
+    }
 
     function handleSetInvisible() {
         setVisible(false);
@@ -44,7 +46,7 @@ function AvatarOptions(props: Readonly<AvatarOptionProps>) {
         !isLoading && (
             <OverflowMenu
                 visible={visible}
-                anchor={toggleOptionsButtone}
+                anchor={toggleOptionsButton}
                 onBackdropPress={handleSetInvisible}
             >
                 <MenuItem

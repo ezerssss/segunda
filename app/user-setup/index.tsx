@@ -15,6 +15,7 @@ import { View, Text, ActivityIndicator, Image } from "react-native";
 import { Button, Divider, Input } from "@ui-kitten/components";
 import AvatarOptions from "../../components/user/avatar-options";
 import CampusSelectionButtons from "../../components/user/campus-buttons";
+import { STARTS_WITH_HTTPS } from "@/constants/regex";
 
 function UserSetupPage() {
     const { user } = useContext(UserContext);
@@ -35,6 +36,7 @@ function UserSetupPage() {
             imageUrl: user?.photoURL,
             campus: CampusEnum.Values["Miagao Campus"],
         },
+        disabled: isLoading,
     });
     const campusSelected = watch("campus");
     const imageURI = watch("imageUrl");
@@ -89,12 +91,12 @@ function UserSetupPage() {
     async function handleSetupUser(data: SetUpUserRequestType) {
         setIsLoading(true);
         try {
-            await uploadImages([imageURI ?? ""], AVATAR_IMAGES_FOLDER).then(
-                async (value) => {
-                    data.imageUrl = value[0];
-                    await setUpUser(data);
-                },
-            );
+            if (data.imageUrl && !STARTS_WITH_HTTPS.test(data.imageUrl)) {
+                data.imageUrl = (
+                    await uploadImages([imageURI ?? ""], AVATAR_IMAGES_FOLDER)
+                )[0];
+            }
+            await setUpUser(data);
             router.back();
         } catch (error) {
             console.error("Setup Failed:", error);
@@ -144,26 +146,19 @@ function UserSetupPage() {
                             placeholder="Enter Display Name"
                             onChangeText={onChange}
                             value={value}
-                            textStyle={{
-                                marginHorizontal: 10,
-                            }}
+                            textClassName="mx-4"
                             disabled={isLoading}
+                            status={errors.name ? "danger" : "basic"}
+                            caption={errors.name?.message}
                         />
                     )}
                 />
-                {errors.name && (
-                    <Text className="mt-1 text-red-500">
-                        {errors.name.message}
-                    </Text>
-                )}
             </View>
-            <View className="flex-col">
-                <View className="mb-2 mt-4 flex-row justify-start">
-                    <Text className="text-xl font-extrabold">Campus </Text>
-                    <Text className="text-xl color-gray-400">
-                        (preferred location)
-                    </Text>
-                </View>
+            <View className="mb-2 mt-4 flex-row justify-start">
+                <Text className="text-xl font-extrabold">Campus </Text>
+                <Text className="text-xl color-gray-400">
+                    (preferred location)
+                </Text>
             </View>
             <View>
                 <CampusSelectionButtons
@@ -184,12 +179,7 @@ function UserSetupPage() {
                         onPress={handleSubmit(handleSetupUser)}
                         disabled={isLoading}
                     >
-                        <Text
-                            className="text-center text-xl font-bold color-white"
-                            style={{ textAlignVertical: "center" }}
-                        >
-                            Proceed
-                        </Text>
+                        Proceed
                     </Button>
                 )}
             </View>

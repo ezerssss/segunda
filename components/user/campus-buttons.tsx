@@ -1,5 +1,6 @@
 import { CampusEnum } from "@/enums/campus";
 import { Button } from "@ui-kitten/components";
+import clsx from "clsx";
 
 interface CampusSelectionButtonsProps {
     campusSelected: string;
@@ -13,12 +14,12 @@ function CampusSelectionButtons(props: CampusSelectionButtonsProps) {
         return (
             <Button
                 key={campus}
-                className="-lg my-1 grow px-2 py-3"
+                className={clsx(
+                    "my-1 grow px-2 py-3",
+                    campus !== campusSelected && "border-dashed",
+                )}
                 disabled={isLoading}
                 appearance={campus === campusSelected ? "filled" : "outline"}
-                style={
-                    campus === campusSelected ? {} : { borderStyle: "dashed" }
-                }
                 onPress={() => handleSetCampus(campus)}
             >
                 {campus}
