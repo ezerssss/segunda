@@ -17,6 +17,7 @@ export const UserDataSchema = z.object({
 export type UserDataType = z.infer<typeof UserDataSchema>;
 
 export const SetUpUserRequestSchema = UserDataSchema.omit({
+    email: true,
     id: true,
     dateCreated: true,
     dateUpdated: true,

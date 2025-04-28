@@ -19,6 +19,12 @@ export default function Home() {
             >
                 <Text>Go to Seller Form</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+                className="self-baseline rounded border px-4 py-2"
+                onPress={() => router.push("/user-setup")}
+            >
+                <Text>Go to User Setup Page</Text>
+            </TouchableOpacity>
         </View>
     );
 }
