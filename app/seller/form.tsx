@@ -150,12 +150,12 @@ export default function SellerFormPage() {
             {!!user && (
                 <View className="flex-row items-center gap-4 px-2 py-4">
                     <Avatar
-                        source={{ uri: user.photoURL ?? "" }}
+                        source={{ uri: user.imageUrl ?? "" }}
                         ImageComponent={ImageBackground}
                         size="large"
                     />
                     <View>
-                        <Text category="h6">{user.displayName ?? ""}</Text>
+                        <Text category="h6">{user.name ?? ""}</Text>
                         <Text category="c1">
                             {new Date().toLocaleDateString()}
                         </Text>
