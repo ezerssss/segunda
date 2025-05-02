@@ -65,6 +65,7 @@
         "react-dom": "18.3.1",
         "react-hook-form": "^7.56.0",
         "react-native": "0.76.9",
+        "react-native-actions-sheet": "^0.9.7",
         "react-native-animatable": "^1.4.0",
         "react-native-dropdown-picker": "^5.4.6",
         "react-native-element-dropdown": "^2.12.4",

@@ -1,4 +1,4 @@
-import { View, ScrollView, ToastAndroid, ImageBackground } from "react-native";
+import { View, ScrollView, ToastAndroid } from "react-native";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { useContext, useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -12,7 +12,6 @@ import clsx from "clsx";
 import {
     Button,
     Input,
-    Avatar,
     Text,
     Divider,
     ProgressBar,
@@ -20,6 +19,7 @@ import {
 import { UserContext } from "@/contexts/userContext";
 import MultiSelectTags from "@/components/seller/multiselect-tags";
 import { ITEM_IMAGES_FOLDER } from "@/constants/storage";
+import UserHeader from "@/components/user/user-header";
 
 export default function SellerFormPage() {
     const { user } = useContext(UserContext);
@@ -148,19 +148,7 @@ export default function SellerFormPage() {
             <Divider />
 
             {!!user && (
-                <View className="flex-row items-center gap-4 px-2 py-4">
-                    <Avatar
-                        source={{ uri: user.photoURL ?? "" }}
-                        ImageComponent={ImageBackground}
-                        size="large"
-                    />
-                    <View>
-                        <Text category="h6">{user.displayName ?? ""}</Text>
-                        <Text category="c1">
-                            {new Date().toLocaleDateString()}
-                        </Text>
-                    </View>
-                </View>
+                <UserHeader name={user?.name} imageUrl={user?.imageUrl} />
             )}
             <View className="space-y-14 bg-white px-2">
                 <Controller

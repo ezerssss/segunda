@@ -32,8 +32,8 @@ function UserSetupPage() {
     } = useForm<SetUpUserRequestType>({
         resolver: zodResolver(SetUpUserRequestSchema),
         defaultValues: {
-            name: user?.displayName ?? "",
-            imageUrl: user?.photoURL,
+            name: user?.name ?? "",
+            imageUrl: user?.imageUrl,
             campus: CampusEnum.Values["Miagao Campus"],
         },
         disabled: isLoading,
