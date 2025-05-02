@@ -31,7 +31,7 @@ export default function BrowsePostsPage() {
     const [itemUnsubscribers, setItemUnsubscribers] = useState<(() => void)[]>(
         [],
     );
-    const pageSize = 5;
+    const pageSize = 10;
 
     useEffect(() => {
         setLoading(true);
