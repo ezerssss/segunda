@@ -17,6 +17,7 @@ import { UserDataType } from "@/types/user";
 import { ItemType } from "@/types/item";
 import PostContent from "@/components/browse-posts/post-content";
 import PostHeader from "@/components/browse-posts/post-header";
+import PostDivider from "@/components/browse-posts/post-divider";
 
 export default function BrowsePostsPage() {
     const [posts, setPosts] = useState<PostType[]>([]);
@@ -76,7 +77,7 @@ export default function BrowsePostsPage() {
                 setLoading(false);
             },
             (error) => {
-                console.error("Error listening to posts: ", error);
+                console.error(error);
                 setLoading(false);
             },
         );
@@ -129,7 +130,7 @@ export default function BrowsePostsPage() {
                 await fetchItemsForPosts(fetchedPosts.map((post) => post.id));
             }
         } catch (error) {
-            console.error("Error fetching more posts: ", error);
+            console.error(error);
         } finally {
             setLoading(false);
         }
@@ -173,13 +174,13 @@ export default function BrowsePostsPage() {
                     setItemsByPost((prev) => ({ ...prev, ...newItemsByPost }));
                 },
                 (error) => {
-                    console.error("Error listening to items: ", error);
+                    console.error(error);
                 },
             );
 
             setItemUnsubscribers((prev) => [...prev, unsubscribeItems]);
         } catch (error) {
-            console.error("Error setting up items listener: ", error);
+            console.error(error);
         }
     }
 
@@ -196,7 +197,7 @@ export default function BrowsePostsPage() {
                 setUsers(fetchedUsers);
             },
             (error) => {
-                console.error("Error listening to users: ", error);
+                console.error(error);
             },
         );
 
@@ -218,24 +219,33 @@ export default function BrowsePostsPage() {
         [],
     );
 
-    function renderItem({ item: post }: { item: PostType }) {
+    interface RenderItemProps {
+        item: PostType;
+        index: number;
+    }
+
+    function renderItem(props: RenderItemProps) {
+        const { item: post, index } = props;
         const postUser = getUserById(post.userId);
         const postItems = itemsByPost[post.id] || [];
         const isVisible = visiblePostIds.includes(post.id);
 
         return (
-            <View className="mb-5 flex flex-col px-2">
-                <PostHeader
-                    postId={post.id}
-                    userName={postUser?.name}
-                    userImageUrl={postUser?.imageUrl ?? ""}
-                />
-                <PostContent
-                    post={post}
-                    postItems={postItems}
-                    isVisible={isVisible}
-                />
-            </View>
+            <>
+                <View className="mb-5 flex flex-col">
+                    <PostHeader
+                        postId={post.id}
+                        userName={postUser?.name}
+                        userImageUrl={postUser?.imageUrl ?? ""}
+                    />
+                    <PostContent
+                        post={post}
+                        postItems={postItems}
+                        isVisible={isVisible}
+                    />
+                </View>
+                {index < posts.length - 1 && <PostDivider />}
+            </>
         );
     }
 
@@ -272,9 +282,9 @@ export default function BrowsePostsPage() {
             windowSize={10}
             maxToRenderPerBatch={10}
             initialNumToRender={3}
-            removeClippedSubviews={true}
+            removeClippedSubviews={false}
             ListFooterComponent={renderFooter}
-            contentContainerClassName="bg-white p-2"
+            contentContainerClassName="bg-white"
         />
     );
 }

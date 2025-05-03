@@ -8,17 +8,17 @@ interface PostHeartsProps {
 function PostHearts(props: PostHeartsProps) {
     const { hearts = 0 } = props;
     return (
-        <View className="mt-2 flex">
-            <TouchableOpacity className="flex-row justify-center">
+        <View className="mt-2 flex flex-row justify-center py-2">
+            <TouchableOpacity>
                 <Icon name="heart-outline" pack="eva" width={20} height={20} />
-                <Text
-                    appearance="hint"
-                    category="s1"
-                    style={{ marginLeft: 8, color: "black" }}
-                >
-                    {hearts} hearts
-                </Text>
             </TouchableOpacity>
+            <Text
+                appearance="hint"
+                category="s1"
+                style={{ marginLeft: 8, color: "black" }}
+            >
+                {hearts} hearts
+            </Text>
         </View>
     );
 }

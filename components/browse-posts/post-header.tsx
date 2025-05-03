@@ -23,7 +23,7 @@ function PostHeader(props: PostHeaderProps) {
 
     return (
         <>
-            <View className="flex-row justify-between">
+            <View className="w-full flex-row justify-between px-3 py-2">
                 <UserHeader
                     key={postId}
                     name={userName}
@@ -31,7 +31,7 @@ function PostHeader(props: PostHeaderProps) {
                 />
                 <Text
                     style={{
-                        marginRight: 15,
+                        marginRight: 3,
                         fontWeight: "bold",
                         fontSize: 20,
                         marginTop: 10,

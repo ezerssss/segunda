@@ -14,7 +14,7 @@ interface PostContentProps {
 
 function PostContent({ post, postItems, isVisible }: PostContentProps) {
     return (
-        <View>
+        <View className="w-full px-2">
             <PostCaptions caption={post?.caption} />
             <PostTags tags={post.tags} />
             <PostItemImages postItems={postItems} isVisible={isVisible} />
