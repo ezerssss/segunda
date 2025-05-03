@@ -4,7 +4,6 @@ import { Button, Icon, Text, useTheme } from "@ui-kitten/components";
 import { TruncatedText } from "../truncated-text";
 import clsx from "clsx";
 import { useRouter } from "expo-router";
-import { BidType } from "@/types/bidder";
 
 interface ItemCardInterface {
     name: string;
@@ -12,16 +11,15 @@ interface ItemCardInterface {
     description: string;
     imageUrl: string;
     index: number;
-    confirmedBidder: BidType;
 }
 
 export default function ItemCard(props: ItemCardInterface) {
-    const { name, price, description, imageUrl, index, confirmedBidder } =
-        props;
+    const { name, price, description, imageUrl, index } = props;
     const [isMined, setIsMined] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
     const theme = useTheme();
     const router = useRouter();
+    const confirmed = false; // placeholder for confirmedBidder
 
     function clickedMined() {
         setIsMined(!isMined);
@@ -56,16 +54,12 @@ export default function ItemCard(props: ItemCardInterface) {
                             "m-0 p-0",
                             isExpanded
                                 ? "w-1/2"
-                                : confirmedBidder
+                                : confirmed
                                   ? "w-1/3"
                                   : "w-1/4",
                         )}
                     >
-                        {confirmedBidder && (
-                            <Text category="h6">
-                                Sold to: {confirmedBidder.name}
-                            </Text>
-                        )}
+                        {confirmed && <Text category="h6">Sold to: name</Text>}
                         <Text category="h6">PHP{price}</Text>
                         <Text category="s1">{name}</Text>
                         {!!description && (
@@ -82,7 +76,7 @@ export default function ItemCard(props: ItemCardInterface) {
                             isExpanded ? "flex-col" : "flex-row",
                         )}
                     >
-                        {!confirmedBidder && (
+                        {!confirmed && (
                             <Button
                                 onPress={clickedMined}
                                 style={{

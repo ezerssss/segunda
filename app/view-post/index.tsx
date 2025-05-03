@@ -5,6 +5,7 @@ import { ItemType } from "@/types/item";
 import { ScrollView } from "react-native";
 import ItemCard from "../../components/view-post/item-card";
 import { usePostContext } from "@/contexts/postContext";
+import { Text } from "@ui-kitten/components";
 
 export default function ViewPostPage() {
     const { postItems, setPostItems } = usePostContext();
@@ -31,8 +32,11 @@ export default function ViewPostPage() {
     }, [getPostItems]);
 
     function renderItems() {
-        const itemsArray = postItems?.sort((a, b) => a.index - b.index);
-        return itemsArray?.map((item) => (
+        if (!postItems || postItems.length === 0) {
+            return <Text>No items available.</Text>;
+        }
+        const itemsArray = postItems.sort((a, b) => a.index - b.index);
+        return itemsArray.map((item) => (
             <ItemCard key={item.id + item.index} {...item} />
         ));
     }
