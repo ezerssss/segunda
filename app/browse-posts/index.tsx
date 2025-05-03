@@ -9,6 +9,7 @@ import {
     startAfter,
     onSnapshot,
     where,
+    FirebaseFirestoreTypes,
 } from "@react-native-firebase/firestore";
 import { db } from "@/firebase/db";
 import { PostType } from "@/types/post";
@@ -25,7 +26,10 @@ export default function BrowsePostsPage() {
     const [itemsByPost, setItemsByPost] = useState<Record<string, ItemType[]>>(
         {},
     );
-    const [lastPostDoc, setLastPostDoc] = useState<any>(null);
+    const [lastPostDoc, setLastPostDoc] =
+        useState<
+            FirebaseFirestoreTypes.QueryDocumentSnapshot<FirebaseFirestoreTypes.DocumentData>
+        >();
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [visiblePostIds, setVisiblePostIds] = useState<string[]>([]);
