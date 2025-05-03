@@ -106,7 +106,7 @@ function UserSetupPage() {
     }
 
     return (
-        <View className="flex-1 bg-white">
+        <View className="flex-1 bg-white px-4">
             <View className="my-4 flex-row items-center justify-start">
                 <Text category="h6">Setup User </Text>
                 <Text appearance="hint">(Step 1 out of 1)</Text>

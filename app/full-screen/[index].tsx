@@ -13,6 +13,7 @@ export default function FullScreenPage() {
     const initialIndex = parseInt(index[0], 10);
     const [isMined, setIsMined] = useState(false);
     const theme = useTheme();
+    const confirmed = false; // placeholder for confirmedBidder
 
     function clickedMined() {
         setIsMined(!isMined);
@@ -61,6 +62,11 @@ export default function FullScreenPage() {
                         />
                     </View>
                     <View className="m-0 w-full px-4 pb-0 pt-2">
+                        {confirmed && (
+                            <Text category="h6" style={{ color: "white" }}>
+                                Sold to: name
+                            </Text>
+                        )}
                         <Text category="h6" style={{ color: "white" }}>
                             PHP{item.price}
                         </Text>
@@ -76,21 +82,25 @@ export default function FullScreenPage() {
                         )}
                     </View>
                     <View className="flex flex-row justify-between gap-2 px-4 py-2">
-                        <Button
-                            onPress={clickedMined}
-                            style={{
-                                backgroundColor: isMined
-                                    ? theme["color-secondary-500"]
-                                    : theme["color-primary-500"],
-                                borderWidth: 0,
-                                flex: 1,
-                            }}
-                            size="small"
-                            appearance="filled"
-                            accessoryLeft={<Icon name="shopping-bag-outline" />}
-                        >
-                            {isMined ? "Steal" : "Mine Now"}
-                        </Button>
+                        {!confirmed && (
+                            <Button
+                                onPress={clickedMined}
+                                style={{
+                                    backgroundColor: isMined
+                                        ? theme["color-secondary-500"]
+                                        : theme["color-primary-500"],
+                                    borderWidth: 0,
+                                    flex: 1,
+                                }}
+                                size="small"
+                                appearance="filled"
+                                accessoryLeft={
+                                    <Icon name="shopping-bag-outline" />
+                                }
+                            >
+                                {isMined ? "Steal" : "Mine Now"}
+                            </Button>
+                        )}
                         <Button
                             onPress={showBidders}
                             size="small"
