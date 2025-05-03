@@ -10,17 +10,17 @@ import {
 export function useGetPostItems() {
     function getPostItems(
         postId: string,
-        snapshot: FirebaseFirestoreTypes.SnapshotListenOptions,
-        error: (
+        onSnapshotCallback: (
             snapshot: FirebaseFirestoreTypes.QuerySnapshot<FirebaseFirestoreTypes.DocumentData>,
         ) => void,
+        onError: (error: Error) => void,
     ): Unsubscribe {
         const itemsQuery = query(
             itemsCollectionRef,
             where("postId", "==", postId),
         );
-        console.log(itemsQuery);
-        return onSnapshot(itemsQuery, snapshot, error);
+
+        return onSnapshot(itemsQuery, onSnapshotCallback, onError);
     }
 
     return { getPostItems };
