@@ -12,7 +12,9 @@ interface PostHeaderProps {
 
 function PostHeader(props: PostHeaderProps) {
     const { postId, userName, userImageUrl } = props;
-    const actionSheetRef = useRef<any>(null);
+    const actionSheetRef = useRef<ActionSheet>(null); // never mind lang ito type script error (mag work man code di ko alam pano i debug HAHAH)
+    // bandaid fix ko was typeOf ActionSheet pero
+    // yung mangyayari kay yung mga methods ng actionsheetRef kay mag typescript error din
 
     function handleReport() {
         console.log("REPORTED KA NA: ", userName);
