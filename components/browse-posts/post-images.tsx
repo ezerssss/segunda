@@ -64,7 +64,7 @@ function PostItemImages(props: PostItemImagesProps) {
                                 </View>
                                 <View className="mb-2 w-[33%] flex-col gap-1">
                                     {postItems.slice(1, 3).map((item) => (
-                                        <Pressable>
+                                        <Pressable key={item.id}>
                                             <Image
                                                 key={item.id}
                                                 source={{
