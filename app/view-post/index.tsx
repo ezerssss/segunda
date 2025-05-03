@@ -1,40 +1,39 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useGetPostItems from "@/hooks/useGetPostItems";
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { ItemType } from "@/types/item";
 import { ScrollView } from "react-native";
 import ItemCard from "../../components/view-post/item-card";
+import { usePostContext } from "@/contexts/postContext";
 
 export default function ViewPostPage() {
-    const [postItems, setPostItems] = useState<ItemType[]>();
+    const { postItems, setPostItems } = usePostContext();
     const { getPostItems } = useGetPostItems();
     const postId = "QIVLNrekTikDeSO1yLfa";
 
-    function onResult(
-        itemsQuerySnapshot: FirebaseFirestoreTypes.QuerySnapshot,
-    ) {
-        const items: ItemType[] = [];
-        itemsQuerySnapshot.forEach((itemDoc) => {
-            const data = {
-                id: itemDoc.id,
-                ...itemDoc.data(),
-            } as ItemType;
-            items.push(data);
-        });
-        setPostItems(items);
-    }
-
-    function onError() {
-        console.error("Failed getting post items");
-    }
     useEffect(() => {
-        const unsubsribe = getPostItems(postId, onResult, onError);
+        const unsubsribe = getPostItems(
+            postId,
+            (itemsQuerySnapshot: FirebaseFirestoreTypes.QuerySnapshot) => {
+                const items: ItemType[] = [];
+                itemsQuerySnapshot.forEach((itemDoc) => {
+                    const data = {
+                        id: itemDoc.id,
+                        ...itemDoc.data(),
+                    } as ItemType;
+                    items.push(data);
+                });
+                setPostItems(items);
+            },
+            () => console.error("Failed getting post items"),
+        );
         return unsubsribe;
-    }, [getPostItems, postItems, setPostItems]);
+    }, [getPostItems]);
 
     function renderItems() {
-        return postItems?.map((item, index) => (
-            <ItemCard key={item.id + index} {...item} />
+        const itemsArray = postItems?.sort((a, b) => a.index - b.index);
+        return itemsArray?.map((item) => (
+            <ItemCard key={item.id + item.index} {...item} />
         ));
     }
 

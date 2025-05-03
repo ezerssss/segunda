@@ -22,6 +22,8 @@ import { cssInterop } from "nativewind";
 import { UserDataType } from "@/types/user";
 import { doc, getDoc } from "@react-native-firebase/firestore";
 import { usersCollectionRef } from "@/constants/collections";
+import { PostContext } from "@/contexts/postContext";
+import { ItemType } from "@/types/item";
 
 SplashScreen.preventAutoHideAsync();
 cssInterop(Input, {
@@ -39,6 +41,8 @@ export default function RootLayout() {
     const [user, setUser] = useState<
         (FirebaseAuthTypes.User & UserDataType) | null
     >(null);
+
+    const [postItems, setPostItems] = useState<ItemType[]>([]);
 
     useEffect(() => {
         if (loaded) {
@@ -81,10 +85,12 @@ export default function RootLayout() {
                 theme={{ ...eva.light, ...theme }}
             >
                 <UserContext.Provider value={{ user, setUser }}>
-                    <StatusBar style="auto" />
-                    <SafeAreaView className="flex-1 bg-white px-4">
-                        <Stack screenOptions={{ headerShown: false }} />
-                    </SafeAreaView>
+                    <PostContext.Provider value={{ postItems, setPostItems }}>
+                        <StatusBar style="auto" />
+                        <SafeAreaView className="flex-1 bg-white">
+                            <Stack screenOptions={{ headerShown: false }} />
+                        </SafeAreaView>
+                    </PostContext.Provider>
                 </UserContext.Provider>
             </ApplicationProvider>
         </>
