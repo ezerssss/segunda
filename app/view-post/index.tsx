@@ -3,7 +3,7 @@ import useGetPostItems from "@/hooks/useGetPostItems";
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { ItemType } from "@/types/item";
 import { ScrollView } from "react-native";
-import ItemCard from "./item";
+import ItemCard from "../../components/view-post/item-card";
 
 export default function ViewPostPage() {
     const [postItems, setPostItems] = useState<ItemType[]>();
