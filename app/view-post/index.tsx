@@ -1,49 +1,34 @@
-import { useEffect } from "react";
 import useGetPostItems from "@/hooks/useGetPostItems";
-import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
-import { ItemType } from "@/types/item";
-import { ScrollView } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import ItemCard from "../../components/view-post/item-card";
-import { usePostContext } from "@/contexts/postContext";
 import { Text } from "@ui-kitten/components";
+import { useRouter } from "expo-router";
 
 export default function ViewPostPage() {
-    const { postItems, setPostItems } = usePostContext();
-    const { getPostItems } = useGetPostItems();
+    const router = useRouter();
     const postId = "QIVLNrekTikDeSO1yLfa";
+    const postItems = useGetPostItems(postId);
+    const sortedItems = postItems.sort((a, b) => a.index - b.index);
 
-    useEffect(() => {
-        const unsubsribe = getPostItems(
-            postId,
-            (itemsQuerySnapshot: FirebaseFirestoreTypes.QuerySnapshot) => {
-                const items: ItemType[] = [];
-                itemsQuerySnapshot.forEach((itemDoc) => {
-                    const data = {
-                        id: itemDoc.id,
-                        ...itemDoc.data(),
-                    } as ItemType;
-                    items.push(data);
-                });
-                setPostItems(items);
-            },
-            () => console.error("Failed getting post items"),
-        );
-        return unsubsribe;
-    }, [getPostItems]);
-
-    function renderItems() {
-        if (!postItems || postItems.length === 0) {
-            return <Text>No items available.</Text>;
-        }
-        const itemsArray = postItems.sort((a, b) => a.index - b.index);
-        return itemsArray.map((item) => (
-            <ItemCard key={item.id + item.index} {...item} />
-        ));
+    function navigateToFullScreen(index: number) {
+        router.push(`../view-post/full-screen/${index}`);
     }
 
     return (
         <ScrollView className="bg-white" showsVerticalScrollIndicator={false}>
-            {renderItems()}
+            {(!postItems || postItems.length === 0) && (
+                <Text>No items available.</Text>
+            )}
+            {sortedItems.map((item) => (
+                <TouchableOpacity
+                    key={item.id}
+                    onPress={() => navigateToFullScreen(item.index)}
+                >
+                    <View className="m-2 flex flex-1 rounded-lg px-2 py-0">
+                        <ItemCard item={item} />
+                    </View>
+                </TouchableOpacity>
+            ))}
         </ScrollView>
     );
 }

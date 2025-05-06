@@ -1,116 +1,84 @@
 import React, { useState } from "react";
-import { View, Image, TouchableOpacity } from "react-native";
+import { View, Image } from "react-native";
 import { Button, Icon, Text, useTheme } from "@ui-kitten/components";
 import { TruncatedText } from "../truncated-text";
-import clsx from "clsx";
-import { useRouter } from "expo-router";
+import { ItemType } from "@/types/item";
 
-interface ItemCardInterface {
-    name: string;
-    price: number;
-    description: string;
-    imageUrl: string;
-    index: number;
+interface PropsInterface {
+    item: ItemType;
 }
 
-export default function ItemCard(props: ItemCardInterface) {
-    const { name, price, description, imageUrl, index } = props;
+export default function ItemCard(props: PropsInterface) {
+    const { item } = props;
+    const { name, price, description, imageUrl } = item;
     const [isMined, setIsMined] = useState(false);
-    const [isExpanded, setIsExpanded] = useState(false);
     const theme = useTheme();
-    const router = useRouter();
     const confirmed = false; // placeholder for confirmedBidder
 
     function clickedMined() {
         setIsMined(!isMined);
     }
 
-    function clickedSeeMore(expanded: boolean) {
-        setIsExpanded(expanded);
-    }
-
     function showBidders() {
         console.log("Clicked bidders!");
     }
 
-    function navigateToFullScreen() {
-        router.push(`../full-screen/${index}`);
-    }
-
-    function renderItemCard() {
-        return (
-            <View className="m-2 flex flex-1 rounded-lg px-2 py-0">
-                <View className="aspect-square w-full overflow-hidden rounded-t-lg">
-                    <Image
-                        className="h-full w-full"
-                        source={{
-                            uri: imageUrl,
-                        }}
-                    />
-                </View>
-                <View className="flex flex-row items-center justify-between gap-1 rounded-b-lg border border-t-0 border-zinc-200 bg-slate-50 px-2 py-4">
-                    <View
-                        className={clsx(
-                            "m-0 p-0",
-                            isExpanded
-                                ? "w-1/2"
-                                : confirmed
-                                  ? "w-1/3"
-                                  : "w-1/4",
-                        )}
-                    >
-                        {confirmed && <Text category="h6">Sold to: name</Text>}
-                        <Text category="h6">PHP{price}</Text>
-                        <Text category="s1">{name}</Text>
-                        {!!description && (
-                            <TruncatedText
-                                text={description}
-                                maxLength={20}
-                                onToggleExpanded={clickedSeeMore}
-                            />
-                        )}
-                    </View>
-                    <View
-                        className={clsx(
-                            "flex justify-between gap-2",
-                            isExpanded ? "flex-col" : "flex-row",
-                        )}
-                    >
-                        {!confirmed && (
-                            <Button
-                                onPress={clickedMined}
-                                style={{
-                                    backgroundColor: isMined
-                                        ? theme["color-secondary-500"]
-                                        : theme["color-primary-500"],
-                                    borderWidth: 0,
-                                }}
-                                size="small"
-                                appearance="filled"
-                                accessoryLeft={
-                                    <Icon name="shopping-bag-outline" />
-                                }
-                            >
-                                {isMined ? "Steal" : "Mine Now"}
-                            </Button>
-                        )}
-                        <Button
-                            onPress={showBidders}
-                            size="small"
-                            appearance="filled"
-                            status="basic"
-                        >
-                            Show Bidders
-                        </Button>
-                    </View>
-                </View>
-            </View>
-        );
-    }
-
     return (
-        <TouchableOpacity onPress={navigateToFullScreen}>
-            {renderItemCard()}
-        </TouchableOpacity>
+        <View className="flex gap-2">
+            <View className="aspect-square w-full items-center justify-center overflow-hidden">
+                <Image
+                    className="h-full w-full"
+                    source={{
+                        uri: imageUrl,
+                    }}
+                />
+            </View>
+            <View className="m-0 w-full px-4 pb-0 pt-2">
+                {confirmed && (
+                    <Text category="h6" style={{ color: "black" }}>
+                        Sold to: name
+                    </Text>
+                )}
+                <Text category="h6" style={{ color: "black" }}>
+                    PHP{price}
+                </Text>
+                <Text category="s1" style={{ color: "black" }}>
+                    {name}
+                </Text>
+                {!!description && (
+                    <TruncatedText text={description} maxLength={125} />
+                )}
+            </View>
+            <View className="flex flex-row justify-between gap-2 px-4 py-2">
+                {!confirmed && (
+                    <Button
+                        onPress={clickedMined}
+                        style={{
+                            backgroundColor: isMined
+                                ? theme["color-secondary-500"]
+                                : theme["color-primary-500"],
+                            borderWidth: 0,
+                            flex: 1,
+                        }}
+                        size="small"
+                        appearance="filled"
+                        accessoryLeft={<Icon name="shopping-bag-outline" />}
+                    >
+                        {isMined ? "Steal" : "Mine Now"}
+                    </Button>
+                )}
+                <Button
+                    onPress={showBidders}
+                    size="small"
+                    appearance="filled"
+                    status="basic"
+                    style={{
+                        flex: 1,
+                    }}
+                >
+                    Show Bidders
+                </Button>
+            </View>
+        </View>
     );
 }
