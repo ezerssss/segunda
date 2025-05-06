@@ -41,7 +41,7 @@ export default function FullScreenPage() {
                         width,
                     }}
                 >
-                    <ItemCard item={item} />
+                    <ItemCard item={item} color="white" />
                 </View>
             )}
         />

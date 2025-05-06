@@ -1,12 +1,12 @@
 import useGetPostItems from "@/hooks/useGetPostItems";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { ScrollView, TouchableOpacity } from "react-native";
 import ItemCard from "../../components/view-post/item-card";
 import { Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 
 export default function ViewPostPage() {
     const router = useRouter();
-    const postId = "QIVLNrekTikDeSO1yLfa";
+    const postId = "QXtVp1f7BerOwqJzAe2Z";
     const postItems = useGetPostItems(postId);
     const sortedItems = postItems.sort((a, b) => a.index - b.index);
 
@@ -24,9 +24,7 @@ export default function ViewPostPage() {
                     key={item.id}
                     onPress={() => navigateToFullScreen(item.index)}
                 >
-                    <View className="m-2 flex flex-1 rounded-lg px-2 py-0">
-                        <ItemCard item={item} />
-                    </View>
+                    <ItemCard item={item} />
                 </TouchableOpacity>
             ))}
         </ScrollView>

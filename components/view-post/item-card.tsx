@@ -6,10 +6,11 @@ import { ItemType } from "@/types/item";
 
 interface PropsInterface {
     item: ItemType;
+    color?: string;
 }
 
 export default function ItemCard(props: PropsInterface) {
-    const { item } = props;
+    const { item, color = "black" } = props;
     const { name, price, description, imageUrl } = item;
     const [isMined, setIsMined] = useState(false);
     const theme = useTheme();
@@ -35,18 +36,18 @@ export default function ItemCard(props: PropsInterface) {
             </View>
             <View className="m-0 w-full px-4 pb-0 pt-2">
                 {confirmed && (
-                    <Text category="h6" style={{ color: "black" }}>
+                    <Text category="h6" style={{ color }}>
                         Sold to: name
                     </Text>
                 )}
-                <Text category="h6" style={{ color: "black" }}>
+                <Text category="h6" style={{ color }}>
                     PHP{price}
                 </Text>
-                <Text category="s1" style={{ color: "black" }}>
+                <Text category="s1" style={{ color }}>
                     {name}
                 </Text>
                 {!!description && (
-                    <TruncatedText text={description} maxLength={125} />
+                    <TruncatedText text={description} color={color} />
                 )}
             </View>
             <View className="flex flex-row justify-between gap-2 px-4 py-2">
