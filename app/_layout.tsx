@@ -6,8 +6,7 @@ import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import "../global.css";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { UserContext } from "../contexts/userContext";
-import { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { UserContext, UserContextData } from "../contexts/userContext";
 import * as eva from "@eva-design/eva";
 import {
     ApplicationProvider,
@@ -22,8 +21,7 @@ import { cssInterop } from "nativewind";
 import { UserDataType } from "@/types/user";
 import { doc, getDoc } from "@react-native-firebase/firestore";
 import { usersCollectionRef } from "@/constants/collections";
-import { PostContext } from "@/contexts/postContext";
-import { ItemType } from "@/types/item";
+import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
 SplashScreen.preventAutoHideAsync();
 cssInterop(Input, {
@@ -38,11 +36,7 @@ export default function RootLayout() {
         SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     });
 
-    const [user, setUser] = useState<
-        (FirebaseAuthTypes.User & UserDataType) | null
-    >(null);
-
-    const [postItems, setPostItems] = useState<ItemType[]>([]);
+    const [user, setUser] = useState<UserContextData | null>(null);
 
     useEffect(() => {
         if (loaded) {
@@ -62,7 +56,9 @@ export default function RootLayout() {
                     const userDocRef = doc(usersCollectionRef, user.uid);
                     const userDoc = await getDoc(userDocRef);
                     const userData = userDoc.data() as UserDataType;
-                    setUser({ ...user, ...userData });
+                    const firebaseUserJson =
+                        user.toJSON() as FirebaseAuthTypes.User;
+                    setUser({ ...firebaseUserJson, ...userData });
                 } catch (error) {
                     console.error(error);
                 }
@@ -85,12 +81,10 @@ export default function RootLayout() {
                 theme={{ ...eva.light, ...theme }}
             >
                 <UserContext.Provider value={{ user, setUser }}>
-                    <PostContext.Provider value={{ postItems, setPostItems }}>
-                        <StatusBar style="auto" />
-                        <SafeAreaView className="flex-1 bg-white">
-                            <Stack screenOptions={{ headerShown: false }} />
-                        </SafeAreaView>
-                    </PostContext.Provider>
+                    <StatusBar style="auto" />
+                    <SafeAreaView className="flex-1 bg-white">
+                        <Stack screenOptions={{ headerShown: false }} />
+                    </SafeAreaView>
                 </UserContext.Provider>
             </ApplicationProvider>
         </>
