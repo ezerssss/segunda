@@ -20,3 +20,14 @@ export const BidRequestSchema = z.object({
     price: z.coerce.number().nonnegative(),
 });
 export type BidRequestType = z.infer<typeof BidRequestSchema>;
+
+export const ConfirmBidRequestSchema = z.object({
+    itemId: z.string().min(1),
+    bidId: z.string().min(1),
+});
+export type ConfirmBidRequestType = z.infer<typeof ConfirmBidRequestSchema>;
+
+export const CancelBidRequestSchema = z.object({
+    itemId: z.string().min(1),
+});
+export type CancelBidRequestType = z.infer<typeof CancelBidRequestSchema>;
