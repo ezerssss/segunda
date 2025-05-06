@@ -2,21 +2,17 @@ import Modal from "react-native-modal";
 import { View, Image } from "react-native";
 import { Button, Text } from "@ui-kitten/components";
 import { Dispatch, SetStateAction } from "react";
+import { confirmBid } from "@/firebase/functions";
+import { ConfirmBidRequestType } from "@/types/bidder";
 
 interface ConfirmBidderModalProps {
     setIsModalVisible: Dispatch<SetStateAction<boolean>>;
     isModalVisible: boolean;
-    bidderName: string | undefined;
-    bidderPrice: number | undefined;
-    bidderImgURI: string | undefined;
-    bidderID: string | undefined;
-}
-
-function ConfirmText() {
-    return <Text style={{ fontWeight: "bold", color: "white" }}>Confirm</Text>;
-}
-function CancelText() {
-    return <Text style={{ fontWeight: "bold", color: "white" }}>Cancel</Text>;
+    bidderName: string;
+    bidderPrice: number;
+    bidderImgURI: string;
+    bidderID: string;
+    itemID: string;
 }
 
 function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
@@ -26,10 +22,23 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
         bidderName,
         bidderPrice,
         bidderImgURI,
+        bidderID,
+        itemID,
     } = props;
 
     async function handleApproveBidder() {
-        //use the approve bidder backend here with the bidderID
+        try {
+            const data: ConfirmBidRequestType = {
+                bidId: bidderID,
+                itemId: itemID,
+            } as ConfirmBidRequestType;
+            const response = await confirmBid(data);
+            console.log(response);
+        } catch (e) {
+            console.error(e);
+        }
+
+        setIsModalVisible(false);
     }
 
     return (
@@ -44,7 +53,7 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
             backdropOpacity={0.5}
         >
             <View className="flex min-h-60 items-center justify-center rounded-3xl bg-white p-4">
-                <Text category="h4" className="mb-4">
+                <Text category="h4" className="mb-4 text-center">
                     Sell item to {bidderName ?? ""}?
                 </Text>
                 <View className="aspect-square w-1/2 items-center overflow-hidden rounded-full">
@@ -56,20 +65,29 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
                 </View>
                 <Text className="my-5">PHP {bidderPrice ?? ""}</Text>
                 <View className="w-1/2 flex-row justify-between">
+                    {/*  */}
+
                     <Button
-                        className="mx-1 grow"
+                        className="mx-1 flex-1"
                         onPress={handleApproveBidder}
-                        appearance="ghost"
-                        style={{ backgroundColor: "#E1306C" }}
-                        accessoryLeft={ConfirmText}
-                    ></Button>
+                        style={{
+                            backgroundColor: "#E1306C",
+                            borderWidth: 0,
+                        }}
+                        size="small"
+                        appearance="filled"
+                    >
+                        Confirm
+                    </Button>
                     <Button
-                        className="mx-1 grow"
-                        appearance="ghost"
-                        style={{ backgroundColor: "#555555" }}
-                        accessoryLeft={CancelText}
+                        className="mx-1 flex-1"
                         onPress={() => setIsModalVisible(false)}
-                    ></Button>
+                        size="small"
+                        appearance="filled"
+                        status="basic"
+                    >
+                        Cancel
+                    </Button>
                 </View>
             </View>
         </Modal>

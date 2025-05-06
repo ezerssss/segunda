@@ -15,13 +15,10 @@ function TestActionButtonPage() {
             try {
                 const q = query(collection(db, "items"));
                 const querySnapshot = await getDocs(q);
-                console.log(querySnapshot.docs[0].id, querySnapshot.docs);
                 if (querySnapshot.docs.length >= 1) {
                     const parsedItem = querySnapshot.docs[0].data() as ItemType;
                     setItem((i) => parsedItem);
-                    console.log("happening here!!!");
                 }
-                console.log("the item is: ", item);
             } catch (e) {
                 console.log(e);
             } finally {

@@ -1,5 +1,5 @@
 import { ItemType } from "@/types/item";
-import { Button, Text } from "@ui-kitten/components";
+import { Button, Icon, useTheme } from "@ui-kitten/components";
 import { useState } from "react";
 import BuyerViewBiddersModal from "./buyer-view-bidders-modal";
 import { BidRequestType } from "@/types/bidder";
@@ -9,13 +9,10 @@ interface MinerActionButtonProp {
     item: ItemType;
 }
 
-function ShowBiddersText() {
-    return <Text style={{ fontWeight: "bold" }}>Show Bidders</Text>;
-}
-
 function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
     const { item } = props;
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const theme = useTheme();
 
     async function handleMine() {
         const data = { price: item.price, itemId: item.id } as BidRequestType;
@@ -30,24 +27,33 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
         <>
             <Button
                 className="mx-1 flex-1"
-                onPress={() => {
-                    handleMine();
+                onPress={handleMine}
+                style={{
+                    backgroundColor: theme["color-primary-500"],
+                    borderWidth: 0,
+                    flex: 1,
                 }}
+                size="small"
+                appearance="filled"
+                accessoryLeft={<Icon name="shopping-bag-outline" />}
             >
-                Mine Now!
+                Mine Now
             </Button>
             <Button
                 className="mx-1 flex-1"
-                appearance="ghost"
-                style={{ backgroundColor: "#DEE1E6" }}
-                accessoryLeft={ShowBiddersText}
                 onPress={handleShowModal}
-            ></Button>
+                size="small"
+                appearance="filled"
+                status="basic"
+            >
+                Show Bidders
+            </Button>
             <BuyerViewBiddersModal
                 isModalVisible={isModalVisible}
                 setIsModalVisible={setIsModalVisible}
                 item={item}
                 isAutoFocused={false}
+                isSteal={false}
             ></BuyerViewBiddersModal>
         </>
     );

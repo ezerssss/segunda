@@ -12,7 +12,6 @@ interface ActionButtonsProps {
 
 function ActionButtons(props: Readonly<ActionButtonsProps>) {
     const { item } = props;
-    console.log("in action button: ", item);
 
     return (
         <View className="flex-1">

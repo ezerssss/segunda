@@ -15,8 +15,7 @@ function useGetBidders(itemID: string, isModalVisible: boolean) {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        // if (!isModalVisible) return;
-        console.log("getting bidders");
+        if (!isModalVisible) return;
         setIsLoading(true);
         const itemDocRef = doc(db, CollectionEnum.ITEMS, itemID);
         const biddersCollectionRef = collection(
@@ -26,20 +25,17 @@ function useGetBidders(itemID: string, isModalVisible: boolean) {
         const biddersQuery = query(
             biddersCollectionRef,
             orderBy("price", "desc"),
-            // orderBy("dateCreated", "asc"),
+            orderBy("dateCreated", "asc"),
         );
 
         const unsubscribeBidders = onSnapshot(
             biddersQuery,
             (biddersQuerySnapshot) => {
-                console.log(biddersQuerySnapshot.docs);
-
                 const bidders: BidType[] = biddersQuerySnapshot.docs.map(
                     (bidderDoc) => {
                         return bidderDoc.data() as BidType;
                     },
                 );
-                console.log("the bidders are", bidders);
 
                 setBidders(bidders);
             },
