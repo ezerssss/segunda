@@ -2,10 +2,12 @@ import { MAX_CAPTION_LENGTH } from "../constants/post";
 import { z } from "zod";
 import { PostTagsEnum } from "../enums/post";
 import { ItemFormSchema } from "./item";
+import { UserPublicDataSchema } from "./user";
 
 export const PostSchema = z.object({
     id: z.string().min(1),
-    userId: z.string().min(1),
+    sellerId: z.string().min(1),
+    sellerData: UserPublicDataSchema,
     caption: z
         .string()
         .trim()
@@ -38,7 +40,8 @@ This looks like:
 */
 export const PostFormSchema = PostSchema.omit({
     id: true,
-    userId: true,
+    sellerId: true,
+    sellerData: true,
     likes: true,
     imageUrls: true,
     dateCreated: true,
