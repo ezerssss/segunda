@@ -22,6 +22,6 @@ export type BidType = z.infer<typeof BidSchema>;
 
 export const BidRequestSchema = z.object({
     itemId: z.string().min(1),
-    price: z.number().nonnegative(),
+    price: z.coerce.number().nonnegative(),
 });
 export type BidRequestType = z.infer<typeof BidRequestSchema>;

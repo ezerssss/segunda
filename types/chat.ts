@@ -1,10 +1,13 @@
 import { z } from "zod";
 import { ItemSchema } from "./item";
+import { UserPublicDataSchema } from "./user";
 
 export const ChatSchema = z.object({
     id: z.string().min(1),
     sellerId: z.string().min(1),
+    sellerData: UserPublicDataSchema,
     buyerId: z.string().min(1),
+    buyerData: UserPublicDataSchema,
     postId: z.string().min(1),
     itemId: z.string().min(1),
     bidId: z.string().min(1),
@@ -25,7 +28,8 @@ export type ChatType = z.infer<typeof ChatSchema>;
 
 export const MessageSchema = z.object({
     id: z.string().min(1),
-    userId: z.string().min(1),
+    senderId: z.string().min(1),
+    senderData: UserPublicDataSchema,
     message: z
         .string()
         .trim()
