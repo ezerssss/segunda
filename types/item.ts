@@ -1,10 +1,12 @@
 import { z } from "zod";
 import { BidSchema } from "./bidder";
+import { UserPublicDataSchema } from "./user";
 
 export const ItemSchema = z.object({
     id: z.string().min(1),
-    userId: z.string().min(1),
     postId: z.string().min(1),
+    sellerId: z.string().min(1),
+    sellerData: UserPublicDataSchema,
     index: z.number().nonnegative(),
     name: z
         .string()
@@ -36,7 +38,8 @@ This looks like:
 */
 export const ItemFormSchema = ItemSchema.omit({
     id: true,
-    userId: true,
+    sellerId: true,
+    sellerData: true,
     postId: true,
     price: true,
     imageUrl: true,
