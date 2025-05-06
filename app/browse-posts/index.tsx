@@ -1,4 +1,4 @@
-import { FlatList, View, ViewToken } from "react-native";
+import { FlatList, ViewToken } from "react-native";
 import { useEffect, useState, useCallback } from "react";
 import {
     collection,
@@ -8,38 +8,27 @@ import {
     limit,
     startAfter,
     onSnapshot,
-    where,
     FirebaseFirestoreTypes,
 } from "@react-native-firebase/firestore";
 import { db } from "@/firebase/db";
 import { PostType } from "@/types/post";
-import { Text } from "@ui-kitten/components";
-import { UserDataType } from "@/types/user";
-import { ItemType } from "@/types/item";
-import PostContent from "@/components/browse-posts/post-content";
-import PostHeader from "@/components/browse-posts/post-header";
-import PostDivider from "@/components/browse-posts/post-divider";
+import BrowserFooter from "@/components/browse-posts/browse-footer";
+import PostItem from "@/components/browse-posts/post-item";
 
 export default function BrowsePostsPage() {
     const [posts, setPosts] = useState<PostType[]>([]);
-    const [users, setUsers] = useState<UserDataType[]>([]);
-    const [itemsByPost, setItemsByPost] = useState<Record<string, ItemType[]>>(
-        {},
-    );
     const [lastPostDoc, setLastPostDoc] =
         useState<
             FirebaseFirestoreTypes.QueryDocumentSnapshot<FirebaseFirestoreTypes.DocumentData>
         >();
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [visiblePostIds, setVisiblePostIds] = useState<string[]>([]);
-    const [itemUnsubscribers, setItemUnsubscribers] = useState<(() => void)[]>(
-        [],
-    );
+    const [loadedPostIds, setLoadedPostIds] = useState<Set<string>>(new Set());
     const pageSize = 10;
 
     useEffect(() => {
-        setLoading(true);
+        setIsLoading(true);
         const postsQuery = query(
             collection(db, "posts"),
             orderBy("dateUpdated", "desc"),
@@ -73,30 +62,26 @@ export default function BrowsePostsPage() {
                     });
 
                     setLastPostDoc(docs[docs.length - 1]);
-
-                    await fetchItemsForPosts(
-                        fetchedPosts.map((post) => post.id),
-                    );
                 }
-                setLoading(false);
+                setIsLoading(false);
             },
             (error) => {
                 console.error(error);
-                setLoading(false);
+                setIsLoading(false);
             },
         );
 
         return () => {
             unsubscribePosts();
-            itemUnsubscribers.forEach((unsubscribe) => unsubscribe());
-            setItemUnsubscribers([]);
+            // itemUnsubscribers.forEach((unsubscribe) => unsubscribe());
+            // setItemUnsubscribers([]);
         };
     }, []);
 
     async function fetchMorePosts() {
-        if (loading || !hasMore) return;
+        if (isLoading || !hasMore) return;
 
-        setLoading(true);
+        setIsLoading(true);
         try {
             let postsQuery = query(
                 collection(db, "posts"),
@@ -130,164 +115,109 @@ export default function BrowsePostsPage() {
                 });
 
                 setLastPostDoc(docs[docs.length - 1]);
-
-                await fetchItemsForPosts(fetchedPosts.map((post) => post.id));
             }
         } catch (error) {
             console.error(error);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     }
 
-    async function fetchItemsForPosts(postIds: string[]) {
-        try {
-            const postsToFetch = postIds.filter((id) => !itemsByPost[id]);
+    // async function fetchItemsForPosts(postIds: string[]) {
+    //     try {
+    //         const postsToFetch = postIds.filter((id) => !itemsByPost[id]);
 
-            if (postsToFetch.length === 0) return;
+    //         if (postsToFetch.length === 0) return;
 
-            const newItemsByPost: Record<string, ItemType[]> = {};
+    //         const newItemsByPost: Record<string, ItemType[]> = {};
 
-            for (const postId of postsToFetch) {
-                newItemsByPost[postId] = [];
-            }
+    //         for (const postId of postsToFetch) {
+    //             newItemsByPost[postId] = [];
+    //         }
 
-            const itemsQuery = query(
-                collection(db, "items"),
-                where("isDeleted", "==", false),
-            );
+    //         const itemsQuery = query(
+    //             collection(db, "items"),
+    //             where("isDeleted", "==", false),
+    //         );
 
-            const unsubscribeItems = onSnapshot(
-                itemsQuery,
-                (itemsQuerySnapshot) => {
-                    const newItems: ItemType[] = [];
-                    itemsQuerySnapshot.forEach((itemDoc) => {
-                        const data = {
-                            id: itemDoc.id,
-                            ...itemDoc.data(),
-                        } as ItemType;
-                        newItems.push(data);
-                    });
+    //         const unsubscribeItems = onSnapshot(
+    //             itemsQuery,
+    //             (itemsQuerySnapshot) => {
+    //                 const newItems: ItemType[] = [];
+    //                 itemsQuerySnapshot.forEach((itemDoc) => {
+    //                     const data = {
+    //                         id: itemDoc.id,
+    //                         ...itemDoc.data(),
+    //                     } as ItemType;
+    //                     newItems.push(data);
+    //                 });
 
-                    for (const postId of postsToFetch) {
-                        newItemsByPost[postId] = newItems.filter(
-                            (item) => item.postId === postId,
-                        );
-                    }
+    //                 for (const postId of postsToFetch) {
+    //                     newItemsByPost[postId] = newItems.filter(
+    //                         (item) => item.postId === postId,
+    //                     );
+    //                 }
 
-                    setItemsByPost((prev) => ({ ...prev, ...newItemsByPost }));
-                },
-                (error) => {
-                    console.error(error);
-                },
-            );
+    //                 setItemsByPost((prev) => ({ ...prev, ...newItemsByPost }));
+    //             },
+    //             (error) => {
+    //                 console.error(error);
+    //             },
+    //         );
 
-            setItemUnsubscribers((prev) => [...prev, unsubscribeItems]);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    useEffect(() => {
-        const usersQuery = query(collection(db, "users"));
-        const unsubscribeUsers = onSnapshot(
-            usersQuery,
-            (usersQuerySnapshot) => {
-                const fetchedUsers: UserDataType[] = [];
-                usersQuerySnapshot.forEach((userDoc) => {
-                    const data = { id: userDoc.id, ...userDoc.data() };
-                    fetchedUsers.push(data as UserDataType);
-                });
-                setUsers(fetchedUsers);
-            },
-            (error) => {
-                console.error(error);
-            },
-        );
-
-        return () => unsubscribeUsers();
-    }, []);
-
-    function getUserById(userId: string) {
-        return users.find((user) => user.id === userId);
-    }
+    //         setItemUnsubscribers((prev) => [...prev, unsubscribeItems]);
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }
 
     const onViewableItemsChanged = useCallback(
         ({ viewableItems }: { viewableItems: ViewToken[] }) => {
-            const visibleIds = viewableItems
-                .map((item) => (item.item as PostType).id)
-                .filter((id): id is string => id !== undefined);
-
-            setVisiblePostIds(visibleIds);
+            const nowVisible = viewableItems.map((v) => v.item.id);
+            setVisiblePostIds(nowVisible);
+            setLoadedPostIds((prev) => {
+                const next = new Set(prev);
+                nowVisible.forEach((id) => next.add(id));
+                return next;
+            });
         },
         [],
     );
 
-    interface RenderItemProps {
-        item: PostType;
-        index: number;
-    }
-
-    function renderItem(props: RenderItemProps) {
-        const { item: post, index } = props;
-        const postUser = getUserById(post.userId);
-        const postItems = itemsByPost[post.id] || [];
-        const isVisible = visiblePostIds.includes(post.id);
-
-        return (
-            <>
-                <View className="mb-5 flex flex-col">
-                    <PostHeader
-                        postId={post.id}
-                        userName={postUser?.name}
-                        userImageUrl={postUser?.imageUrl ?? ""}
-                    />
-                    <PostContent
-                        post={post}
-                        postItems={postItems}
-                        isVisible={isVisible}
-                    />
-                </View>
-                {index < posts.length - 1 && <PostDivider />}
-            </>
-        );
-    }
-
-    function renderFooter() {
-        if (loading) {
-            return (
-                <Text className="py-2 text-center text-base text-gray-600">
-                    Loading...
-                </Text>
-            );
-        }
-        if (!hasMore) {
-            return (
-                <Text className="py-2 text-center text-base text-gray-600">
-                    No more posts to load
-                </Text>
-            );
-        }
-        return null;
-    }
-
     return (
         <FlatList
             data={posts}
-            renderItem={renderItem}
             keyExtractor={(item) => item.id}
+            renderItem={({ item, index }) => {
+                const isVisible = visiblePostIds.includes(item.id);
+                const hasLoadedBefore = loadedPostIds.has(item.id);
+                const isLast = index === posts.length - 1;
+                return (
+                    <PostItem
+                        post={item}
+                        isVisible={isVisible}
+                        userName={item.sellerData?.name}
+                        userImageUrl={item.sellerData?.imageUrl ?? ""}
+                        isLast={isLast}
+                        hasLoadedBefore={hasLoadedBefore}
+                    />
+                );
+            }}
+            extraData={visiblePostIds}
             onEndReached={fetchMorePosts}
             onEndReachedThreshold={0.5}
             viewabilityConfig={{
-                itemVisiblePercentThreshold: 30,
+                viewAreaCoveragePercentThreshold: 30,
                 minimumViewTime: 200,
             }}
             onViewableItemsChanged={onViewableItemsChanged}
-            windowSize={10}
+            windowSize={15}
             maxToRenderPerBatch={10}
-            initialNumToRender={3}
-            removeClippedSubviews={false}
-            ListFooterComponent={renderFooter}
+            initialNumToRender={10}
+            removeClippedSubviews={true}
+            ListFooterComponent={
+                <BrowserFooter isLoading={isLoading} hasMore={hasMore} />
+            }
             contentContainerClassName="bg-white"
         />
     );
