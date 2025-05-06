@@ -1,6 +1,6 @@
 import { Button, Text } from "@ui-kitten/components";
 import { useState } from "react";
-import StealModal from "./steal-modal";
+import BuyerViewBiddersModal from "./buyer-view-bidders-modal";
 import { ItemType } from "@/types/item";
 
 interface BuyerActionButtonsProps {
@@ -46,12 +46,12 @@ function StealerActionButtons(props: Readonly<BuyerActionButtonsProps>) {
                 onPress={handleShowModal}
             ></Button>
 
-            <StealModal
+            <BuyerViewBiddersModal
                 isModalVisible={isModalVisible}
                 setIsModalVisible={setIsModalVisible}
                 item={item}
                 isAutoFocused={isAutoFocused}
-            ></StealModal>
+            ></BuyerViewBiddersModal>
         </>
     );
 }

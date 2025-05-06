@@ -19,7 +19,8 @@ function ActionButtons(props: Readonly<ActionButtonsProps>) {
             <View className="w-full flex-row justify-between">
                 <StealerActionButtons item={item}></StealerActionButtons>
             </View>
-            <View className="mt-10">
+            <View className="my-4"></View>
+            <View className="w-full flex-row justify-between">
                 <MinerActionButton item={item}></MinerActionButton>
             </View>
             <View className="mt-10">

@@ -10,20 +10,23 @@ import { Button, Input, Text } from "@ui-kitten/components";
 import { bidItem } from "@/firebase/functions";
 import { ItemType } from "@/types/item";
 
+import useGetBidders from "@/hooks/useGetBidders";
+
 function StealButtonText() {
     return <Text style={{ fontWeight: "bold", color: "white" }}>Steal</Text>;
 }
 
 interface StealModalProps {
     item: ItemType;
-
     isModalVisible: boolean;
     setIsModalVisible: Dispatch<SetStateAction<boolean>>;
     isAutoFocused: boolean;
 }
 
-function StealModal(props: Readonly<StealModalProps>) {
+function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
     const { item, isModalVisible, setIsModalVisible, isAutoFocused } = props;
+    const { bidders } = useGetBidders(item.id, isModalVisible);
+
     const {
         handleSubmit,
         formState: { errors },
@@ -36,7 +39,6 @@ function StealModal(props: Readonly<StealModalProps>) {
     });
 
     async function handlePlaceBid(data: BidRequestType) {
-        console.log("Placed bid: ", data);
         const response = await bidItem(data);
         console.log(response);
     }
@@ -60,30 +62,16 @@ function StealModal(props: Readonly<StealModalProps>) {
                     showsVerticalScrollIndicator={false}
                     showsHorizontalScrollIndicator={false}
                 >
-                    <View className="my-4">
-                        <BidderDetails
-                            imgURI="https://i.imgur.com/CzXTtJV.jpg"
-                            bid={50.0}
-                            name="John Smilga"
-                            date="04/10/2025 | 11:20 pm"
-                        ></BidderDetails>
-                    </View>
-                    <View className="my-4">
-                        <BidderDetails
-                            imgURI="https://i.imgur.com/CzXTtJV.jpg"
-                            bid={50.0}
-                            name="John Smilga"
-                            date="04/10/2025 | 11:20 pm"
-                        ></BidderDetails>
-                    </View>
-                    <View className="my-4">
-                        <BidderDetails
-                            imgURI="https://i.imgur.com/CzXTtJV.jpg"
-                            bid={50.0}
-                            name="John Smilga"
-                            date="04/10/2025 | 11:20 pm"
-                        ></BidderDetails>
-                    </View>
+                    {bidders.map(({ dateCreated, price }, index) => (
+                        <View className="my-4" key={index}>
+                            <BidderDetails
+                                imgURI={"bidderData.imageUrl"}
+                                bid={price}
+                                name={"bidderData.name"}
+                                date={dateCreated}
+                            ></BidderDetails>
+                        </View>
+                    ))}
                 </ScrollView>
                 <View className="mt-5 flex-row">
                     <Controller
@@ -123,4 +111,4 @@ function StealModal(props: Readonly<StealModalProps>) {
     );
 }
 
-export default StealModal;
+export default BuyerViewBiddersModal;

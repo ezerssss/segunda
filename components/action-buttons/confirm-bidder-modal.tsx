@@ -6,9 +6,10 @@ import { Dispatch, SetStateAction } from "react";
 interface ConfirmBidderModalProps {
     setIsModalVisible: Dispatch<SetStateAction<boolean>>;
     isModalVisible: boolean;
-    bidderName: string;
-    bidderPrice: number;
-    bidderImgURI: string;
+    bidderName: string | undefined;
+    bidderPrice: number | undefined;
+    bidderImgURI: string | undefined;
+    bidderID: string | undefined;
 }
 
 function ConfirmText() {
@@ -27,7 +28,9 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
         bidderImgURI,
     } = props;
 
-    async function handleApproveBidder() {}
+    async function handleApproveBidder() {
+        //use the approve bidder backend here with the bidderID
+    }
 
     return (
         <Modal
@@ -42,7 +45,7 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
         >
             <View className="flex min-h-60 items-center justify-center rounded-3xl bg-white p-4">
                 <Text category="h4" className="mb-4">
-                    Sell item to {bidderName}?
+                    Sell item to {bidderName ?? ""}?
                 </Text>
                 <View className="aspect-square w-1/2 items-center overflow-hidden rounded-full">
                     <Image
@@ -51,7 +54,7 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
                         resizeMode="cover"
                     />
                 </View>
-                <Text className="my-5">PHP {bidderPrice}</Text>
+                <Text className="my-5">PHP {bidderPrice ?? ""}</Text>
                 <View className="w-1/2 flex-row justify-between">
                     <Button
                         className="mx-1 grow"

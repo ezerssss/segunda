@@ -8,7 +8,7 @@ interface BidderDetailsProps {
     name: string;
 }
 
-function BidderDetails(props: BidderDetailsProps) {
+function BidderDetails(props: Readonly<BidderDetailsProps>) {
     const { imgURI, bid, date, name } = props;
     return (
         <View className="flex-row items-center">
