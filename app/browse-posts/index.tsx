@@ -73,8 +73,6 @@ export default function BrowsePostsPage() {
 
         return () => {
             unsubscribePosts();
-            // itemUnsubscribers.forEach((unsubscribe) => unsubscribe());
-            // setItemUnsubscribers([]);
         };
     }, []);
 
@@ -123,54 +121,6 @@ export default function BrowsePostsPage() {
         }
     }
 
-    // async function fetchItemsForPosts(postIds: string[]) {
-    //     try {
-    //         const postsToFetch = postIds.filter((id) => !itemsByPost[id]);
-
-    //         if (postsToFetch.length === 0) return;
-
-    //         const newItemsByPost: Record<string, ItemType[]> = {};
-
-    //         for (const postId of postsToFetch) {
-    //             newItemsByPost[postId] = [];
-    //         }
-
-    //         const itemsQuery = query(
-    //             collection(db, "items"),
-    //             where("isDeleted", "==", false),
-    //         );
-
-    //         const unsubscribeItems = onSnapshot(
-    //             itemsQuery,
-    //             (itemsQuerySnapshot) => {
-    //                 const newItems: ItemType[] = [];
-    //                 itemsQuerySnapshot.forEach((itemDoc) => {
-    //                     const data = {
-    //                         id: itemDoc.id,
-    //                         ...itemDoc.data(),
-    //                     } as ItemType;
-    //                     newItems.push(data);
-    //                 });
-
-    //                 for (const postId of postsToFetch) {
-    //                     newItemsByPost[postId] = newItems.filter(
-    //                         (item) => item.postId === postId,
-    //                     );
-    //                 }
-
-    //                 setItemsByPost((prev) => ({ ...prev, ...newItemsByPost }));
-    //             },
-    //             (error) => {
-    //                 console.error(error);
-    //             },
-    //         );
-
-    //         setItemUnsubscribers((prev) => [...prev, unsubscribeItems]);
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }
-
     const onViewableItemsChanged = useCallback(
         ({ viewableItems }: { viewableItems: ViewToken[] }) => {
             const nowVisible = viewableItems.map((v) => v.item.id);
@@ -194,6 +144,7 @@ export default function BrowsePostsPage() {
                 const isLast = index === posts.length - 1;
                 return (
                     <PostItem
+                        key={item.id}
                         post={item}
                         isVisible={isVisible}
                         userName={item.sellerData?.name}
