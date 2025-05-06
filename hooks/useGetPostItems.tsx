@@ -29,7 +29,7 @@ export function useGetPostItems(postId: string) {
             () => console.error("Failed getting post items"),
         );
         return unsubsribe;
-    });
+    }, []);
 
     return postItems;
 }
