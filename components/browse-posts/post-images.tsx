@@ -1,5 +1,7 @@
-import { View, Image } from "react-native";
+import { View } from "react-native";
 import { Text } from "@ui-kitten/components";
+import { memo } from "react";
+import { Image } from "expo-image";
 
 interface PostItemImagesProps {
     imageUrls: string[];
@@ -90,4 +92,4 @@ function PostItemImages(props: PostItemImagesProps) {
     );
 }
 
-export default PostItemImages;
+export default memo(PostItemImages);
