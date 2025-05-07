@@ -18,7 +18,7 @@ function PostItem(props: PostItemProps) {
 
     return (
         <>
-            <View className="mb-5 flex flex-col">
+            <View className="mb-2 flex flex-col">
                 <PostHeader
                     postId={id}
                     userName={sellerData.name}
