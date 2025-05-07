@@ -65,8 +65,6 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
                 </View>
                 <Text className="my-5">PHP {bidderPrice ?? ""}</Text>
                 <View className="w-1/2 flex-row justify-between">
-                    {/*  */}
-
                     <Button
                         className="mx-1 flex-1"
                         onPress={handleApproveBidder}

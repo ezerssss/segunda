@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 
 import Modal from "react-native-modal";
 import { ScrollView, View } from "react-native";
-import { Button, Text } from "@ui-kitten/components";
+import { Button, Text, useTheme } from "@ui-kitten/components";
 import ConfirmBidderModal from "./confirm-bidder-modal";
 import { ItemType } from "@/types/item";
 import useGetBidders from "@/hooks/useGetBidders";
@@ -16,15 +16,14 @@ interface SellerViewBiddersModalProps {
     setIsModalVisible: Dispatch<SetStateAction<boolean>>;
 }
 
-function ApproveText() {
-    return <Text style={{ fontWeight: "bold", color: "white" }}>Approve</Text>;
-}
-
 function SellerViewBiddersModal(props: Readonly<SellerViewBiddersModalProps>) {
     const { setIsModalVisible, isModalVisible, item } = props;
+    const hasConfirmedBidder = item.confirmedBidder !== null;
+
     const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
     const [approvedBidder, setApprovedBidder] = useState<BidType>();
     const { bidders } = useGetBidders(item.id, isModalVisible);
+    const theme = useTheme();
 
     function handleApprove(bidder: BidType) {
         setApprovedBidder(bidder);
@@ -54,10 +53,10 @@ function SellerViewBiddersModal(props: Readonly<SellerViewBiddersModalProps>) {
                         showsVerticalScrollIndicator={false}
                         showsHorizontalScrollIndicator={false}
                     >
-                        {bidders.map((bidder, index) => (
+                        {bidders.map((bidder) => (
                             <View
                                 className="my-4 flex-row items-center justify-between"
-                                key={index}
+                                key={bidder.id}
                             >
                                 <BidderDetails
                                     imgURI={bidder.bidderData.imageUrl ?? ""}
@@ -70,10 +69,25 @@ function SellerViewBiddersModal(props: Readonly<SellerViewBiddersModalProps>) {
                                     onPress={() => {
                                         handleApprove(bidder);
                                     }}
-                                    appearance="ghost"
-                                    style={{ backgroundColor: "#E1306C" }}
-                                    accessoryLeft={ApproveText}
-                                ></Button>
+                                    style={{
+                                        backgroundColor: hasConfirmedBidder
+                                            ? theme["color-basic-disabled"]
+                                            : "#E1306C",
+                                        borderWidth: 0,
+                                    }}
+                                    size="small"
+                                    appearance="filled"
+                                    disabled={hasConfirmedBidder}
+                                >
+                                    <Text
+                                        style={{
+                                            fontWeight: "bold",
+                                            color: "white",
+                                        }}
+                                    >
+                                        Approve
+                                    </Text>
+                                </Button>
                             </View>
                         ))}
                     </ScrollView>

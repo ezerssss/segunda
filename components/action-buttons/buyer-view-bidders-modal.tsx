@@ -2,16 +2,17 @@ import BidderDetails from "./bidder-details";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BidRequestSchema, BidRequestType } from "@/types/bidder";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import Modal from "react-native-modal";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, ActivityIndicator } from "react-native";
 import { Button, Icon, Input, Text, useTheme } from "@ui-kitten/components";
 import { bidItem } from "@/firebase/functions";
 import { ItemType } from "@/types/item";
 
 import useGetBidders from "@/hooks/useGetBidders";
 import NoBidders from "./no-bidders";
+import ConfirmBuyActionModal from "./confirm-buy-action-modal";
 
 interface StealModalProps {
     item: ItemType;
@@ -25,7 +26,13 @@ function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
     const { item, isModalVisible, setIsModalVisible, isSteal, isAutoFocused } =
         props;
     const { bidders } = useGetBidders(item.id, isModalVisible);
+    console.log("bidders are", bidders);
+
     const theme = useTheme();
+    const [isLoading, setIsLoading] = useState(false);
+    const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+
+    const [bidData, setBidData] = useState<BidRequestType | null>(null);
 
     const {
         handleSubmit,
@@ -36,18 +43,28 @@ function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
         defaultValues: {
             itemId: item.id,
         },
+        disabled: isLoading,
     });
 
-    async function handlePlaceBid(data: BidRequestType) {
+    function setConfirmModalParams(data: BidRequestType | null) {
+        setBidData(data);
+        setIsConfirmVisible(true);
+    }
+
+    async function handlePlaceBid(data: BidRequestType | null) {
+        setIsLoading(true);
         try {
             const response = await bidItem(data);
             console.log(response);
         } catch (e) {
             console.error(e);
+        } finally {
+            setIsLoading(false);
         }
     }
 
     async function handleMine() {
+        setIsLoading(true);
         try {
             const data = {
                 price: item.price,
@@ -58,7 +75,7 @@ function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
         } catch (e) {
             console.error(e);
         } finally {
-            setIsModalVisible(false);
+            setIsLoading(false);
         }
     }
 
@@ -74,7 +91,7 @@ function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
             style={{ justifyContent: "flex-end", margin: 0 }}
         >
             <View className="max-h-[75vh] min-h-60 rounded-t-3xl bg-white p-4">
-                <Text category="h4" className="mb-4">
+                <Text category="h4" className="mb-4 w-full text-left">
                     Active Bidders
                 </Text>
                 {bidders.length === 0 ? (
@@ -85,8 +102,8 @@ function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
                         showsHorizontalScrollIndicator={false}
                     >
                         {bidders.map(
-                            ({ bidderData, dateCreated, price }, index) => (
-                                <View className="my-4" key={index}>
+                            ({ bidderData, dateCreated, price, id }) => (
+                                <View className="my-4" key={id}>
                                     <BidderDetails
                                         imgURI={bidderData.imageUrl ?? ""}
                                         bid={price}
@@ -119,9 +136,10 @@ function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
                                     />
                                 )}
                             />
+
                             <Button
                                 className="mx-1 w-32"
-                                onPress={handleSubmit(handlePlaceBid)}
+                                onPress={handleSubmit(setConfirmModalParams)}
                                 style={{
                                     backgroundColor: "#E1306C",
                                     borderWidth: 0,
@@ -129,10 +147,14 @@ function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
                                 size="small"
                                 appearance="filled"
                                 accessoryLeft={
-                                    <Icon name="shopping-bag-outline" />
+                                    isLoading ? (
+                                        <ActivityIndicator color="white" />
+                                    ) : (
+                                        <Icon name="shopping-bag-outline" />
+                                    )
                                 }
                             >
-                                Steal
+                                {isLoading ? "" : "Steal"}
                             </Button>
                         </View>
                         {errors.price?.message && (
@@ -145,19 +167,32 @@ function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
                     <View className="mx-1 my-5">
                         <Button
                             className="flex-1"
-                            onPress={handleMine}
+                            onPress={() => setConfirmModalParams(null)}
                             style={{
                                 backgroundColor: theme["color-primary-500"],
                                 borderWidth: 0,
                             }}
                             size="small"
                             appearance="filled"
-                            accessoryLeft={<Icon name="shopping-bag-outline" />}
+                            accessoryLeft={
+                                isLoading ? (
+                                    <ActivityIndicator color="white" />
+                                ) : (
+                                    <Icon name="shopping-bag-outline" />
+                                )
+                            }
                         >
-                            Mine Now
+                            {isLoading ? "" : "Mine Now"}
                         </Button>
                     </View>
                 )}
+                <ConfirmBuyActionModal
+                    handleConfirm={isSteal ? handlePlaceBid : handleMine}
+                    data={bidData}
+                    isSteal={isSteal}
+                    isModalVisible={isConfirmVisible}
+                    setIsModalVisible={setIsConfirmVisible}
+                ></ConfirmBuyActionModal>
             </View>
         </Modal>
     );
