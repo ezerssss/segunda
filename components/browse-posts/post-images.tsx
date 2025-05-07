@@ -21,6 +21,7 @@ function PostItemImages(props: PostItemImagesProps) {
                         height: 350,
                         width: "100%",
                         resizeMode: "cover",
+                        marginTop: 8,
                     }}
                     cachePolicy={"memory"}
                 />
