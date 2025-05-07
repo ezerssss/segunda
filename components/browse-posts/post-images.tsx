@@ -5,45 +5,38 @@ import { Image } from "expo-image";
 
 interface PostItemImagesProps {
     imageUrls: string[];
+    blurHashes: string[];
 }
 
 function PostItemImages(props: PostItemImagesProps) {
-    const { imageUrls } = props;
+    const { imageUrls, blurHashes } = props;
 
     const count = Math.min(imageUrls.length, 4);
 
     if (count === 1) {
         return (
-            <View className="mb-2 w-full">
-                <Image
-                    source={{ uri: imageUrls[0] }}
-                    style={{
-                        height: 350,
-                        width: "100%",
-                        resizeMode: "cover",
-                        marginTop: 8,
-                    }}
-                    cachePolicy={"memory"}
-                />
-            </View>
+            <Image
+                source={{ uri: imageUrls[0] }}
+                className="aspect-square w-full flex-1 rounded"
+                contentFit="cover"
+                placeholder={{ blurhash: blurHashes[0] }}
+                placeholderContentFit="cover"
+            />
         );
     }
 
     if (count === 2) {
         return (
-            <View className="mt-4 flex-row justify-between">
-                {imageUrls.slice(0, 2).map((uri) => (
-                    <View key={uri} className="mb-2 w-[49%]">
-                        <Image
-                            source={{ uri }}
-                            style={{
-                                height: 200,
-                                width: "100%",
-                                resizeMode: "cover",
-                            }}
-                            cachePolicy={"memory"}
-                        />
-                    </View>
+            <View className="flex-row justify-between gap-[1px]">
+                {imageUrls.slice(0, 2).map((uri, index) => (
+                    <Image
+                        key={uri}
+                        source={{ uri }}
+                        className="aspect-square flex-1 rounded"
+                        contentFit="cover"
+                        placeholder={{ blurhash: blurHashes[index] }}
+                        placeholderContentFit="cover"
+                    />
                 ))}
             </View>
         );
@@ -51,30 +44,23 @@ function PostItemImages(props: PostItemImagesProps) {
 
     if (count === 3) {
         return (
-            <View className="mt-4 w-full flex-row">
-                <View className="mb-2 w-[66%] pr-1">
-                    <Image
-                        source={{ uri: imageUrls[0] }}
-                        style={{
-                            height: 250,
-                            width: "100%",
-                            resizeMode: "cover",
-                        }}
-                        cachePolicy={"memory"}
-                    />
-                </View>
-                <View className="mb-2 w-[33%] flex-col gap-1">
-                    {imageUrls.slice(1, 3).map((uri) => (
+            <View className="flex-row gap-[1px]">
+                <Image
+                    source={{ uri: imageUrls[0] }}
+                    className="flex-1 rounded"
+                    contentFit="cover"
+                    placeholder={{ blurhash: blurHashes[0] }}
+                    placeholderContentFit="cover"
+                />
+                <View className="w-[40%] gap-[1px]">
+                    {imageUrls.slice(1, 3).map((uri, index) => (
                         <Image
                             key={uri}
                             source={{ uri }}
-                            className="h-[123px] w-full"
-                            cachePolicy={"memory"}
-                            style={{
-                                height: 123,
-                                width: "100%",
-                                resizeMode: "cover",
-                            }}
+                            className="aspect-square flex-1 rounded"
+                            contentFit="cover"
+                            placeholder={{ blurhash: blurHashes[index] }}
+                            placeholderContentFit="cover"
                         />
                     ))}
                 </View>
@@ -83,32 +69,39 @@ function PostItemImages(props: PostItemImagesProps) {
     }
 
     return (
-        <View className="mt-4 flex-row flex-wrap justify-between">
-            {imageUrls.slice(0, 4).map((uri, idx) => (
-                <View key={uri} className="relative mb-2 w-[49%]">
+        <View className="flex flex-col gap-[1px]">
+            <View className="flex-row justify-between gap-[1px]">
+                {imageUrls.slice(0, 2).map((uri, index) => (
                     <Image
+                        key={uri}
                         source={{ uri }}
-                        style={{
-                            height: 150,
-                            width: "100%",
-                            resizeMode: "cover",
-                        }}
+                        className="aspect-square flex-1 rounded"
+                        contentFit="cover"
+                        placeholder={{ blurhash: blurHashes[index] }}
+                        placeholderContentFit="cover"
                     />
-                    {idx === 3 && imageUrls.length > 4 && (
-                        <View className="absolute inset-0 items-center justify-center bg-black/50">
-                            <Text
-                                style={{
-                                    fontSize: 15,
-                                    fontWeight: "bold",
-                                    color: "white",
-                                }}
-                            >
-                                + {imageUrls.length - 4}
-                            </Text>
-                        </View>
-                    )}
-                </View>
-            ))}
+                ))}
+            </View>
+            <View className="flex-row justify-between gap-[1px]">
+                {imageUrls.slice(2, 4).map((uri, index) => (
+                    <View key={uri} className="relative aspect-square flex-1">
+                        <Image
+                            source={{ uri }}
+                            className="aspect-square flex-1 rounded"
+                            contentFit="cover"
+                            placeholder={{ blurhash: blurHashes[index] }}
+                            placeholderContentFit="cover"
+                        />
+                        {index === 1 && imageUrls.length > 4 && (
+                            <View className="absolute inset-0 items-center justify-center bg-black/50">
+                                <Text category="h4" className="text-white">
+                                    + {imageUrls.length - 4}
+                                </Text>
+                            </View>
+                        )}
+                    </View>
+                ))}
+            </View>
         </View>
     );
 }
