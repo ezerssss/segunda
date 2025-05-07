@@ -9,48 +9,39 @@ import { memo } from "react";
 
 interface PostItemProps {
     post: PostType;
-    userName?: string;
-    userImageUrl?: string;
     isLast: boolean;
 }
 
 function PostItem(props: PostItemProps) {
-    const { post, userName, userImageUrl, isLast } = props;
+    const { post, isLast } = props;
+    const { id, sellerData, caption, tags, imageUrls, blurHashes } = post;
 
     return (
         <>
             <View className="mb-5 flex flex-col">
                 <PostHeader
-                    postId={post.id}
-                    userName={userName}
-                    userImageUrl={userImageUrl}
+                    postId={id}
+                    userName={sellerData.name}
+                    userImageUrl={sellerData.imageUrl ?? ""}
                 />
                 <View className="w-full px-2">
-                    <Text>{post.caption}</Text>
-                    <View className="mt-1 flex-row flex-wrap gap-1">
-                        {post.tags.map((tag) => (
-                            <Text
-                                key={tag}
-                                style={{
-                                    color: "blue",
-                                }}
-                            >
+                    <Text>{caption}</Text>
+                    <View className="mb-2 mt-1 flex-row flex-wrap gap-1">
+                        {tags.map((tag) => (
+                            <Text key={tag} className="text-[blue]">
                                 #{tag}
                             </Text>
                         ))}
                     </View>
-                    <PostItemImages imageUrls={post.imageUrls} />
+                    <PostItemImages
+                        imageUrls={imageUrls}
+                        blurHashes={blurHashes}
+                    />
                     <PostHearts />
                 </View>
             </View>
             {!isLast && (
-                <Divider
-                    style={{
-                        height: 4,
-                        backgroundColor: "#f0f2f5",
-                        width: "100%",
-                    }}
-                />
+                <Divider className="h-1 flex-1 rounded-lg bg-gray-200" />
             )}
         </>
     );
