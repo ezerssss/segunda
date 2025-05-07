@@ -9,16 +9,13 @@ import { memo } from "react";
 
 interface PostItemProps {
     post: PostType;
-    isVisible: boolean;
     userName?: string;
     userImageUrl?: string;
     isLast: boolean;
-    hasLoadedBefore: boolean;
 }
 
 function PostItem(props: PostItemProps) {
-    const { post, isVisible, userName, userImageUrl, isLast, hasLoadedBefore } =
-        props;
+    const { post, userName, userImageUrl, isLast } = props;
 
     return (
         <>
@@ -42,11 +39,7 @@ function PostItem(props: PostItemProps) {
                             </Text>
                         ))}
                     </View>
-                    <PostItemImages
-                        imageUrls={post.imageUrls}
-                        isVisible={isVisible}
-                        hasLoadedBefore={hasLoadedBefore}
-                    />
+                    <PostItemImages imageUrls={post.imageUrls} />
                     <PostHearts />
                 </View>
             </View>

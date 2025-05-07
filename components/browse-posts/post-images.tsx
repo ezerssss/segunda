@@ -5,16 +5,10 @@ import { Image } from "expo-image";
 
 interface PostItemImagesProps {
     imageUrls: string[];
-    isVisible: boolean;
-    hasLoadedBefore: boolean;
 }
 
 function PostItemImages(props: PostItemImagesProps) {
-    const { imageUrls, isVisible, hasLoadedBefore } = props;
-
-    if (!isVisible && !hasLoadedBefore) {
-        return <View className="h-[175px] w-full bg-gray-200" />;
-    }
+    const { imageUrls } = props;
 
     const count = Math.min(imageUrls.length, 4);
 

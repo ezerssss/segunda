@@ -1,5 +1,5 @@
-import { FlatList, ViewToken } from "react-native";
-import { useEffect, useState, useCallback } from "react";
+import { FlatList } from "react-native";
+import { useEffect, useState } from "react";
 import {
     collection,
     query,
@@ -24,8 +24,6 @@ export default function BrowsePostsPage() {
         >();
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const [visiblePostIds, setVisiblePostIds] = useState<string[]>([]);
-    const [loadedPostIds, setLoadedPostIds] = useState<Set<string>>(new Set());
 
     useEffect(() => {
         setIsLoading(true);
@@ -121,51 +119,25 @@ export default function BrowsePostsPage() {
         }
     }
 
-    const onViewableItemsChanged = useCallback(
-        ({ viewableItems }: { viewableItems: ViewToken[] }) => {
-            const nowVisible = viewableItems.map((v) => v.item.id);
-            setVisiblePostIds(nowVisible);
-            setLoadedPostIds((prev) => {
-                const next = new Set(prev);
-                nowVisible.forEach((id) => next.add(id));
-                return next;
-            });
-        },
-        [],
-    );
-
     return (
         <FlatList
             data={posts}
             keyExtractor={(item) => item.id}
             renderItem={({ item, index }) => {
-                const isVisible = visiblePostIds.includes(item.id);
-                const hasLoadedBefore = loadedPostIds.has(item.id);
                 const isLast = index === posts.length - 1;
                 return (
                     <PostItem
                         key={item.id}
                         post={item}
-                        isVisible={isVisible}
                         userName={item.sellerData?.name}
                         userImageUrl={item.sellerData?.imageUrl ?? ""}
                         isLast={isLast}
-                        hasLoadedBefore={hasLoadedBefore}
                     />
                 );
             }}
-            extraData={visiblePostIds}
             onEndReached={fetchMorePosts}
-            onEndReachedThreshold={0.5}
-            viewabilityConfig={{
-                viewAreaCoveragePercentThreshold: 30,
-                minimumViewTime: 200,
-            }}
-            onViewableItemsChanged={onViewableItemsChanged}
-            windowSize={15}
-            maxToRenderPerBatch={10}
-            initialNumToRender={10}
-            removeClippedSubviews={true}
+            initialNumToRender={5}
+            removeClippedSubviews={false}
             ListFooterComponent={
                 <BrowserFooter isLoading={isLoading} hasMore={hasMore} />
             }
