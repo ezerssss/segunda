@@ -1,6 +1,7 @@
-import { View, Image } from "react-native";
+import { View } from "react-native";
 import { Text } from "@ui-kitten/components";
 import { memo } from "react";
+import { Image } from "expo-image";
 
 interface PostItemImagesProps {
     imageUrls: string[];
@@ -22,8 +23,12 @@ function PostItemImages(props: PostItemImagesProps) {
             <View className="mb-2 w-full">
                 <Image
                     source={{ uri: imageUrls[0] }}
-                    className="h-[350px] w-full"
-                    resizeMode="cover"
+                    style={{
+                        height: 350,
+                        width: "100%",
+                        resizeMode: "cover",
+                    }}
+                    cachePolicy={"memory"}
                 />
             </View>
         );
@@ -36,8 +41,12 @@ function PostItemImages(props: PostItemImagesProps) {
                     <View key={uri} className="mb-2 w-[49%]">
                         <Image
                             source={{ uri }}
-                            className="h-[200px] w-full"
-                            resizeMode="cover"
+                            style={{
+                                height: 200,
+                                width: "100%",
+                                resizeMode: "cover",
+                            }}
+                            cachePolicy={"memory"}
                         />
                     </View>
                 ))}
@@ -51,8 +60,12 @@ function PostItemImages(props: PostItemImagesProps) {
                 <View className="mb-2 w-[66%] pr-1">
                     <Image
                         source={{ uri: imageUrls[0] }}
-                        className="h-[250px] w-full"
-                        resizeMode="cover"
+                        style={{
+                            height: 250,
+                            width: "100%",
+                            resizeMode: "cover",
+                        }}
+                        cachePolicy={"memory"}
                     />
                 </View>
                 <View className="mb-2 w-[33%] flex-col gap-1">
@@ -61,7 +74,12 @@ function PostItemImages(props: PostItemImagesProps) {
                             key={uri}
                             source={{ uri }}
                             className="h-[123px] w-full"
-                            resizeMode="cover"
+                            cachePolicy={"memory"}
+                            style={{
+                                height: 123,
+                                width: "100%",
+                                resizeMode: "cover",
+                            }}
                         />
                     ))}
                 </View>
@@ -75,8 +93,11 @@ function PostItemImages(props: PostItemImagesProps) {
                 <View key={uri} className="relative mb-2 w-[49%]">
                     <Image
                         source={{ uri }}
-                        className="h-[150px] w-full"
-                        resizeMode="cover"
+                        style={{
+                            height: 150,
+                            width: "100%",
+                            resizeMode: "cover",
+                        }}
                     />
                     {idx === 3 && imageUrls.length > 4 && (
                         <View className="absolute inset-0 items-center justify-center bg-black/50">
