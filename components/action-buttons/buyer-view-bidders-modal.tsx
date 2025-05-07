@@ -26,8 +26,6 @@ function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
     const { item, isModalVisible, setIsModalVisible, isSteal, isAutoFocused } =
         props;
     const { bidders } = useGetBidders(item.id, isModalVisible);
-    console.log("bidders are", bidders);
-
     const theme = useTheme();
     const [isLoading, setIsLoading] = useState(false);
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
