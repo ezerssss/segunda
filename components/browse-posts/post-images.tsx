@@ -101,8 +101,14 @@ function PostItemImages(props: PostItemImagesProps) {
                     />
                     {idx === 3 && imageUrls.length > 4 && (
                         <View className="absolute inset-0 items-center justify-center bg-black/50">
-                            <Text className="text-xl font-bold text-white">
-                                +{imageUrls.length - 4}
+                            <Text
+                                style={{
+                                    fontSize: 15,
+                                    fontWeight: "bold",
+                                    color: "white",
+                                }}
+                            >
+                                + {imageUrls.length - 4}
                             </Text>
                         </View>
                     )}
