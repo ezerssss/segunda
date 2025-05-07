@@ -14,6 +14,7 @@ import { db } from "@/firebase/db";
 import { PostType } from "@/types/post";
 import BrowserFooter from "@/components/browse-posts/browse-footer";
 import PostItem from "@/components/browse-posts/post-item";
+import { MAX_POSTS_PER_LOAD } from "@/constants/post";
 
 export default function BrowsePostsPage() {
     const [posts, setPosts] = useState<PostType[]>([]);
@@ -25,14 +26,13 @@ export default function BrowsePostsPage() {
     const [hasMore, setHasMore] = useState(true);
     const [visiblePostIds, setVisiblePostIds] = useState<string[]>([]);
     const [loadedPostIds, setLoadedPostIds] = useState<Set<string>>(new Set());
-    const pageSize = 10;
 
     useEffect(() => {
         setIsLoading(true);
         const postsQuery = query(
             collection(db, "posts"),
             orderBy("dateUpdated", "desc"),
-            limit(pageSize),
+            limit(MAX_POSTS_PER_LOAD),
         );
 
         const unsubscribePosts = onSnapshot(
@@ -85,7 +85,7 @@ export default function BrowsePostsPage() {
                 collection(db, "posts"),
                 orderBy("dateUpdated", "desc"),
                 startAfter(lastPostDoc),
-                limit(pageSize),
+                limit(MAX_POSTS_PER_LOAD),
             );
 
             const postsQuerySnapshot = await getDocs(postsQuery);

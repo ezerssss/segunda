@@ -24,7 +24,6 @@ function PostItemImages(props: PostItemImagesProps) {
                     source={{ uri: imageUrls[0] }}
                     className="h-[350px] w-full"
                     resizeMode="cover"
-                    onLoadEnd={() => console.log("img w 1 ")}
                 />
             </View>
         );
@@ -39,7 +38,6 @@ function PostItemImages(props: PostItemImagesProps) {
                             source={{ uri }}
                             className="h-[200px] w-full"
                             resizeMode="cover"
-                            onLoadEnd={() => console.log("img w 2 ")}
                         />
                     </View>
                 ))}
@@ -55,7 +53,6 @@ function PostItemImages(props: PostItemImagesProps) {
                         source={{ uri: imageUrls[0] }}
                         className="h-[250px] w-full"
                         resizeMode="cover"
-                        onLoadEnd={() => console.log("img w 3 ")}
                     />
                 </View>
                 <View className="mb-2 w-[33%] flex-col gap-1">
@@ -80,7 +77,6 @@ function PostItemImages(props: PostItemImagesProps) {
                         source={{ uri }}
                         className="h-[150px] w-full"
                         resizeMode="cover"
-                        onLoadEnd={() => console.log("img w 4 or mor loded")}
                     />
                     {idx === 3 && imageUrls.length > 4 && (
                         <View className="absolute inset-0 items-center justify-center bg-black/50">
