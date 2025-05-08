@@ -89,7 +89,7 @@ function PostItemImages(props: PostItemImagesProps) {
                             source={{ uri }}
                             className="aspect-square flex-1 rounded"
                             contentFit="cover"
-                            placeholder={{ blurhash: blurHashes[index] }}
+                            placeholder={{ blurhash: blurHashes[index + 2] }}
                             placeholderContentFit="cover"
                         />
                         {index === 1 && imageUrls.length > 4 && (
