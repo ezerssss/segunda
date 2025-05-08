@@ -19,6 +19,7 @@ export const ItemSchema = z.object({
         .trim()
         .max(500, { message: "Description can only be 500 letters long." }),
     imageUrl: z.string().url(),
+    blurHash: z.string().min(1),
     miner: BidSchema.nullable(),
     confirmedBidder: BidSchema.nullable(),
     dateCreated: z.string().datetime(),
@@ -43,6 +44,7 @@ export const ItemFormSchema = ItemSchema.omit({
     postId: true,
     price: true,
     imageUrl: true,
+    blurHash: true,
     miner: true,
     confirmedBidder: true,
     dateCreated: true,

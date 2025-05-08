@@ -4,32 +4,23 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
-import "../global.css";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { UserContext, UserContextData } from "../contexts/userContext";
 import * as eva from "@eva-design/eva";
-import {
-    ApplicationProvider,
-    IconRegistry,
-    Input,
-} from "@ui-kitten/components";
+import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
 import { default as theme } from "../custom-theme.json";
 import { default as mapping } from "../custom-mapping.json";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import auth from "@/firebase/auth";
-import { cssInterop } from "nativewind";
 import { UserDataType } from "@/types/user";
 import { doc, getDoc } from "@react-native-firebase/firestore";
 import { usersCollectionRef } from "@/constants/collections";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
+import "../utils/native-wind-config";
+import "../global.css";
+
 SplashScreen.preventAutoHideAsync();
-cssInterop(Input, {
-    className: {
-        target: "style",
-    },
-    textClassName: "textStyle",
-});
 
 export default function RootLayout() {
     const [loaded] = useFonts({
@@ -46,12 +37,16 @@ export default function RootLayout() {
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((user) => {
-            if (user === null) {
+            if (!user) {
                 setUser(null);
                 return;
             }
 
             (async () => {
+                if (!user) {
+                    return;
+                }
+
                 try {
                     const userDocRef = doc(usersCollectionRef, user.uid);
                     const userDoc = await getDoc(userDocRef);
