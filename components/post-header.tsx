@@ -1,6 +1,6 @@
 import { View, TouchableOpacity } from "react-native";
 import { Text, Divider, Icon } from "@ui-kitten/components";
-import UserHeader from "../user/user-header";
+import UserHeader from "./user/user-header";
 import { useRef } from "react";
 import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
 

@@ -31,12 +31,6 @@ export default function Home() {
             >
                 <Text>Browse Posts</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                className="self-baseline rounded border px-4 py-2"
-                onPress={() => router.push("/view-post")}
-            >
-                <Text>Go to View Post Page</Text>
-            </TouchableOpacity>
         </View>
     );
 }

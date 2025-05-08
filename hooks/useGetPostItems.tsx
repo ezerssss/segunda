@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { usePostContext } from "@/contexts/postContext";
 
 export function useGetPostItems(postId: string) {
-    const { postItems, setPostItems } = usePostContext();
+    const { setPostItems } = usePostContext();
 
     useEffect(() => {
         const unsubsribe = onSnapshot(
@@ -30,8 +30,6 @@ export function useGetPostItems(postId: string) {
         );
         return unsubsribe;
     }, []);
-
-    return postItems;
 }
 
 export default useGetPostItems;

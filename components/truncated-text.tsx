@@ -20,7 +20,6 @@ export function TruncatedText(props: PropsInterface) {
     return (
         <>
             <Text
-                category="c2"
                 style={{ color: textColor }}
                 numberOfLines={isExpanded ? undefined : 2}
                 ellipsizeMode="clip"
@@ -28,10 +27,7 @@ export function TruncatedText(props: PropsInterface) {
                 {text}
             </Text>
             <TouchableOpacity onPress={toggleExpanded}>
-                <Text
-                    category="c2"
-                    style={{ color: textColor, fontWeight: "bold" }}
-                >
+                <Text style={{ color: textColor, fontWeight: "bold" }}>
                     {isExpanded ? "See Less" : "...See More"}
                 </Text>
             </TouchableOpacity>
