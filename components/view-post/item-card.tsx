@@ -27,7 +27,7 @@ export function ItemCard(props: PropsInterface) {
     }
 
     return (
-        <View className="flex gap-2">
+        <View className="flex">
             <View className="aspect-square w-full items-center justify-center overflow-hidden">
                 <Image
                     className="h-full w-full"

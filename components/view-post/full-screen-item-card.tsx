@@ -31,7 +31,7 @@ export function FullScreenItemCard(props: PropsInterface) {
 
     return (
         <View
-            className="relative flex gap-2"
+            className="relative flex"
             style={{ width, height, backgroundColor: "black" }}
         >
             <Zoomable
@@ -67,14 +67,12 @@ export function FullScreenItemCard(props: PropsInterface) {
                     <Text category="h6" style={{ color }}>
                         PHP{price}
                     </Text>
-                    <Text category="s1" style={{ color }}>
-                        {name}
-                    </Text>
+                    <Text style={{ color }}>{name}</Text>
                     {!!description && (
                         <TruncatedText text={description} color={color} />
                     )}
                 </View>
-                <View className="flex flex-row justify-between gap-2 px-4 py-2">
+                <View className="flex flex-row justify-between gap-2 px-2 py-4">
                     {!confirmed && (
                         <Button
                             onPress={clickedMined}

@@ -5,9 +5,10 @@ import { TouchableOpacity } from "react-native";
 interface PropsInterface {
     text: string;
     color?: string;
+    isItemCard?: boolean;
 }
 export function TruncatedText(props: PropsInterface) {
-    const { text, color = "black" } = props;
+    const { text, color = "black", isItemCard = true } = props;
     const [isExpanded, setIsExpanded] = useState(false);
     const [numLines, setNumLines] = useState(0);
 
@@ -19,7 +20,7 @@ export function TruncatedText(props: PropsInterface) {
         setNumLines(event.nativeEvent.lines.length);
     }
 
-    const seeMoreColor = color === "black" ? "gray-400" : "white";
+    const seeMoreColor = color === "black" ? "zinc-50" : "white";
 
     return (
         <>
@@ -28,12 +29,18 @@ export function TruncatedText(props: PropsInterface) {
                 onTextLayout={handleTextLayout}
                 numberOfLines={isExpanded ? undefined : 2}
                 ellipsizeMode="clip"
+                category={isItemCard ? "c1" : "s1"}
             >
                 {text}
             </Text>
             {!isExpanded && numLines > 1 && (
                 <TouchableOpacity onPress={toggleExpanded}>
-                    <Text className={`text-${seeMoreColor}`}>...See More</Text>
+                    <Text
+                        className={`text-${seeMoreColor}`}
+                        category={isItemCard ? "c1" : "s1"}
+                    >
+                        ...See More
+                    </Text>
                 </TouchableOpacity>
             )}
         </>
