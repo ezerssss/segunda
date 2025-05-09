@@ -2,7 +2,6 @@ import { PostType } from "@/types/post";
 import { TouchableOpacity, View } from "react-native";
 import PostHeader from "../post-header";
 import { Divider } from "@ui-kitten/components";
-import { Text } from "react-native-animatable";
 import PostItemImages from "./post-images";
 import PostHearts from "./post-hearts";
 import { memo } from "react";
@@ -30,16 +29,10 @@ function PostItem(props: PostItemProps) {
                     postId={id}
                     userName={sellerData.name}
                     userImageUrl={sellerData.imageUrl ?? ""}
+                    caption={caption}
+                    tags={tags}
                 />
-                <View className="w-full px-2">
-                    <Text>{caption}</Text>
-                    <View className="mb-2 mt-1 flex-row flex-wrap gap-1">
-                        {tags.map((tag) => (
-                            <Text key={tag} className="text-[blue]">
-                                #{tag}
-                            </Text>
-                        ))}
-                    </View>
+                <View className="w-full">
                     <PostItemImages
                         imageUrls={imageUrls}
                         blurHashes={blurHashes}

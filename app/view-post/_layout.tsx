@@ -7,7 +7,7 @@ import { PostType } from "@/types/post";
 
 export default function RootLayout() {
     const [postItems, setPostItems] = useState<ItemType[]>([]);
-    const [post, setPost] = useState<PostType | undefined>({} as PostType);
+    const [post, setPost] = useState<PostType | null>(null);
 
     return (
         <PostContext.Provider

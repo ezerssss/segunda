@@ -9,7 +9,7 @@ const multiSelectStyle = StyleSheet.create({
         marginTop: 4,
     },
     dropdownContainer: {
-        backgroundColor: "#ffffff",
+        backgroundColor: "white",
         borderRadius: 4,
     },
     hashtagChip: {
@@ -17,7 +17,7 @@ const multiSelectStyle = StyleSheet.create({
         alignItems: "center",
         borderRadius: 20,
         paddingHorizontal: 12,
-        paddingVertical: 6,
+        paddingVertical: 4,
         marginRight: 8,
         marginTop: 8,
     },
@@ -28,7 +28,6 @@ const multiSelectStyle = StyleSheet.create({
     },
     hashtagClose: {
         color: "white",
-        fontSize: 18,
     },
 });
 

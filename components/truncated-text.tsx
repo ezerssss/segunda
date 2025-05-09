@@ -1,4 +1,4 @@
-import { Text, useTheme } from "@ui-kitten/components";
+import { Text } from "@ui-kitten/components";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native";
 
@@ -7,30 +7,35 @@ interface PropsInterface {
     color?: string;
 }
 export function TruncatedText(props: PropsInterface) {
-    const { text, color } = props;
+    const { text, color = "black" } = props;
     const [isExpanded, setIsExpanded] = useState(false);
-    const theme = useTheme();
+    const [numLines, setNumLines] = useState(0);
 
-    const toggleExpanded = () => {
+    function toggleExpanded() {
         setIsExpanded(!isExpanded);
-    };
+    }
 
-    const textColor = color ?? theme["color-gray-500"];
+    function handleTextLayout(event: any) {
+        setNumLines(event.nativeEvent.lines.length);
+    }
+
+    const seeMoreColor = color === "black" ? "gray-400" : "white";
 
     return (
         <>
             <Text
-                style={{ color: textColor }}
+                className={`text-${color}`}
+                onTextLayout={handleTextLayout}
                 numberOfLines={isExpanded ? undefined : 2}
                 ellipsizeMode="clip"
             >
                 {text}
             </Text>
-            <TouchableOpacity onPress={toggleExpanded}>
-                <Text style={{ color: textColor, fontWeight: "bold" }}>
-                    {isExpanded ? "See Less" : "...See More"}
-                </Text>
-            </TouchableOpacity>
+            {!isExpanded && numLines > 1 && (
+                <TouchableOpacity onPress={toggleExpanded}>
+                    <Text className={`text-${seeMoreColor}`}>...See More</Text>
+                </TouchableOpacity>
+            )}
         </>
     );
 }

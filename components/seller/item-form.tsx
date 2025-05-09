@@ -45,7 +45,7 @@ function ItemForm(props: ItemFormProps) {
     }
 
     return (
-        <View className="m-4">
+        <View className="mb-2">
             <Text category="label" className="mb-2 mt-4 font-semibold">
                 Upload Image
             </Text>

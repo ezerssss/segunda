@@ -1,18 +1,22 @@
-import { FlatList, Dimensions, View } from "react-native";
-import { Text } from "@ui-kitten/components";
+import { FlatList, Dimensions, View, ActivityIndicator } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import { usePostContext } from "@/contexts/postContext";
+import { PostContext } from "@/contexts/postContext";
 import ItemCard from "@/components/view-post/item-card";
+import { useContext } from "react";
 
 export default function FullScreenPage() {
     const { width } = Dimensions.get("window");
 
     const { index } = useLocalSearchParams();
-    const { postItems } = usePostContext();
+    const { postItems, post } = useContext(PostContext);
     const initialIndex = parseInt(index[0], 10);
 
-    if (!postItems || postItems.length === 0) {
-        return <Text>Loading...</Text>;
+    if (!postItems || !post || postItems.length === 0) {
+        return (
+            <View className="min-h-screen flex-1 items-center justify-center bg-white">
+                <ActivityIndicator />
+            </View>
+        );
     }
 
     return (
@@ -34,14 +38,18 @@ export default function FullScreenPage() {
                 offset: width * index,
                 index,
             })}
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
                 <View
                     className="flex gap-2"
                     style={{
                         width,
                     }}
                 >
-                    <ItemCard item={item} color="white" />
+                    <ItemCard
+                        item={item}
+                        color="white"
+                        blurhash={post.blurHashes[index]}
+                    />
                 </View>
             )}
         />

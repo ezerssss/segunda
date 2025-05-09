@@ -1,16 +1,18 @@
-import React, { useState } from "react";
-import { View, Image } from "react-native";
+import React, { useState, memo } from "react";
+import { View } from "react-native";
 import { Button, Icon, Text, useTheme } from "@ui-kitten/components";
 import { TruncatedText } from "../truncated-text";
 import { ItemType } from "@/types/item";
+import { Image } from "expo-image";
 
 interface PropsInterface {
     item: ItemType;
     color?: string;
+    blurhash: string;
 }
 
-export default function ItemCard(props: PropsInterface) {
-    const { item, color = "black" } = props;
+export function ItemCard(props: PropsInterface) {
+    const { item, color = "black", blurhash } = props;
     const { name, price, description, imageUrl } = item;
     const [isMined, setIsMined] = useState(false);
     const theme = useTheme();
@@ -32,6 +34,7 @@ export default function ItemCard(props: PropsInterface) {
                     source={{
                         uri: imageUrl,
                     }}
+                    placeholder={{ blurhash }}
                 />
             </View>
             <View className="m-0 w-full px-4 pb-0 pt-2">
@@ -83,3 +86,5 @@ export default function ItemCard(props: PropsInterface) {
         </View>
     );
 }
+
+export default memo(ItemCard);

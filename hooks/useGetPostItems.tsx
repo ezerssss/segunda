@@ -6,11 +6,12 @@ import {
     FirebaseFirestoreTypes,
     onSnapshot,
 } from "@react-native-firebase/firestore";
-import { useEffect } from "react";
-import { usePostContext } from "@/contexts/postContext";
+import { useContext, useEffect, useState } from "react";
+import { PostContext } from "@/contexts/postContext";
 
 export function useGetPostItems(postId: string) {
-    const { setPostItems } = usePostContext();
+    const { setPostItems } = useContext(PostContext);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const unsubsribe = onSnapshot(
@@ -25,11 +26,14 @@ export function useGetPostItems(postId: string) {
                     items.push(data);
                 });
                 setPostItems(items);
+                setIsLoading(false);
             },
             () => console.error("Failed getting post items"),
         );
         return unsubsribe;
     }, []);
+
+    return isLoading;
 }
 
 export default useGetPostItems;
