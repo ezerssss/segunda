@@ -1,7 +1,7 @@
 import { FlatList, Dimensions, View, ActivityIndicator } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { PostContext } from "@/contexts/postContext";
-import ItemCard from "@/components/view-post/item-card";
+import FullScreenItemCard from "@/components/view-post/full-screen-item-card";
 import { useContext } from "react";
 
 export default function FullScreenPage() {
@@ -22,12 +22,6 @@ export default function FullScreenPage() {
     return (
         <FlatList
             data={postItems}
-            contentContainerStyle={{
-                padding: 0,
-                margin: 0,
-                backgroundColor: "black",
-                alignItems: "center",
-            }}
             horizontal
             pagingEnabled
             initialScrollIndex={initialIndex}
@@ -39,18 +33,11 @@ export default function FullScreenPage() {
                 index,
             })}
             renderItem={({ item, index }) => (
-                <View
-                    className="flex gap-2"
-                    style={{
-                        width,
-                    }}
-                >
-                    <ItemCard
-                        item={item}
-                        color="white"
-                        blurhash={post.blurHashes[index]}
-                    />
-                </View>
+                <FullScreenItemCard
+                    item={item}
+                    color="white"
+                    blurhash={post.blurHashes[index]}
+                />
             )}
         />
     );
