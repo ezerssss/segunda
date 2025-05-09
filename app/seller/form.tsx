@@ -136,7 +136,10 @@ export default function SellerFormPage() {
     }
 
     return (
-        <ScrollView className="bg-white" showsVerticalScrollIndicator={false}>
+        <ScrollView
+            className="bg-white px-4"
+            showsVerticalScrollIndicator={false}
+        >
             {isLoading && <ProgressBar progress={progress} />}
 
             <View className="flex-row items-center px-0 py-4">

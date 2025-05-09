@@ -101,5 +101,5 @@ export default function useGetPosts() {
         }
     }
 
-    return { posts, fetchMorePosts };
+    return { posts, fetchMorePosts, isLoading };
 }
