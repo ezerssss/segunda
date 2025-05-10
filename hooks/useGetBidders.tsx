@@ -4,20 +4,21 @@ import {
     orderBy,
     query,
     doc,
+    getDocs,
 } from "@react-native-firebase/firestore";
 import { db } from "@/firebase/db";
-import { useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { CollectionEnum } from "@/enums/collection";
 import { BidType } from "@/types/bidder";
+import { BiddersModalContext } from "@/contexts/biddersModalContext";
+import { ItemType } from "@/types/item";
 
-function useGetBidders(itemID: string, isModalVisible: boolean) {
-    const [bidders, setBidders] = useState<BidType[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+function useGetBidders(item: ItemType, isModalVisible: boolean) {
+    const { setModalContent } = useContext(BiddersModalContext);
 
     useEffect(() => {
         if (!isModalVisible) return;
-        setIsLoading(true);
-        const itemDocRef = doc(db, CollectionEnum.ITEMS, itemID);
+        const itemDocRef = doc(db, CollectionEnum.ITEMS, item.id);
         const biddersCollectionRef = collection(
             itemDocRef,
             CollectionEnum.BIDDERS,
@@ -36,8 +37,7 @@ function useGetBidders(itemID: string, isModalVisible: boolean) {
                         return bidderDoc.data() as BidType;
                     },
                 );
-
-                setBidders(bidders);
+                setModalContent({ item: item, bidders: bidders });
             },
 
             (error) => {
@@ -48,6 +48,18 @@ function useGetBidders(itemID: string, isModalVisible: boolean) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isModalVisible]);
 
-    return { bidders, isLoading };
+    async function getInitialBidders() {
+        const itemDocRef = doc(db, CollectionEnum.ITEMS, item.id);
+        const biddersCollectionRef = collection(
+            itemDocRef,
+            CollectionEnum.BIDDERS,
+        );
+        const querySnapshot = await getDocs(query(biddersCollectionRef));
+        const bidders: BidType[] = querySnapshot.docs.map((bidderDoc) => {
+            return bidderDoc.data() as BidType;
+        });
+        setModalContent({ item: item, bidders: bidders });
+    }
+    return getInitialBidders;
 }
 export default useGetBidders;

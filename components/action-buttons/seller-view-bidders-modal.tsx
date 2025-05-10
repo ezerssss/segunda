@@ -1,28 +1,26 @@
 import BidderDetails from "./bidder-details";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useContext, useState } from "react";
 
 import Modal from "react-native-modal";
 import { ScrollView, View } from "react-native";
 import { Button, Text, useTheme } from "@ui-kitten/components";
 import ConfirmBidderModal from "./confirm-bidder-modal";
-import { ItemType } from "@/types/item";
-import useGetBidders from "@/hooks/useGetBidders";
 import { BidType } from "@/types/bidder";
 import NoBidders from "./no-bidders";
+import { BiddersModalContext } from "@/contexts/biddersModalContext";
 
-interface SellerViewBiddersModalProps {
-    item: ItemType;
-    isModalVisible: boolean;
-    setIsModalVisible: Dispatch<SetStateAction<boolean>>;
-}
+function SellerViewBiddersModal() {
+    const {
+        isSellerViewModalVisible,
+        setIsSellerViewModalVisible,
+        modalContent,
+    } = useContext(BiddersModalContext);
+    const { item, bidders } = modalContent;
 
-function SellerViewBiddersModal(props: Readonly<SellerViewBiddersModalProps>) {
-    const { setIsModalVisible, isModalVisible, item } = props;
-    const hasConfirmedBidder = item.confirmedBidder !== null;
+    const hasConfirmedBidder = item?.confirmedBidder !== null;
 
     const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
     const [approvedBidder, setApprovedBidder] = useState<BidType>();
-    const { bidders } = useGetBidders(item.id, isModalVisible);
     const theme = useTheme();
 
     function handleApprove(bidder: BidType) {
@@ -32,9 +30,9 @@ function SellerViewBiddersModal(props: Readonly<SellerViewBiddersModalProps>) {
 
     return (
         <Modal
-            isVisible={isModalVisible}
-            onBackdropPress={() => setIsModalVisible(false)}
-            onBackButtonPress={() => setIsModalVisible(false)}
+            isVisible={isSellerViewModalVisible}
+            onBackdropPress={() => setIsSellerViewModalVisible(false)}
+            onBackButtonPress={() => setIsSellerViewModalVisible(false)}
             animationIn="slideInUp"
             animationOut="slideOutDown"
             useNativeDriver={false}
@@ -79,21 +77,14 @@ function SellerViewBiddersModal(props: Readonly<SellerViewBiddersModalProps>) {
                                     appearance="filled"
                                     disabled={hasConfirmedBidder}
                                 >
-                                    <Text
-                                        style={{
-                                            fontWeight: "bold",
-                                            color: "white",
-                                        }}
-                                    >
-                                        Approve
-                                    </Text>
+                                    Approve
                                 </Button>
                             </View>
                         ))}
                     </ScrollView>
                 )}
             </View>
-            {approvedBidder && (
+            {approvedBidder && item?.id && (
                 <ConfirmBidderModal
                     isModalVisible={isConfirmModalVisible}
                     setIsModalVisible={setIsConfirmModalVisible}

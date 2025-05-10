@@ -7,6 +7,7 @@ import "react-native-reanimated";
 import "../global.css";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { UserContext, UserContextData } from "../contexts/userContext";
+import { BiddersModalContext } from "@/contexts/biddersModalContext";
 import * as eva from "@eva-design/eva";
 import {
     ApplicationProvider,
@@ -22,6 +23,9 @@ import { UserDataType } from "@/types/user";
 import { doc, getDoc } from "@react-native-firebase/firestore";
 import { usersCollectionRef } from "@/constants/collections";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import ModalContentType from "@/types/modalContent";
+import BuyerViewBiddersModal from "@/components/action-buttons/buyer-view-bidders-modal";
+import SellerViewBiddersModal from "@/components/action-buttons/seller-view-bidders-modal";
 
 SplashScreen.preventAutoHideAsync();
 cssInterop(Input, {
@@ -37,6 +41,14 @@ export default function RootLayout() {
     });
 
     const [user, setUser] = useState<UserContextData | null>(null);
+    const [modalContent, setModalContent] = useState<ModalContentType>({
+        item: null,
+        bidders: [],
+    });
+    const [isBuyerViewModalVisible, setIsBuyerViewModalVisible] =
+        useState<boolean>(false);
+    const [isSellerViewModalVisible, setIsSellerViewModalVisible] =
+        useState<boolean>(false);
 
     useEffect(() => {
         if (loaded) {
@@ -81,10 +93,23 @@ export default function RootLayout() {
                 theme={{ ...eva.light, ...theme }}
             >
                 <UserContext.Provider value={{ user, setUser }}>
-                    <StatusBar style="auto" />
-                    <SafeAreaView className="flex-1 bg-white px-4">
-                        <Stack screenOptions={{ headerShown: false }} />
-                    </SafeAreaView>
+                    <BiddersModalContext.Provider
+                        value={{
+                            isBuyerViewModalVisible,
+                            isSellerViewModalVisible,
+                            modalContent,
+                            setIsSellerViewModalVisible,
+                            setIsBuyerViewModalVisible,
+                            setModalContent,
+                        }}
+                    >
+                        <StatusBar style="auto" />
+                        <SafeAreaView className="flex-1 bg-white px-4">
+                            <Stack screenOptions={{ headerShown: false }} />
+                            <BuyerViewBiddersModal />
+                            <SellerViewBiddersModal />
+                        </SafeAreaView>
+                    </BiddersModalContext.Provider>
                 </UserContext.Provider>
             </ApplicationProvider>
         </>

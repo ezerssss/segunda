@@ -1,8 +1,9 @@
 import { Button } from "@ui-kitten/components";
-import { useState } from "react";
-
-import SellerViewBiddersModal from "./seller-view-bidders-modal";
 import { ItemType } from "@/types/item";
+import { useContext, useState } from "react";
+import { BiddersModalContext } from "@/contexts/biddersModalContext";
+import useGetBidders from "@/hooks/useGetBidders";
+import { ActivityIndicator } from "react-native";
 
 interface SellerActionButtonProp {
     item: ItemType;
@@ -10,29 +11,31 @@ interface SellerActionButtonProp {
 
 function SellerActionButton(props: Readonly<SellerActionButtonProp>) {
     const { item } = props;
+    const { isSellerViewModalVisible, setIsSellerViewModalVisible } =
+        useContext(BiddersModalContext);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const [isModalVisible, setIsModalVisible] = useState(false);
-
-    function handleShowModal() {
-        setIsModalVisible(true);
+    async function handleShowModal() {
+        setIsLoading(true);
+        await getInitialBidders();
+        setIsLoading(false);
+        setIsSellerViewModalVisible(true);
     }
+
+    const getInitialBidders = useGetBidders(item, isSellerViewModalVisible);
     return (
-        <>
-            <Button
-                className="mx-1 flex-1"
-                onPress={handleShowModal}
-                size="small"
-                appearance="filled"
-                status="basic"
-            >
-                Show Bidders
-            </Button>
-            <SellerViewBiddersModal
-                isModalVisible={isModalVisible}
-                setIsModalVisible={setIsModalVisible}
-                item={item}
-            ></SellerViewBiddersModal>
-        </>
+        <Button
+            className="mx-1 flex-1"
+            onPress={handleShowModal}
+            size="small"
+            appearance="filled"
+            status="basic"
+            accessoryLeft={
+                isLoading ? <ActivityIndicator color="white" /> : <></>
+            }
+        >
+            {isLoading ? "" : "Show Bidders"}
+        </Button>
     );
 }
 

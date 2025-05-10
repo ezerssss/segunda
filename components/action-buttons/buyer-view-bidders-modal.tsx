@@ -2,30 +2,28 @@ import BidderDetails from "./bidder-details";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BidRequestSchema, BidRequestType } from "@/types/bidder";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import Modal from "react-native-modal";
 import { ScrollView, View, ActivityIndicator } from "react-native";
 import { Button, Icon, Input, Text, useTheme } from "@ui-kitten/components";
 import { bidItem } from "@/firebase/functions";
-import { ItemType } from "@/types/item";
 
-import useGetBidders from "@/hooks/useGetBidders";
 import NoBidders from "./no-bidders";
 import ConfirmBuyActionModal from "./confirm-buy-action-modal";
+import { BiddersModalContext } from "@/contexts/biddersModalContext";
 
-interface StealModalProps {
-    item: ItemType;
-    isModalVisible: boolean;
-    setIsModalVisible: Dispatch<SetStateAction<boolean>>;
-    isSteal: boolean;
-    isAutoFocused: boolean;
-}
+function BuyerViewBiddersModal() {
+    const {
+        modalContent,
+        isBuyerViewModalVisible,
+        setIsBuyerViewModalVisible,
+    } = useContext(BiddersModalContext);
+    const { item, bidders } = modalContent;
+    const itemId = item?.id ?? "";
+    console.log(item?.id);
 
-function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
-    const { item, isModalVisible, setIsModalVisible, isSteal, isAutoFocused } =
-        props;
-    const { bidders } = useGetBidders(item.id, isModalVisible);
+    const isSteal = item?.miner !== null;
     const theme = useTheme();
     const [isLoading, setIsLoading] = useState(false);
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
@@ -36,15 +34,18 @@ function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
         handleSubmit,
         formState: { errors },
         control,
+        getValues,
+        reset,
     } = useForm<BidRequestType>({
         resolver: zodResolver(BidRequestSchema),
         defaultValues: {
-            itemId: item.id,
+            itemId: itemId,
         },
         disabled: isLoading,
     });
 
     function setConfirmModalParams(data: BidRequestType | null) {
+        console.log("yurrr");
         setBidData(data);
         setIsConfirmVisible(true);
     }
@@ -58,6 +59,7 @@ function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
             console.error(e);
         } finally {
             setIsLoading(false);
+            reset({ itemId: itemId, price: undefined });
         }
     }
 
@@ -65,8 +67,8 @@ function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
         setIsLoading(true);
         try {
             const data = {
-                price: item.price,
-                itemId: item.id,
+                price: item?.price,
+                itemId: item?.id,
             } as BidRequestType;
             const response = await bidItem(data);
             console.log(response);
@@ -77,11 +79,21 @@ function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
         }
     }
 
+    useEffect(() => {
+        if (itemId) {
+            reset({
+                itemId: itemId,
+                price: getValues("price") ?? undefined,
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [itemId]);
+
     return (
         <Modal
-            isVisible={isModalVisible}
-            onBackdropPress={() => setIsModalVisible(false)}
-            onBackButtonPress={() => setIsModalVisible(false)}
+            isVisible={isBuyerViewModalVisible}
+            onBackdropPress={() => setIsBuyerViewModalVisible(false)}
+            onBackButtonPress={() => setIsBuyerViewModalVisible(false)}
             animationIn="slideInUp"
             animationOut="slideOutDown"
             useNativeDriver={false}
@@ -119,12 +131,14 @@ function BuyerViewBiddersModal(props: Readonly<StealModalProps>) {
                             <Controller
                                 control={control}
                                 name="price"
-                                render={({ field: { onChange, value } }) => (
+                                render={({
+                                    field: { onChange, onBlur, value },
+                                }) => (
                                     <Input
-                                        autoFocus={isAutoFocused}
                                         keyboardType="numeric"
                                         placeholder="Place your bid"
                                         onChangeText={onChange}
+                                        onBlur={onBlur}
                                         value={value?.toString()}
                                         textClassName="mx-4"
                                         className="flex-1"

@@ -1,7 +1,7 @@
 import Modal from "react-native-modal";
-import { View, Image } from "react-native";
+import { View, Image, ActivityIndicator } from "react-native";
 import { Button, Text } from "@ui-kitten/components";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { confirmBid } from "@/firebase/functions";
 import { ConfirmBidRequestType } from "@/types/bidder";
 
@@ -25,8 +25,10 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
         bidderID,
         itemID,
     } = props;
+    const [isLoading, setIsLoading] = useState(false);
 
     async function handleApproveBidder() {
+        setIsLoading(true);
         try {
             const data: ConfirmBidRequestType = {
                 bidId: bidderID,
@@ -36,9 +38,10 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
             console.log(response);
         } catch (e) {
             console.error(e);
+        } finally {
+            setIsLoading(false);
+            setIsModalVisible(false);
         }
-
-        setIsModalVisible(false);
     }
 
     return (
@@ -74,8 +77,16 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
                         }}
                         size="small"
                         appearance="filled"
+                        accessoryLeft={
+                            isLoading ? (
+                                <ActivityIndicator color="white" />
+                            ) : (
+                                <></>
+                            )
+                        }
+                        disabled={isLoading}
                     >
-                        Confirm
+                        {isLoading ? "" : "Confirm"}
                     </Button>
                     <Button
                         className="mx-1 flex-1"
@@ -83,6 +94,7 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
                         size="small"
                         appearance="filled"
                         status="basic"
+                        disabled={isLoading}
                     >
                         Cancel
                     </Button>

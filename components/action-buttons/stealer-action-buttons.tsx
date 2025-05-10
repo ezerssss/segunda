@@ -1,7 +1,9 @@
 import { Button, Icon } from "@ui-kitten/components";
-import { useState } from "react";
-import BuyerViewBiddersModal from "./buyer-view-bidders-modal";
+import { useContext, useState } from "react";
 import { ItemType } from "@/types/item";
+import { BiddersModalContext } from "@/contexts/biddersModalContext";
+import useGetBidders from "@/hooks/useGetBidders";
+import { ActivityIndicator } from "react-native";
 
 interface BuyerActionButtonsProps {
     item: ItemType;
@@ -9,54 +11,51 @@ interface BuyerActionButtonsProps {
 
 function StealerActionButtons(props: Readonly<BuyerActionButtonsProps>) {
     const { item } = props;
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isAutoFocused, setIsAutoFocused] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const { isBuyerViewModalVisible, setIsBuyerViewModalVisible } =
+        useContext(BiddersModalContext);
 
-    function handleShowModal() {
-        setIsAutoFocused(false);
-        setIsModalVisible(true);
+    async function handleShowBidders() {
+        setIsLoading(true);
+        await getInitialBidders();
+        setIsLoading(false);
+        setIsBuyerViewModalVisible(true);
     }
 
-    function handleSteal() {
-        setIsAutoFocused(true);
-        setIsModalVisible(true);
-    }
+    const getInitialBidders = useGetBidders(item, isBuyerViewModalVisible);
 
     return (
         <>
             <Button
                 className="mx-1 flex-1"
-                onPress={handleSteal}
+                onPress={handleShowBidders}
                 style={{
                     backgroundColor: "#E1306C",
                     borderWidth: 0,
-                    flex: 1,
                 }}
                 size="small"
                 appearance="filled"
                 accessoryLeft={<Icon name="shopping-bag-outline" />}
+                disabled={isLoading}
             >
                 Steal
             </Button>
             <Button
                 className="mx-1 flex-1"
-                onPress={handleShowModal}
+                onPress={handleShowBidders}
                 size="small"
                 appearance="filled"
                 status="basic"
                 style={{
                     flex: 1,
                 }}
+                accessoryLeft={
+                    isLoading ? <ActivityIndicator color="white" /> : <></>
+                }
+                disabled={isLoading}
             >
-                Show Bidders
+                {isLoading ? "" : "Show Bidders"}
             </Button>
-            <BuyerViewBiddersModal
-                isModalVisible={isModalVisible}
-                setIsModalVisible={setIsModalVisible}
-                item={item}
-                isSteal={true}
-                isAutoFocused={isAutoFocused}
-            ></BuyerViewBiddersModal>
         </>
     );
 }

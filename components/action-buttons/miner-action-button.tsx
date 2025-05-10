@@ -1,11 +1,12 @@
 import { ItemType } from "@/types/item";
 import { Button, Icon, useTheme } from "@ui-kitten/components";
-import { useState } from "react";
-import BuyerViewBiddersModal from "./buyer-view-bidders-modal";
+import { useContext, useState } from "react";
 import { BidRequestType } from "@/types/bidder";
 import { bidItem } from "@/firebase/functions";
 import ConfirmBuyActionModal from "./confirm-buy-action-modal";
 import { ActivityIndicator } from "react-native";
+import { BiddersModalContext } from "@/contexts/biddersModalContext";
+import useGetBidders from "@/hooks/useGetBidders";
 
 interface MinerActionButtonProp {
     item: ItemType;
@@ -13,9 +14,19 @@ interface MinerActionButtonProp {
 
 function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
     const { item } = props;
-    const [isBiddersModalVisible, setIsBiddersModalVisible] = useState(false);
     const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isBiddersLoading, setIsBiddersLoading] = useState(false);
+
+    const { isBuyerViewModalVisible, setIsBuyerViewModalVisible } =
+        useContext(BiddersModalContext);
+
+    async function handleShowBidders() {
+        setIsBiddersLoading(true);
+        await getInitialBidders();
+        setIsBiddersLoading(false);
+        setIsBuyerViewModalVisible(true);
+    }
 
     const theme = useTheme();
 
@@ -34,19 +45,16 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
             setIsLoading(false);
         }
     }
-    function handleShowBiddersModal() {
-        setIsBiddersModalVisible(true);
-    }
 
-    function handleShowConfirmModal() {
-        setIsConfirmModalVisible(true);
-    }
+    const getInitialBidders = useGetBidders(item, isBuyerViewModalVisible);
 
     return (
         <>
             <Button
                 className="mx-1 flex-1"
-                onPress={handleShowConfirmModal}
+                onPress={() => {
+                    setIsConfirmModalVisible(true);
+                }}
                 style={{
                     backgroundColor: theme["color-primary-500"],
                     borderWidth: 0,
@@ -61,18 +69,26 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
                         <Icon name="shopping-bag-outline" />
                     )
                 }
+                disabled={isLoading || isBiddersLoading}
             >
                 {isLoading ? "" : "Mine Now"}
             </Button>
             <Button
                 className="mx-1 flex-1"
-                onPress={handleShowBiddersModal}
+                onPress={handleShowBidders}
                 size="small"
                 appearance="filled"
                 status="basic"
-                disabled={isLoading}
+                accessoryLeft={
+                    isBiddersLoading ? (
+                        <ActivityIndicator color="white" />
+                    ) : (
+                        <></>
+                    )
+                }
+                disabled={isLoading || isBiddersLoading}
             >
-                Show Bidders
+                {isLoading ? "" : "Show Bidders"}
             </Button>
             <ConfirmBuyActionModal
                 handleConfirm={handleMine}
@@ -81,13 +97,6 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
                 isModalVisible={isConfirmModalVisible}
                 setIsModalVisible={setIsConfirmModalVisible}
             ></ConfirmBuyActionModal>
-            <BuyerViewBiddersModal
-                isModalVisible={isBiddersModalVisible}
-                setIsModalVisible={setIsBiddersModalVisible}
-                item={item}
-                isAutoFocused={false}
-                isSteal={false}
-            ></BuyerViewBiddersModal>
         </>
     );
 }
