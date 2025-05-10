@@ -1,7 +1,8 @@
 import SellerItem from "@/components/seller/seller-items";
-import useGetSellerItems from "@/hooks/useGetItems";
-import { FlatList, View, ActivityIndicator } from "react-native";
+import useGetSellerItems from "@/hooks/useGetSellerItems";
+import { FlatList, View } from "react-native";
 import { Text } from "@ui-kitten/components";
+import { Image } from "expo-image";
 
 function SellerItemsPage() {
     const { items, fetchMoreItems } = useGetSellerItems();
@@ -21,11 +22,16 @@ function SellerItemsPage() {
                 removeClippedSubviews={false}
                 onEndReached={fetchMoreItems}
                 ListEmptyComponent={
-                    <View className="min-h-screen flex-1 items-center justify-center bg-white">
-                        <ActivityIndicator />
+                    <View className="mt-[40%] h-[350px] items-center justify-center">
+                        <Image
+                            source={require("../../assets/images/no-items.png")}
+                            contentFit="contain"
+                            className="aspect-square h-[150px] w-[100%]"
+                        />
                     </View>
                 }
-                className="bg-white p-4"
+                contentContainerStyle={{ paddingBottom: 30 }}
+                className="bg-white p-2"
             />
         </>
     );
