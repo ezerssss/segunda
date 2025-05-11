@@ -35,22 +35,24 @@ export default function useGetPosts() {
                 const docs = postsQuerySnapshot.docs;
 
                 setHasMore(docs.length > 0);
-                const fetchedPosts: PostType[] = docs.map(
+                const newPosts: PostType[] = docs.map(
                     (doc) => doc.data() as PostType,
                 );
+                const newPostIds = new Set(newPosts.map((post) => post.id));
 
                 setPosts((prevPosts) => {
-                    const existingIds = new Set(
-                        prevPosts.map((post) => post.id),
+                    const outdatedPosts = prevPosts.filter(
+                        (post) => !newPostIds.has(post.id),
                     );
-                    const uniqueNewPosts = fetchedPosts.filter(
-                        (post) => !existingIds.has(post.id),
-                    );
-                    return [...uniqueNewPosts, ...prevPosts];
+                    return [...newPosts, ...outdatedPosts];
                 });
 
                 if (docs.length > 0) {
-                    setLastPostDoc(docs[docs.length - 1]);
+                    // Don't update lastDoc if it's not undefined (user has scrolled past the live update zone already)
+                    setLastPostDoc((prevData) => {
+                        if (prevData) return prevData;
+                        return docs[docs.length - 1];
+                    });
                 }
                 setIsLoading(false);
             },
@@ -79,16 +81,16 @@ export default function useGetPosts() {
             const docs = postsQuerySnapshot.docs;
 
             setHasMore(docs.length > 0);
-            const fetchedPosts: PostType[] = docs.map(
+            const newPosts: PostType[] = docs.map(
                 (doc) => doc.data() as PostType,
             );
+            const newPostIds = new Set(newPosts.map((post) => post.id));
 
             setPosts((prevPosts) => {
-                const existingIds = new Set(prevPosts.map((post) => post.id));
-                const uniqueNewPosts = fetchedPosts.filter(
-                    (post) => !existingIds.has(post.id),
+                const outDatedPosts = prevPosts.filter(
+                    (post) => !newPostIds.has(post.id),
                 );
-                return [...uniqueNewPosts, ...prevPosts];
+                return [...outDatedPosts, ...newPosts];
             });
 
             if (docs.length > 0) {
@@ -101,5 +103,5 @@ export default function useGetPosts() {
         }
     }
 
-    return { posts, fetchMorePosts, isLoading };
+    return { posts, fetchMorePosts, isLoading, hasMore };
 }
