@@ -36,10 +36,11 @@ function MultiSelectTags(props: MultiSelectPropsInterface) {
                         backgroundColor: theme["color-primary-500"],
                     }}
                 >
-                    <Text style={multiSelectStyle.hashtagText}>
+                    <Text category="label" style={multiSelectStyle.hashtagText}>
                         #{item.label}
                     </Text>
                     <Text
+                        appearance="hint"
                         onPress={() => {
                             if (!isLoading) unSelect && unSelect(item);
                         }}

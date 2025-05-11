@@ -1,17 +1,20 @@
 import { View, TouchableOpacity } from "react-native";
 import { Text, Divider, Icon } from "@ui-kitten/components";
-import UserHeader from "../user/user-header";
+import UserHeader from "./user/user-header";
 import { useRef } from "react";
 import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
+import { TruncatedText } from "./truncated-text";
 
 interface PostHeaderProps {
     postId: string;
     userName?: string;
     userImageUrl?: string;
+    caption: string;
+    tags: string[];
 }
 
 function PostHeader(props: PostHeaderProps) {
-    const { postId, userName, userImageUrl } = props;
+    const { postId, userName, userImageUrl, caption, tags } = props;
     const actionSheetRef = useRef<ActionSheetRef>(null);
 
     function handleReport() {
@@ -32,6 +35,16 @@ function PostHeader(props: PostHeaderProps) {
                 >
                     ...
                 </Text>
+            </View>
+            <View className="w-full px-2">
+                <TruncatedText text={caption} isItemCard={false} />
+                <View className="mb-2 mt-1 flex-row flex-wrap gap-1">
+                    {tags.map((tag) => (
+                        <Text key={tag} className="text-[blue]">
+                            #{tag}
+                        </Text>
+                    ))}
+                </View>
             </View>
             <ActionSheet ref={actionSheetRef} gestureEnabled={true}>
                 <Text
