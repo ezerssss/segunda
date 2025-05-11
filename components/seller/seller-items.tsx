@@ -23,7 +23,7 @@ export default function SellerItem({ sellerItem }: SellerItemProps) {
     }
 
     return (
-        <View className="mt-4 flex">
+        <View className="mt-2 flex p-2">
             <View className="flex-row">
                 <Image
                     source={{ uri: imageUrl }}
