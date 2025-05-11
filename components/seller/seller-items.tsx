@@ -26,70 +26,68 @@ export default function SellerItem({ sellerItem }: SellerItemProps) {
     }
 
     return (
-        <View className="mt-4 flex">
-            <View className="flex-row">
-                <Image
-                    source={{ uri: imageUrl }}
-                    className="h-[100px] w-[100px] rounded"
-                    contentFit="cover"
-                    placeholder={{ blurHash }}
-                />
+        <View className="mt-4 flex-row">
+            <Image
+                source={{ uri: imageUrl }}
+                className="aspect-square h-[100px]"
+                contentFit="cover"
+                placeholder={{ blurhash: blurHash }}
+            />
 
-                <View className="ml-2 flex-1">
-                    <Text className="font-bold capitalize" category="s1">
-                        {name}
-                    </Text>
-                    <Text category="s2" className="text-[14px]">
-                        PHP {price}
-                    </Text>
+            <View className="ml-2 flex-1">
+                <Text className="font-bold capitalize" category="s1">
+                    {name}
+                </Text>
+                <Text category="s2" className="text-[14px]">
+                    PHP {price}
+                </Text>
 
-                    <Text
-                        className="mt-2 text-[13px] text-gray-500"
-                        numberOfLines={expanded ? 0 : 2}
-                        onTextLayout={(e) => {
-                            if (!truncated && e.nativeEvent.lines.length > 2) {
-                                setTruncated(true);
-                            }
-                        }}
-                    >
-                        {description}
-                    </Text>
-
-                    {truncated && (
-                        <TouchableOpacity
-                            className="mt-1 self-start"
-                            onPress={() => setExpanded((prev) => !prev)}
-                        >
-                            <Text category="c1" className="text-[12px]">
-                                {expanded ? "See less" : "See more"}
-                            </Text>
-                        </TouchableOpacity>
-                    )}
-                </View>
-
-                <OverflowMenu
-                    anchor={() => {
-                        return (
-                            <TouchableOpacity
-                                className="ml-auto"
-                                onPress={() => setIsMenuVisible(true)}
-                            >
-                                <Entypo
-                                    name="dots-three-vertical"
-                                    size={18}
-                                    color="black"
-                                />
-                            </TouchableOpacity>
-                        );
+                <Text
+                    className="mt-2 text-[13px] text-gray-500"
+                    numberOfLines={expanded ? 0 : 2}
+                    onTextLayout={(e) => {
+                        if (!truncated && e.nativeEvent.lines.length > 2) {
+                            setTruncated(true);
+                        }
                     }}
-                    visible={isMenuVisible}
-                    onBackdropPress={() => setIsMenuVisible(false)}
-                    onSelect={(index: IndexPath) => onMenuTap(index.row)}
                 >
-                    <MenuItem title="Edit" />
-                    <MenuItem title="Delete" />
-                </OverflowMenu>
+                    {description}
+                </Text>
+
+                {truncated && (
+                    <TouchableOpacity
+                        className="mt-1 self-start"
+                        onPress={() => setExpanded((prev) => !prev)}
+                    >
+                        <Text category="c1" className="text-[12px]">
+                            {expanded ? "See less" : "See more"}
+                        </Text>
+                    </TouchableOpacity>
+                )}
             </View>
+
+            <OverflowMenu
+                anchor={() => {
+                    return (
+                        <TouchableOpacity
+                            className="ml-auto"
+                            onPress={() => setIsMenuVisible(true)}
+                        >
+                            <Entypo
+                                name="dots-three-vertical"
+                                size={18}
+                                color="black"
+                            />
+                        </TouchableOpacity>
+                    );
+                }}
+                visible={isMenuVisible}
+                onBackdropPress={() => setIsMenuVisible(false)}
+                onSelect={(index: IndexPath) => onMenuTap(index.row)}
+            >
+                <MenuItem title="Edit" />
+                <MenuItem title="Delete" />
+            </OverflowMenu>
         </View>
     );
 }

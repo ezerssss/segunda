@@ -5,7 +5,7 @@ import { Text } from "@ui-kitten/components";
 import { Image } from "expo-image";
 
 function SellerItemsPage() {
-    const { items, fetchMoreItems } = useGetSellerItems();
+    const { items } = useGetSellerItems();
 
     return (
         <>
@@ -20,7 +20,6 @@ function SellerItemsPage() {
                 }}
                 initialNumToRender={5}
                 removeClippedSubviews={false}
-                onEndReached={fetchMoreItems}
                 ListEmptyComponent={
                     <View className="mt-[40%] h-[350px] items-center justify-center">
                         <Image
