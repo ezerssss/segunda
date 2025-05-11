@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { BidSchema } from "./bidder";
 import { UserPublicDataSchema } from "./user";
+import { PostTagsEnum } from "@/enums/post";
 
 export const ItemSchema = z.object({
     id: z.string().min(1),
@@ -18,7 +19,9 @@ export const ItemSchema = z.object({
         .string()
         .trim()
         .max(500, { message: "Description can only be 500 letters long." }),
+    tags: z.array(PostTagsEnum),
     imageUrl: z.string().url(),
+    blurHash: z.string().min(1),
     miner: BidSchema.nullable(),
     confirmedBidder: BidSchema.nullable(),
     dateCreated: z.string().datetime(),
@@ -42,7 +45,9 @@ export const ItemFormSchema = ItemSchema.omit({
     sellerData: true,
     postId: true,
     price: true,
+    tags: true,
     imageUrl: true,
+    blurHash: true,
     miner: true,
     confirmedBidder: true,
     dateCreated: true,

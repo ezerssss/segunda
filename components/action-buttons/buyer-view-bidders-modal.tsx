@@ -21,7 +21,6 @@ function BuyerViewBiddersModal() {
     } = useContext(BiddersModalContext);
     const { item, bidders } = modalContent;
     const itemId = item?.id ?? "";
-    console.log(item?.id);
 
     const isSteal = item?.miner !== null;
     const theme = useTheme();
@@ -45,7 +44,6 @@ function BuyerViewBiddersModal() {
     });
 
     function setConfirmModalParams(data: BidRequestType | null) {
-        console.log("yurrr");
         setBidData(data);
         setIsConfirmVisible(true);
     }
@@ -86,7 +84,6 @@ function BuyerViewBiddersModal() {
                 price: getValues("price") ?? undefined,
             });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [itemId]);
 
     return (
@@ -104,27 +101,22 @@ function BuyerViewBiddersModal() {
                 <Text category="h4" className="mb-4 w-full text-left">
                     Active Bidders
                 </Text>
-                {bidders.length === 0 ? (
-                    <NoBidders></NoBidders>
-                ) : (
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        {bidders.map(
-                            ({ bidderData, dateCreated, price, id }) => (
-                                <View className="my-4" key={id}>
-                                    <BidderDetails
-                                        imgURI={bidderData.imageUrl ?? ""}
-                                        bid={price}
-                                        name={bidderData.name}
-                                        date={dateCreated}
-                                    ></BidderDetails>
-                                </View>
-                            ),
-                        )}
-                    </ScrollView>
-                )}
+                {bidders.length === 0 && <NoBidders />}
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                >
+                    {bidders.map(({ bidderData, dateCreated, price, id }) => (
+                        <View className="my-4" key={id}>
+                            <BidderDetails
+                                imgURI={bidderData.imageUrl ?? ""}
+                                bid={price}
+                                name={bidderData.name}
+                                date={dateCreated}
+                            ></BidderDetails>
+                        </View>
+                    ))}
+                </ScrollView>
                 {isSteal ? (
                     <>
                         <View className="mt-5 flex-row">
@@ -148,7 +140,6 @@ function BuyerViewBiddersModal() {
                                     />
                                 )}
                             />
-
                             <Button
                                 className="mx-1 w-32"
                                 onPress={handleSubmit(setConfirmModalParams)}

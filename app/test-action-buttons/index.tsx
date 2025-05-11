@@ -26,7 +26,6 @@ function TestActionButtonPage() {
             }
         };
         getItems();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <View className="flex-1 items-center justify-center bg-white">

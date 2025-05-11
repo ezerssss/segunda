@@ -31,6 +31,12 @@ export default function Home() {
             >
                 <Text>Test Action Buttons</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+                className="self-baseline rounded border px-4 py-2"
+                onPress={() => router.push("/browse-posts")}
+            >
+                <Text>Browse Posts</Text>
+            </TouchableOpacity>
         </View>
     );
 }

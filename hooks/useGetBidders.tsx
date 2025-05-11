@@ -6,19 +6,19 @@ import {
     doc,
     getDocs,
 } from "@react-native-firebase/firestore";
-import { db } from "@/firebase/db";
 import { useContext, useEffect } from "react";
 import { CollectionEnum } from "@/enums/collection";
 import { BidType } from "@/types/bidder";
 import { BiddersModalContext } from "@/contexts/biddersModalContext";
 import { ItemType } from "@/types/item";
+import { itemsCollectionRef } from "@/constants/collections";
 
 function useGetBidders(item: ItemType, isModalVisible: boolean) {
     const { setModalContent } = useContext(BiddersModalContext);
 
     useEffect(() => {
         if (!isModalVisible) return;
-        const itemDocRef = doc(db, CollectionEnum.ITEMS, item.id);
+        const itemDocRef = doc(itemsCollectionRef, item.id);
         const biddersCollectionRef = collection(
             itemDocRef,
             CollectionEnum.BIDDERS,
@@ -45,11 +45,10 @@ function useGetBidders(item: ItemType, isModalVisible: boolean) {
             },
         );
         return unsubscribeBidders;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isModalVisible]);
 
     async function getInitialBidders() {
-        const itemDocRef = doc(db, CollectionEnum.ITEMS, item.id);
+        const itemDocRef = doc(itemsCollectionRef, item.id);
         const biddersCollectionRef = collection(
             itemDocRef,
             CollectionEnum.BIDDERS,
