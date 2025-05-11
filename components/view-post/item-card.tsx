@@ -1,21 +1,23 @@
 import React, { useState, memo } from "react";
-import { View } from "react-native";
+import { View, Pressable } from "react-native";
 import { Button, Icon, Text, useTheme } from "@ui-kitten/components";
 import { TruncatedText } from "../truncated-text";
 import { ItemType } from "@/types/item";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 
 interface PropsInterface {
     item: ItemType;
     color?: string;
-    blurhash: string;
 }
 
 export function ItemCard(props: PropsInterface) {
-    const { item, color = "black", blurhash } = props;
-    const { name, price, description, imageUrl } = item;
+    const { item, color = "black" } = props;
+    const { name, price, description, imageUrl, blurhash, index } = item;
     const [isMined, setIsMined] = useState(false);
     const theme = useTheme();
+    const router = useRouter();
+
     const confirmed = false; // placeholder for confirmedBidder
 
     function clickedMined() {
@@ -26,8 +28,12 @@ export function ItemCard(props: PropsInterface) {
         console.log("Clicked bidders!");
     }
 
+    function navigateToFullScreen(index: number) {
+        router.push(`../view-post/full-screen/${index}`);
+    }
+
     return (
-        <View className="flex">
+        <Pressable className="flex" onPress={() => navigateToFullScreen(index)}>
             <View className="aspect-square w-full items-center justify-center overflow-hidden">
                 <Image
                     className="h-full w-full"
@@ -83,7 +89,7 @@ export function ItemCard(props: PropsInterface) {
                     Show Bidders
                 </Button>
             </View>
-        </View>
+        </Pressable>
     );
 }
 

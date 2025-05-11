@@ -29,7 +29,7 @@ export function useGetPost(postId: string) {
         return unsubsribe;
     }, []);
 
-    return isLoading;
+    return { isLoading };
 }
 
 export default useGetPost;

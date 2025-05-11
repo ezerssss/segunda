@@ -33,7 +33,7 @@ export function useGetPostItems(postId: string) {
         return unsubsribe;
     }, []);
 
-    return isLoading;
+    return { isLoading };
 }
 
 export default useGetPostItems;

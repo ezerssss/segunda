@@ -1,32 +1,24 @@
-import {
-    ActivityIndicator,
-    TouchableOpacity,
-    View,
-    FlatList,
-} from "react-native";
+import { ActivityIndicator, View, FlatList } from "react-native";
 import ItemCard from "../../components/view-post/item-card";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { PostContext } from "@/contexts/postContext";
 import useGetPostItems from "@/hooks/useGetPostItems";
 import useGetPost from "@/hooks/useGetPost";
 import PostHeader from "@/components/post-header";
 import { useContext } from "react";
 import { Divider, Text } from "@ui-kitten/components";
+import React from "react";
 
 export default function ViewPostPage() {
-    const router = useRouter();
     const { postItems, post } = useContext(PostContext);
     const { postId } = useLocalSearchParams();
 
-    const postItemsIsLoading = useGetPostItems(postId as string);
-    const postIsLoading = useGetPost(postId as string);
+    const { isLoading: postItemsIsLoading } = useGetPostItems(postId as string);
+    const { isLoading: postIsLoading } = useGetPost(postId as string);
 
-    if (
-        postIsLoading ||
-        postItemsIsLoading ||
-        !post ||
-        postItems.length === 0
-    ) {
+    const isLoading = postIsLoading || postItemsIsLoading;
+
+    if (isLoading) {
         return (
             <View className="min-h-screen flex-1 items-center justify-center bg-white">
                 <ActivityIndicator />
@@ -34,12 +26,18 @@ export default function ViewPostPage() {
         );
     }
 
-    const { id, sellerData, caption, tags, blurHashes } = post;
-    const isLastIndex = postItems.length - 1;
+    const noContent = !post || postItems.length === 0;
 
-    function navigateToFullScreen(index: number) {
-        router.push(`../view-post/full-screen/${index}`);
+    if (noContent) {
+        return (
+            <View className="min-h-screen flex-1 items-center justify-center bg-white">
+                <Text>There are no posts currently.</Text>
+            </View>
+        );
     }
+
+    const { id, sellerData, caption, tags } = post;
+    const lastIndex = postItems.length - 1;
 
     return (
         <FlatList
@@ -48,29 +46,16 @@ export default function ViewPostPage() {
             keyExtractor={(item) => item.id}
             renderItem={({ item, index }) => {
                 return (
-                    <>
-                        <TouchableOpacity
-                            key={item.id}
-                            onPress={() => navigateToFullScreen(index)}
-                        >
-                            <ItemCard
-                                item={item}
-                                blurhash={blurHashes[index]}
-                            />
-                        </TouchableOpacity>
-                        {index !== isLastIndex && (
+                    <React.Fragment key={item.id}>
+                        <ItemCard item={item} />
+                        {index !== lastIndex && (
                             <Divider className="h-1 flex-1 rounded-lg bg-gray-200" />
                         )}
-                    </>
+                    </React.Fragment>
                 );
             }}
             initialNumToRender={5}
             removeClippedSubviews={false}
-            ListEmptyComponent={
-                <View className="min-h-screen flex-1 items-center justify-center bg-white">
-                    <Text>There are no posts currently.</Text>
-                </View>
-            }
             ListHeaderComponent={
                 <PostHeader
                     postId={id}
