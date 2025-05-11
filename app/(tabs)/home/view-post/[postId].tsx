@@ -1,5 +1,5 @@
 import { ActivityIndicator, View, FlatList } from "react-native";
-import ItemCard from "../../components/view-post/item-card";
+import ItemCard from "@/components/view-post/item-card";
 import { useLocalSearchParams } from "expo-router";
 import { PostContext } from "@/contexts/postContext";
 import useGetPostItems from "@/hooks/useGetPostItems";

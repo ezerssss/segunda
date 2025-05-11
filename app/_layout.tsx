@@ -29,6 +29,7 @@ export default function RootLayout() {
     });
 
     const [user, setUser] = useState<UserContextData | null>(null);
+    const [isUserLoading, setIsUserLoading] = useState(true);
 
     useEffect(() => {
         if (loaded) {
@@ -40,11 +41,13 @@ export default function RootLayout() {
         const unsubscribe = auth.onAuthStateChanged((user) => {
             if (!user) {
                 setUser(null);
+                setIsUserLoading(false);
                 return;
             }
 
             (async () => {
                 if (!user) {
+                    setIsUserLoading(false);
                     return;
                 }
 
@@ -57,6 +60,8 @@ export default function RootLayout() {
                     setUser({ ...firebaseUserJson, ...userData });
                 } catch (error) {
                     console.error(error);
+                } finally {
+                    setIsUserLoading(false);
                 }
             })();
         });
@@ -76,7 +81,9 @@ export default function RootLayout() {
                 customMapping={mapping}
                 theme={{ ...eva.light, ...theme }}
             >
-                <UserContext.Provider value={{ user, setUser }}>
+                <UserContext.Provider
+                    value={{ user, setUser, isUserLoading, setIsUserLoading }}
+                >
                     <StatusBar style="auto" />
                     <SafeAreaView className="flex-1 bg-white">
                         <Stack screenOptions={{ headerShown: false }} />

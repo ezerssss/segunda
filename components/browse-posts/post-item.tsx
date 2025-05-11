@@ -19,7 +19,7 @@ function PostItem(props: PostItemProps) {
     const router = useRouter();
 
     function navigateToViewPost(postId: string) {
-        router.push(`/view-post/${postId}`);
+        router.push(`/(tabs)/home/view-post/${postId}`);
     }
 
     return (

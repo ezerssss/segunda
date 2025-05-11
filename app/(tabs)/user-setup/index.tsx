@@ -14,8 +14,8 @@ import { STARTS_WITH_HTTPS } from "@/constants/regex";
 
 import { View, ActivityIndicator, Image } from "react-native";
 import { Button, Divider, Input, Text } from "@ui-kitten/components";
-import AvatarOptions from "../../components/user/avatar-options";
-import CampusSelectionButtons from "../../components/user/campus-buttons";
+import AvatarOptions from "../../../components/user/avatar-options";
+import CampusSelectionButtons from "../../../components/user/campus-buttons";
 
 function UserSetupPage() {
     const { user } = useContext(UserContext);
