@@ -1,5 +1,5 @@
 import React, { useState, memo } from "react";
-import { View, Dimensions } from "react-native";
+import { View } from "react-native";
 import { Button, Icon, Text, useTheme } from "@ui-kitten/components";
 import { TruncatedText } from "../truncated-text";
 import { ItemType } from "@/types/item";
@@ -9,14 +9,11 @@ import { Zoomable } from "@likashefqet/react-native-image-zoom";
 interface PropsInterface {
     item: ItemType;
     color?: string;
-    blurhash: string;
 }
 
 export function FullScreenItemCard(props: PropsInterface) {
-    const { height, width } = Dimensions.get("window");
-
-    const { item, color = "black", blurhash } = props;
-    const { name, price, description, imageUrl } = item;
+    const { item, color = "black" } = props;
+    const { name, price, description, imageUrl, blurHash } = item;
     const [isMined, setIsMined] = useState(false);
     const theme = useTheme();
     const confirmed = false; // placeholder for confirmedBidder
@@ -30,10 +27,7 @@ export function FullScreenItemCard(props: PropsInterface) {
     }
 
     return (
-        <View
-            className="relative flex"
-            style={{ width, height, backgroundColor: "black" }}
-        >
+        <View className="relative flex h-screen w-screen bg-black">
             <Zoomable
                 isDoubleTapEnabled
                 style={{
@@ -46,16 +40,13 @@ export function FullScreenItemCard(props: PropsInterface) {
                     source={{
                         uri: imageUrl,
                     }}
-                    placeholder={{ blurhash }}
-                    style={{
-                        width,
-                        aspectRatio: 1 / 1,
-                    }}
+                    placeholder={{ blurHash }}
+                    className="aspect-square w-full"
                 />
             </Zoomable>
 
             <View
-                className="absolute inset-y-0 bottom-0 left-0 right-0 z-10 w-full"
+                className="absolute bottom-0 left-0 right-0 z-10 w-full"
                 style={{ backgroundColor: "rgba(0, 0, 0, 0.25)" }}
             >
                 <View className="m-0 px-4 pb-0 pt-2">

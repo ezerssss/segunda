@@ -33,7 +33,7 @@ export function TruncatedText(props: PropsInterface) {
             >
                 {text}
             </Text>
-            {!isExpanded && numLines > 1 && (
+            {!isExpanded && numLines > 2 && (
                 <TouchableOpacity onPress={toggleExpanded}>
                     <Text
                         className={`text-${seeMoreColor}`}

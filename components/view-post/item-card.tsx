@@ -29,11 +29,11 @@ export function ItemCard(props: PropsInterface) {
     }
 
     function navigateToFullScreen(index: number) {
-        router.push(`../view-post/full-screen/${index}`);
+        router.push(`/view-post/full-screen/${index}`);
     }
 
     return (
-        <Pressable className="flex" onPress={() => navigateToFullScreen(index)}>
+        <Pressable onPress={() => navigateToFullScreen(index)}>
             <View className="aspect-square w-full items-center justify-center overflow-hidden">
                 <Image
                     className="h-full w-full"

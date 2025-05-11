@@ -3,6 +3,7 @@ import { ItemType } from "@/types/item";
 import {
     query,
     where,
+    orderBy,
     FirebaseFirestoreTypes,
     onSnapshot,
 } from "@react-native-firebase/firestore";
@@ -15,20 +16,20 @@ export function useGetPostItems(postId: string) {
 
     useEffect(() => {
         const unsubsribe = onSnapshot(
-            query(itemsCollectionRef, where("postId", "==", postId)),
+            query(
+                itemsCollectionRef,
+                where("postId", "==", postId),
+                orderBy("index"),
+            ),
             (itemsQuerySnapshot: FirebaseFirestoreTypes.QuerySnapshot) => {
                 const items: ItemType[] = [];
                 itemsQuerySnapshot.forEach((itemDoc) => {
-                    const data = {
-                        id: itemDoc.id,
-                        ...itemDoc.data(),
-                    } as ItemType;
-                    items.push(data);
+                    items.push(itemDoc.data() as ItemType);
                 });
                 setPostItems(items);
                 setIsLoading(false);
             },
-            () => console.error("Failed getting post items"),
+            (error) => console.error("Error in getting post items: ", error),
         );
         return unsubsribe;
     }, []);

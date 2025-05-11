@@ -40,7 +40,7 @@ function MultiSelectTags(props: MultiSelectPropsInterface) {
                         #{item.label}
                     </Text>
                     <Text
-                        category="hint"
+                        appearance="hint"
                         onPress={() => {
                             if (!isLoading) unSelect && unSelect(item);
                         }}

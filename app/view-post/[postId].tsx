@@ -44,11 +44,11 @@ export default function ViewPostPage() {
             data={postItems}
             showsVerticalScrollIndicator={false}
             keyExtractor={(item) => item.id}
-            renderItem={({ item, index }) => {
+            renderItem={({ item }) => {
                 return (
                     <React.Fragment key={item.id}>
                         <ItemCard item={item} />
-                        {index !== lastIndex && (
+                        {lastIndex !== item.index && (
                             <Divider className="h-1 flex-1 rounded-lg bg-gray-200" />
                         )}
                     </React.Fragment>

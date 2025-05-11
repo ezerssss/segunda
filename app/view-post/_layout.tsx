@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { Slot } from "expo-router";
 import { useState } from "react";
 import "react-native-reanimated";
 import { PostContext } from "@/contexts/postContext";
@@ -13,7 +13,7 @@ export default function RootLayout() {
         <PostContext.Provider
             value={{ postItems, setPostItems, post, setPost }}
         >
-            <Stack screenOptions={{ headerShown: false }} />
+            <Slot />
         </PostContext.Provider>
     );
 }

@@ -18,12 +18,12 @@ export function useGetPost(postId: string) {
             (postDocSnapshot: FirebaseFirestoreTypes.DocumentSnapshot) => {
                 if (postDocSnapshot.exists) {
                     setPost(postDocSnapshot.data() as PostType);
-                    setIsLoading(false);
                 } else {
                     console.error("Failed getting post");
                 }
+                setIsLoading(false);
             },
-            () => console.error("Failed getting post"),
+            (error) => console.error("Error in getting post: ", error),
         );
 
         return unsubsribe;
