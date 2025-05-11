@@ -13,7 +13,7 @@ interface PropsInterface {
 
 export function ItemCard(props: PropsInterface) {
     const { item, color = "black" } = props;
-    const { name, price, description, imageUrl, blurhash, index } = item;
+    const { name, price, description, imageUrl, blurHash, index } = item;
     const [isMined, setIsMined] = useState(false);
     const theme = useTheme();
     const router = useRouter();
@@ -40,7 +40,7 @@ export function ItemCard(props: PropsInterface) {
                     source={{
                         uri: imageUrl,
                     }}
-                    placeholder={{ blurhash }}
+                    placeholder={{ blurHash }}
                 />
             </View>
             <View className="m-0 w-full px-4 pb-0 pt-2">
