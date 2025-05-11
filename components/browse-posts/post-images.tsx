@@ -17,7 +17,7 @@ function PostItemImages(props: PostItemImagesProps) {
         return (
             <Image
                 source={{ uri: imageUrls[0] }}
-                className="aspect-square w-full flex-1 rounded"
+                className="aspect-square w-full flex-1"
                 contentFit="cover"
                 placeholder={{ blurhash: blurHashes[0] }}
                 placeholderContentFit="cover"
@@ -32,7 +32,7 @@ function PostItemImages(props: PostItemImagesProps) {
                     <Image
                         key={uri}
                         source={{ uri }}
-                        className="aspect-square flex-1 rounded"
+                        className="aspect-square flex-1"
                         contentFit="cover"
                         placeholder={{ blurhash: blurHashes[index] }}
                         placeholderContentFit="cover"
@@ -47,7 +47,7 @@ function PostItemImages(props: PostItemImagesProps) {
             <View className="flex-row gap-[1px]">
                 <Image
                     source={{ uri: imageUrls[0] }}
-                    className="flex-1 rounded"
+                    className="flex-1"
                     contentFit="cover"
                     placeholder={{ blurhash: blurHashes[0] }}
                     placeholderContentFit="cover"
@@ -57,7 +57,7 @@ function PostItemImages(props: PostItemImagesProps) {
                         <Image
                             key={uri}
                             source={{ uri }}
-                            className="aspect-square flex-1 rounded"
+                            className="aspect-square flex-1"
                             contentFit="cover"
                             placeholder={{ blurhash: blurHashes[index] }}
                             placeholderContentFit="cover"
@@ -75,7 +75,7 @@ function PostItemImages(props: PostItemImagesProps) {
                     <Image
                         key={uri}
                         source={{ uri }}
-                        className="aspect-square flex-1 rounded"
+                        className="aspect-square flex-1"
                         contentFit="cover"
                         placeholder={{ blurhash: blurHashes[index] }}
                         placeholderContentFit="cover"
@@ -87,7 +87,7 @@ function PostItemImages(props: PostItemImagesProps) {
                     <View key={uri} className="relative aspect-square flex-1">
                         <Image
                             source={{ uri }}
-                            className="aspect-square flex-1 rounded"
+                            className="aspect-square flex-1"
                             contentFit="cover"
                             placeholder={{ blurhash: blurHashes[index + 2] }}
                             placeholderContentFit="cover"

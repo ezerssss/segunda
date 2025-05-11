@@ -16,6 +16,7 @@ import { UserDataType } from "@/types/user";
 import { doc, getDoc } from "@react-native-firebase/firestore";
 import { usersCollectionRef } from "@/constants/collections";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import "../utils/native-wind-config";
 import "../global.css";
@@ -68,7 +69,7 @@ export default function RootLayout() {
     }
 
     return (
-        <>
+        <GestureHandlerRootView>
             <IconRegistry icons={EvaIconsPack} />
             <ApplicationProvider
                 {...eva}
@@ -77,11 +78,11 @@ export default function RootLayout() {
             >
                 <UserContext.Provider value={{ user, setUser }}>
                     <StatusBar style="auto" />
-                    <SafeAreaView className="flex-1 bg-white px-4">
+                    <SafeAreaView className="flex-1 bg-white">
                         <Stack screenOptions={{ headerShown: false }} />
                     </SafeAreaView>
                 </UserContext.Provider>
             </ApplicationProvider>
-        </>
+        </GestureHandlerRootView>
     );
 }
