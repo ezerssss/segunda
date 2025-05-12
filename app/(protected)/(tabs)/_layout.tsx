@@ -7,6 +7,8 @@ import {
     createMaterialTopTabNavigator,
 } from "@react-navigation/material-top-tabs";
 import { ParamListBase, TabNavigationState } from "@react-navigation/native";
+import { useContext } from "react";
+import { UserContext } from "@/contexts/userContext";
 
 const { Navigator } = createMaterialTopTabNavigator();
 
@@ -20,6 +22,7 @@ export const TopTabs = withLayoutContext<
 export default function AppLayout() {
     const theme = useTheme();
     const indicatorColor = theme["color-primary-500"];
+    const { user } = useContext(UserContext);
 
     return (
         <TopTabs
@@ -79,7 +82,7 @@ export default function AppLayout() {
                     tabBarIcon: () => (
                         <Avatar
                             source={{
-                                uri: "https://a.thumbs.redditmedia.com/HaXDOt6VCSDYHNnBG2kmo7xArWVWkl8_QgppfGAQP-0.png",
+                                uri: user?.imageUrl ?? "",
                             }}
                             size="tiny"
                         />
