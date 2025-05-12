@@ -27,7 +27,7 @@ function useLogin() {
     useEffect(() => {
         if (user) {
             setIsLoading(false);
-            router.push("/(tabs)/home");
+            router.push("/(protected)/(tabs)/home");
         }
     }, [user]);
 

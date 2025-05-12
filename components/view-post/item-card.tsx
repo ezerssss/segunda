@@ -29,7 +29,7 @@ export function ItemCard(props: PropsInterface) {
     }
 
     function navigateToFullScreen(index: number) {
-        router.push(`/(tabs)/home/view-post/full-screen/${index}`);
+        router.push(`/(protected)/view-post/full-screen/${index}`);
     }
 
     return (

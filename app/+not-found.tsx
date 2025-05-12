@@ -8,7 +8,7 @@ export default function NotFoundScreen() {
             <View className="flex-1 items-center justify-center p-5">
                 <Text>This screen doesn't exist.</Text>
                 <Link
-                    href="/(tabs)/home"
+                    href="/(protected)/(tabs)/home"
                     className="mt-3.5 rounded border py-3.5"
                 >
                     <Text>Go to home screen!</Text>

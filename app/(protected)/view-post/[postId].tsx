@@ -5,9 +5,8 @@ import { PostContext } from "@/contexts/postContext";
 import useGetPostItems from "@/hooks/useGetPostItems";
 import useGetPost from "@/hooks/useGetPost";
 import PostHeader from "@/components/post-header";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { Divider, Text } from "@ui-kitten/components";
-import React from "react";
 
 export default function ViewPostPage() {
     const { postItems, post } = useContext(PostContext);
@@ -55,7 +54,6 @@ export default function ViewPostPage() {
                 );
             }}
             initialNumToRender={5}
-            removeClippedSubviews={false}
             ListHeaderComponent={
                 <PostHeader
                     postId={id}
