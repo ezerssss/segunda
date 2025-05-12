@@ -29,7 +29,7 @@ export default function SellerItem({ sellerItem }: SellerItemProps) {
                     source={{ uri: imageUrl }}
                     className="h-[100px] w-[100px] rounded"
                     contentFit="cover"
-                    placeholder={{ blurHash }}
+                    placeholder={{ blurHash: blurHash }}
                 />
 
                 <View className="ml-2 flex-1">

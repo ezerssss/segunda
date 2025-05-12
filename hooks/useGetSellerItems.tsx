@@ -33,16 +33,7 @@ export default function useGetSellerItems() {
                 const fetchedItems: ItemType[] = docs.map(
                     (doc) => doc.data() as ItemType,
                 );
-                setItems((prevItems) => {
-                    const existingIds = new Set(
-                        prevItems.map((item) => item.id),
-                    );
-                    const uniqueNewItems = fetchedItems.filter(
-                        (item) => !existingIds.has(item.id),
-                    );
-                    return [...uniqueNewItems, ...prevItems];
-                });
-                setIsLoading(false);
+                setItems(fetchedItems);
             },
             (error) => {
                 console.error(error);
