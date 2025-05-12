@@ -24,6 +24,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import "../utils/native-wind-config";
 import "../global.css";
+import { ItemType } from "@/types/item";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -37,6 +38,8 @@ export default function RootLayout() {
         item: null,
         bidders: [],
     });
+    const [item, setItem] = useState<ItemType | null>(null);
+
     const [isBuyerViewModalVisible, setIsBuyerViewModalVisible] =
         useState<boolean>(false);
     const [isSellerViewModalVisible, setIsSellerViewModalVisible] =
@@ -97,6 +100,8 @@ export default function RootLayout() {
                             setIsSellerViewModalVisible,
                             setIsBuyerViewModalVisible,
                             setModalContent,
+                            item,
+                            setItem,
                         }}
                     >
                         <StatusBar style="auto" />

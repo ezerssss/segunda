@@ -22,7 +22,7 @@ function SellerActionButton(props: Readonly<SellerActionButtonProp>) {
         setIsSellerViewModalVisible(true);
     }
 
-    const getInitialBidders = useGetBidders(item, isSellerViewModalVisible);
+    const { getInitialBidders } = useGetBidders(item, isSellerViewModalVisible);
     return (
         <Button
             className="mx-1 flex-1"

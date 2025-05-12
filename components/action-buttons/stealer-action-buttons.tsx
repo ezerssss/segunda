@@ -1,9 +1,7 @@
 import { Button, Icon } from "@ui-kitten/components";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { ItemType } from "@/types/item";
 import { BiddersModalContext } from "@/contexts/biddersModalContext";
-import useGetBidders from "@/hooks/useGetBidders";
-import { ActivityIndicator } from "react-native";
 
 interface BuyerActionButtonsProps {
     item: ItemType;
@@ -11,18 +9,13 @@ interface BuyerActionButtonsProps {
 
 function StealerActionButtons(props: Readonly<BuyerActionButtonsProps>) {
     const { item } = props;
-    const [isLoading, setIsLoading] = useState(false);
-    const { isBuyerViewModalVisible, setIsBuyerViewModalVisible } =
+    const { setIsBuyerViewModalVisible, setItem } =
         useContext(BiddersModalContext);
 
-    async function handleShowBidders() {
-        setIsLoading(true);
-        await getInitialBidders();
-        setIsLoading(false);
+    function handleShowBidders() {
         setIsBuyerViewModalVisible(true);
+        setItem(item);
     }
-
-    const getInitialBidders = useGetBidders(item, isBuyerViewModalVisible);
 
     return (
         <>
@@ -36,7 +29,6 @@ function StealerActionButtons(props: Readonly<BuyerActionButtonsProps>) {
                 size="small"
                 appearance="filled"
                 accessoryLeft={<Icon name="shopping-bag-outline" />}
-                disabled={isLoading}
             >
                 Steal
             </Button>
@@ -49,12 +41,8 @@ function StealerActionButtons(props: Readonly<BuyerActionButtonsProps>) {
                 style={{
                     flex: 1,
                 }}
-                accessoryLeft={
-                    isLoading ? <ActivityIndicator color="white" /> : <></>
-                }
-                disabled={isLoading}
             >
-                {isLoading ? "" : "Show Bidders"}
+                Show Bidders
             </Button>
         </>
     );

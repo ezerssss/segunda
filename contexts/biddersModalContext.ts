@@ -14,12 +14,16 @@ interface BiddersModalContextInterface {
     setIsSellerViewModalVisible: Dispatch<SetStateAction<boolean>>;
     setIsBuyerViewModalVisible: Dispatch<SetStateAction<boolean>>;
     setModalContent: Dispatch<SetStateAction<ModalContentType>>;
+    item: ItemType | null;
+    setItem: Dispatch<SetStateAction<ItemType | null>>;
 }
 export const BiddersModalContext = createContext<BiddersModalContextInterface>({
     isBuyerViewModalVisible: false,
     isSellerViewModalVisible: false,
     modalContent: { item: null, bidders: [] },
+    item: null,
     setIsSellerViewModalVisible: () => {},
     setIsBuyerViewModalVisible: () => {},
     setModalContent: () => {},
+    setItem: () => {},
 });

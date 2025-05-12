@@ -6,7 +6,6 @@ import { bidItem } from "@/firebase/functions";
 import ConfirmBuyActionModal from "./confirm-buy-action-modal";
 import { ActivityIndicator } from "react-native";
 import { BiddersModalContext } from "@/contexts/biddersModalContext";
-import useGetBidders from "@/hooks/useGetBidders";
 
 interface MinerActionButtonProp {
     item: ItemType;
@@ -16,16 +15,13 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
     const { item } = props;
     const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [isBiddersLoading, setIsBiddersLoading] = useState(false);
 
-    const { isBuyerViewModalVisible, setIsBuyerViewModalVisible } =
+    const { setIsBuyerViewModalVisible, setItem } =
         useContext(BiddersModalContext);
 
-    async function handleShowBidders() {
-        setIsBiddersLoading(true);
-        await getInitialBidders();
-        setIsBiddersLoading(false);
+    function handleShowBidders() {
         setIsBuyerViewModalVisible(true);
+        setItem(item);
     }
 
     const theme = useTheme();
@@ -45,8 +41,6 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
             setIsLoading(false);
         }
     }
-
-    const getInitialBidders = useGetBidders(item, isBuyerViewModalVisible);
 
     return (
         <>
@@ -69,7 +63,7 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
                         <Icon name="shopping-bag-outline" />
                     )
                 }
-                disabled={isLoading || isBiddersLoading}
+                disabled={isLoading}
             >
                 {isLoading ? "" : "Mine Now"}
             </Button>
@@ -79,14 +73,7 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
                 size="small"
                 appearance="filled"
                 status="basic"
-                accessoryLeft={
-                    isBiddersLoading ? (
-                        <ActivityIndicator color="white" />
-                    ) : (
-                        <></>
-                    )
-                }
-                disabled={isLoading || isBiddersLoading}
+                disabled={isLoading}
             >
                 {isLoading ? "" : "Show Bidders"}
             </Button>

@@ -1,7 +1,7 @@
 import BidderDetails from "./bidder-details";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BidRequestSchema, BidRequestType } from "@/types/bidder";
+import { BidRequestSchema, BidRequestType, BidType } from "@/types/bidder";
 import { useContext, useEffect, useState } from "react";
 
 import Modal from "react-native-modal";
@@ -12,14 +12,21 @@ import { bidItem } from "@/firebase/functions";
 import NoBidders from "./no-bidders";
 import ConfirmBuyActionModal from "./confirm-buy-action-modal";
 import { BiddersModalContext } from "@/contexts/biddersModalContext";
+import { itemsCollectionRef } from "@/constants/collections";
+import {
+    collection,
+    doc,
+    getDocs,
+    onSnapshot,
+    orderBy,
+    query,
+    Unsubscribe,
+} from "@react-native-firebase/firestore";
+import { CollectionEnum } from "@/enums/collection";
 
 function BuyerViewBiddersModal() {
-    const {
-        modalContent,
-        isBuyerViewModalVisible,
-        setIsBuyerViewModalVisible,
-    } = useContext(BiddersModalContext);
-    const { item, bidders } = modalContent;
+    const { isBuyerViewModalVisible, setIsBuyerViewModalVisible, item } =
+        useContext(BiddersModalContext);
     const itemId = item?.id ?? "";
 
     const isSteal = item?.miner !== null;
@@ -28,6 +35,12 @@ function BuyerViewBiddersModal() {
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
 
     const [bidData, setBidData] = useState<BidRequestType | null>(null);
+    const [bidders, setBidders] = useState<BidType[]>([]);
+    const [unsubscribe, setUnsubscribe] = useState<Unsubscribe>(() => {
+        return () => {
+            console.log("inital unsub");
+        };
+    });
 
     const {
         handleSubmit,
@@ -77,6 +90,53 @@ function BuyerViewBiddersModal() {
         }
     }
 
+    async function getBidders() {
+        setIsLoading(true);
+        console.log("id is ", itemId);
+
+        const itemDocRef = doc(itemsCollectionRef, item?.id);
+        const biddersCollectionRef = collection(
+            itemDocRef,
+            CollectionEnum.BIDDERS,
+        );
+        const biddersQuery = query(
+            biddersCollectionRef,
+            orderBy("price", "desc"),
+            orderBy("dateCreated", "asc"),
+        );
+        try {
+            const querySnapshot = await getDocs(biddersQuery);
+            const bidders: BidType[] = querySnapshot.docs.map((bidderDoc) => {
+                return bidderDoc.data() as BidType;
+            });
+            setBidders(bidders);
+            const unsubscribeBidders = onSnapshot(
+                query(collection(itemDocRef, "bidders")),
+                (biddersQuerySnapshot) => {
+                    const bidders: BidType[] = biddersQuerySnapshot.docs.map(
+                        (bidderDoc) => {
+                            return bidderDoc.data() as BidType;
+                        },
+                    );
+                    console.log("bidders", bidders);
+                    setBidders(bidders);
+                    setIsLoading(false);
+                },
+                (error) => {
+                    console.error(error);
+                },
+            );
+            setUnsubscribe(() => {
+                unsubscribeBidders();
+                console.log("clean up!");
+            });
+        } catch (e) {
+            console.error(e);
+        }
+
+        setIsLoading(false);
+    }
+
     useEffect(() => {
         if (itemId) {
             reset({
@@ -84,7 +144,10 @@ function BuyerViewBiddersModal() {
                 price: getValues("price") ?? undefined,
             });
         }
-    }, [itemId]);
+        setBidders([]);
+        getBidders();
+        return unsubscribe;
+    }, [isBuyerViewModalVisible]);
 
     return (
         <Modal

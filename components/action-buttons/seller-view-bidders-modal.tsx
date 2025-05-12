@@ -1,5 +1,5 @@
 import BidderDetails from "./bidder-details";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import Modal from "react-native-modal";
 import { ScrollView, View } from "react-native";
@@ -8,25 +8,91 @@ import ConfirmBidderModal from "./confirm-bidder-modal";
 import { BidType } from "@/types/bidder";
 import NoBidders from "./no-bidders";
 import { BiddersModalContext } from "@/contexts/biddersModalContext";
+import {
+    collection,
+    doc,
+    getDocs,
+    onSnapshot,
+    orderBy,
+    query,
+    Unsubscribe,
+} from "@react-native-firebase/firestore";
+import { itemsCollectionRef } from "@/constants/collections";
+import { CollectionEnum } from "@/enums/collection";
 
 function SellerViewBiddersModal() {
-    const {
-        isSellerViewModalVisible,
-        setIsSellerViewModalVisible,
-        modalContent,
-    } = useContext(BiddersModalContext);
-    const { item, bidders } = modalContent;
+    const { isSellerViewModalVisible, setIsSellerViewModalVisible, item } =
+        useContext(BiddersModalContext);
+
+    const [bidders, setBidders] = useState<BidType[]>([]);
 
     const hasConfirmedBidder = item?.confirmedBidder !== null;
 
     const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
     const [approvedBidder, setApprovedBidder] = useState<BidType>();
+    const [unsubscribe, setUnsubscribe] = useState<Unsubscribe>(() => {
+        return () => {
+            console.log("inital unsub");
+        };
+    });
     const theme = useTheme();
 
     function handleApprove(bidder: BidType) {
         setApprovedBidder(bidder);
         setIsConfirmModalVisible(true);
     }
+
+    async function getBidders() {
+        setIsLoading(true);
+
+        const itemDocRef = doc(itemsCollectionRef, item?.id);
+        const biddersCollectionRef = collection(
+            itemDocRef,
+            CollectionEnum.BIDDERS,
+        );
+        const biddersQuery = query(
+            biddersCollectionRef,
+            orderBy("price", "desc"),
+            orderBy("dateCreated", "asc"),
+        );
+        try {
+            const querySnapshot = await getDocs(biddersQuery);
+            const bidders: BidType[] = querySnapshot.docs.map((bidderDoc) => {
+                return bidderDoc.data() as BidType;
+            });
+            setBidders(bidders);
+            const unsubscribeBidders = onSnapshot(
+                query(collection(itemDocRef, "bidders")),
+                (biddersQuerySnapshot) => {
+                    const bidders: BidType[] = biddersQuerySnapshot.docs.map(
+                        (bidderDoc) => {
+                            return bidderDoc.data() as BidType;
+                        },
+                    );
+                    console.log("bidders", bidders);
+                    setBidders(bidders);
+                    setIsLoading(false);
+                },
+                (error) => {
+                    console.error(error);
+                },
+            );
+            setUnsubscribe(() => {
+                unsubscribeBidders();
+                console.log("clean up!");
+            });
+        } catch (e) {
+            console.error(e);
+        }
+
+        setIsLoading(false);
+    }
+
+    useEffect(() => {
+        setBidders([]);
+        getBidders();
+        return unsubscribe;
+    }, [isSellerViewModalVisible]);
 
     return (
         <Modal
@@ -70,7 +136,9 @@ function SellerViewBiddersModal() {
                                     style={{
                                         backgroundColor: hasConfirmedBidder
                                             ? theme["color-basic-disabled"]
-                                            : "#E1306C",
+                                            : item.miner?.id === bidder.bidderId
+                                              ? theme["color-primary-500"]
+                                              : "#E1306C",
                                         borderWidth: 0,
                                     }}
                                     size="small"
@@ -100,3 +168,6 @@ function SellerViewBiddersModal() {
 }
 
 export default SellerViewBiddersModal;
+function setIsLoading(arg0: boolean) {
+    throw new Error("Function not implemented.");
+}
