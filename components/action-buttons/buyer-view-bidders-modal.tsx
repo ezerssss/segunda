@@ -36,11 +36,7 @@ function BuyerViewBiddersModal() {
 
     const [bidData, setBidData] = useState<BidRequestType | null>(null);
     const [bidders, setBidders] = useState<BidType[]>([]);
-    const [unsubscribe, setUnsubscribe] = useState<Unsubscribe>(() => {
-        return () => {
-            console.log("inital unsub");
-        };
-    });
+    const [unsubscribe, setUnsubscribe] = useState<Unsubscribe | null>(null);
 
     const {
         handleSubmit,
@@ -91,10 +87,11 @@ function BuyerViewBiddersModal() {
     }
 
     async function getBidders() {
+        if (!item) return;
         setIsLoading(true);
         console.log("id is ", itemId);
 
-        const itemDocRef = doc(itemsCollectionRef, item?.id);
+        const itemDocRef = doc(itemsCollectionRef, item.id);
         const biddersCollectionRef = collection(
             itemDocRef,
             CollectionEnum.BIDDERS,
@@ -110,8 +107,9 @@ function BuyerViewBiddersModal() {
                 return bidderDoc.data() as BidType;
             });
             setBidders(bidders);
+            if (unsubscribe) unsubscribe();
             const unsubscribeBidders = onSnapshot(
-                query(collection(itemDocRef, "bidders")),
+                biddersQuery,
                 (biddersQuerySnapshot) => {
                     const bidders: BidType[] = biddersQuerySnapshot.docs.map(
                         (bidderDoc) => {
@@ -133,21 +131,30 @@ function BuyerViewBiddersModal() {
         } catch (e) {
             console.error(e);
         }
-
         setIsLoading(false);
     }
 
+    // useEffect(() => {
+    //     if (itemId) {
+    //         reset({
+    //             itemId: itemId,
+    //             price: getValues("price") ?? undefined,
+    //         });
+    //     }
+    //     setBidders([]);
+    //     getBidders();
+    //     return unsubscribe;
+    // }, [isBuyerViewModalVisible]);
+
     useEffect(() => {
-        if (itemId) {
+        if (item) {
             reset({
-                itemId: itemId,
+                itemId: item.id,
                 price: getValues("price") ?? undefined,
             });
+            getBidders();
         }
-        setBidders([]);
-        getBidders();
-        return unsubscribe;
-    }, [isBuyerViewModalVisible]);
+    }, [item]);
 
     return (
         <Modal
