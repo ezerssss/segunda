@@ -25,6 +25,7 @@ import "../utils/native-wind-config";
 import "../global.css";
 import { ItemType } from "@/types/item";
 import { BidType } from "@/types/bidder";
+import { View } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -107,8 +108,11 @@ export default function RootLayout() {
                         <StatusBar style="auto" />
                         <SafeAreaView className="flex-1 bg-white">
                             <Stack screenOptions={{ headerShown: false }} />
-                            <BuyerViewBiddersModal />
-                            <SellerViewBiddersModal />
+                            <View className="flex items-center">
+                                <BuyerViewBiddersModal />
+
+                                <SellerViewBiddersModal />
+                            </View>
                         </SafeAreaView>
                     </BiddersModalContext.Provider>
                 </UserContext.Provider>

@@ -1,5 +1,5 @@
 import BidderDetails from "./bidder-details";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Modal from "react-native-modal";
 import { ScrollView, View } from "react-native";
 import { Button, Text, useTheme } from "@ui-kitten/components";
@@ -7,6 +7,9 @@ import ConfirmBidderModal from "./confirm-bidder-modal";
 import { BidType } from "@/types/bidder";
 import NoBidders from "./no-bidders";
 import { BiddersModalContext } from "@/contexts/biddersModalContext";
+import { doc, onSnapshot } from "@react-native-firebase/firestore";
+import { itemsCollectionRef } from "@/constants/collections";
+import { ItemType } from "@/types/item";
 
 function SellerViewBiddersModal() {
     const {
@@ -14,19 +17,36 @@ function SellerViewBiddersModal() {
         setIsSellerViewModalVisible,
         item,
         bidders,
+        setItem,
     } = useContext(BiddersModalContext);
 
     const hasConfirmedBidder = item?.confirmedBidder !== null;
+    const itemId = item?.id ?? "";
 
     const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
     const [approvedBidder, setApprovedBidder] = useState<BidType>();
-    const [isLoading, setIsLoading] = useState(false);
     const theme = useTheme();
 
     function handleApprove(bidder: BidType) {
         setApprovedBidder(bidder);
         setIsConfirmModalVisible(true);
     }
+
+    useEffect(() => {
+        if (!itemId) return;
+        const currItemRef = doc(itemsCollectionRef, itemId);
+        const unsubscribeItem = onSnapshot(
+            currItemRef,
+            (currItemSnapshot) => {
+                setItem(currItemSnapshot.data() as ItemType);
+            },
+            (error) => {
+                console.error(error);
+            },
+        );
+
+        return unsubscribeItem;
+    }, [itemId]);
 
     return (
         <Modal
@@ -77,7 +97,7 @@ function SellerViewBiddersModal() {
                                     }}
                                     size="small"
                                     appearance="filled"
-                                    disabled={hasConfirmedBidder || isLoading}
+                                    disabled={hasConfirmedBidder}
                                 >
                                     Approve
                                 </Button>
@@ -95,8 +115,6 @@ function SellerViewBiddersModal() {
                     bidderPrice={approvedBidder.price}
                     bidderID={approvedBidder.id}
                     itemID={item.id}
-                    isLoading={isLoading}
-                    setIsLoading={setIsLoading}
                 />
             )}
         </Modal>
