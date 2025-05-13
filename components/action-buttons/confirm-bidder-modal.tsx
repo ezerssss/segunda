@@ -1,7 +1,7 @@
 import Modal from "react-native-modal";
 import { View, Image, ActivityIndicator } from "react-native";
 import { Button, Text } from "@ui-kitten/components";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { confirmBid } from "@/firebase/functions";
 import { ConfirmBidRequestType } from "@/types/bidder";
 
@@ -13,6 +13,8 @@ interface ConfirmBidderModalProps {
     bidderImgURI: string;
     bidderID: string;
     itemID: string;
+    isLoading: boolean;
+    setIsLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
@@ -24,8 +26,9 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
         bidderImgURI,
         bidderID,
         itemID,
+        isLoading,
+        setIsLoading,
     } = props;
-    const [isLoading, setIsLoading] = useState(false);
 
     async function handleApproveBidder() {
         setIsLoading(true);
@@ -34,8 +37,7 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
                 bidId: bidderID,
                 itemId: itemID,
             } as ConfirmBidRequestType;
-            const response = await confirmBid(data);
-            console.log(response);
+            await confirmBid(data);
         } catch (e) {
             console.error(e);
         } finally {

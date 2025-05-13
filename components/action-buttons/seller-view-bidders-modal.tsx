@@ -20,6 +20,7 @@ function SellerViewBiddersModal() {
 
     const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
     const [approvedBidder, setApprovedBidder] = useState<BidType>();
+    const [isLoading, setIsLoading] = useState(false);
     const theme = useTheme();
 
     function handleApprove(bidder: BidType) {
@@ -69,14 +70,14 @@ function SellerViewBiddersModal() {
                                     style={{
                                         backgroundColor: hasConfirmedBidder
                                             ? theme["color-basic-disabled"]
-                                            : item.miner?.id === bidder.bidderId
+                                            : item.miner?.id === bidder.id
                                               ? theme["color-primary-500"]
                                               : "#E1306C",
                                         borderWidth: 0,
                                     }}
                                     size="small"
                                     appearance="filled"
-                                    disabled={hasConfirmedBidder}
+                                    disabled={hasConfirmedBidder || isLoading}
                                 >
                                     Approve
                                 </Button>
@@ -94,6 +95,8 @@ function SellerViewBiddersModal() {
                     bidderPrice={approvedBidder.price}
                     bidderID={approvedBidder.id}
                     itemID={item.id}
+                    isLoading={isLoading}
+                    setIsLoading={setIsLoading}
                 />
             )}
         </Modal>
