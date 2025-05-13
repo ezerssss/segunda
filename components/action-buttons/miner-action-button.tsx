@@ -36,8 +36,7 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
                 price: item.price,
                 itemId: item.id,
             } as BidRequestType;
-            const response = await bidItem(data);
-            console.log(response);
+            await bidItem(data);
         } catch (e) {
             console.error(e);
         } finally {
@@ -89,7 +88,7 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
                 isSteal={false}
                 isModalVisible={isConfirmModalVisible}
                 setIsModalVisible={setIsConfirmModalVisible}
-            ></ConfirmBuyActionModal>
+            />
         </>
     );
 }

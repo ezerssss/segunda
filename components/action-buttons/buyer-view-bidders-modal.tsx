@@ -51,25 +51,14 @@ function BuyerViewBiddersModal() {
     async function handlePlaceBid(data: BidRequestType | null) {
         setIsLoading(true);
         try {
-            const response = await bidItem(data);
-            console.log(response);
-        } catch (e) {
-            console.error(e);
-        } finally {
-            setIsLoading(false);
+            if (!isSteal) {
+                data = {
+                    price: item?.price,
+                    itemId: item?.id,
+                } as BidRequestType;
+            }
+            await bidItem(data);
             reset({ itemId: itemId, price: undefined });
-        }
-    }
-
-    async function handleMine() {
-        setIsLoading(true);
-        try {
-            const data = {
-                price: item?.price,
-                itemId: item?.id,
-            } as BidRequestType;
-            const response = await bidItem(data);
-            console.log(response);
         } catch (e) {
             console.error(e);
         } finally {
@@ -78,15 +67,15 @@ function BuyerViewBiddersModal() {
     }
 
     useEffect(() => {
-        if (item) {
-            reset({
-                itemId: item.id,
-                price: getValues("price") ?? undefined,
-            });
-        }
+        if (!item) return;
+        reset({
+            itemId: item.id,
+            price: getValues("price") ?? undefined,
+        });
     }, [item]);
 
     useEffect(() => {
+        if (!itemId) return;
         const currItemRef = doc(itemsCollectionRef, itemId);
         const unsubscribeItem = onSnapshot(
             currItemRef,
@@ -207,12 +196,12 @@ function BuyerViewBiddersModal() {
                     </View>
                 )}
                 <ConfirmBuyActionModal
-                    handleConfirm={isSteal ? handlePlaceBid : handleMine}
+                    handleConfirm={handlePlaceBid}
                     data={bidData}
                     isSteal={isSteal}
                     isModalVisible={isConfirmVisible}
                     setIsModalVisible={setIsConfirmVisible}
-                ></ConfirmBuyActionModal>
+                />
             </View>
         </Modal>
     );

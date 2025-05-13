@@ -94,7 +94,7 @@ function SellerViewBiddersModal() {
                     bidderPrice={approvedBidder.price}
                     bidderID={approvedBidder.id}
                     itemID={item.id}
-                ></ConfirmBidderModal>
+                />
             )}
         </Modal>
     );
