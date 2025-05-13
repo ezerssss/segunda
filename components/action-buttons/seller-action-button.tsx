@@ -1,6 +1,6 @@
 import { Button } from "@ui-kitten/components";
 import { ItemType } from "@/types/item";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { BiddersModalContext } from "@/contexts/biddersModalContext";
 import useGetBidders from "@/hooks/useGetBidders";
 import { ActivityIndicator } from "react-native";
@@ -11,18 +11,14 @@ interface SellerActionButtonProp {
 
 function SellerActionButton(props: Readonly<SellerActionButtonProp>) {
     const { item } = props;
-    const { isSellerViewModalVisible, setIsSellerViewModalVisible } =
-        useContext(BiddersModalContext);
-    const [isLoading, setIsLoading] = useState(false);
+    const { setIsSellerViewModalVisible } = useContext(BiddersModalContext);
+    const { getBidders, isModalInit } = useGetBidders();
 
     async function handleShowModal() {
-        setIsLoading(true);
-        await getInitialBidders();
-        setIsLoading(false);
+        await getBidders(item);
         setIsSellerViewModalVisible(true);
     }
 
-    const { getInitialBidders } = useGetBidders(item, isSellerViewModalVisible);
     return (
         <Button
             className="mx-1 flex-1"
@@ -31,10 +27,10 @@ function SellerActionButton(props: Readonly<SellerActionButtonProp>) {
             appearance="filled"
             status="basic"
             accessoryLeft={
-                isLoading ? <ActivityIndicator color="white" /> : <></>
+                isModalInit ? <ActivityIndicator color="white" /> : <></>
             }
         >
-            {isLoading ? "" : "Show Bidders"}
+            {isModalInit ? "" : "Show Bidders"}
         </Button>
     );
 }

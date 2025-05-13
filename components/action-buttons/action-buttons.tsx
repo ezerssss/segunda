@@ -15,12 +15,8 @@ function ActionButtons(props: Readonly<ActionButtonsProps>) {
     const { item } = props;
     const isSeller = user?.id === item.sellerId;
 
-    function getActionButtons() {
-        if (isSeller) return <SellerActionButton item={item} />;
-        if (item.miner === null) return <MinerActionButton item={item} />;
-        return <StealerActionButtons item={item} />;
-    }
-
-    return getActionButtons();
+    if (isSeller) return <SellerActionButton item={item} />;
+    if (item.miner === null) return <MinerActionButton item={item} />;
+    return <StealerActionButtons item={item} />;
 }
 export default ActionButtons;

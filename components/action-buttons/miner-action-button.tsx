@@ -6,6 +6,7 @@ import { bidItem } from "@/firebase/functions";
 import ConfirmBuyActionModal from "./confirm-buy-action-modal";
 import { ActivityIndicator } from "react-native";
 import { BiddersModalContext } from "@/contexts/biddersModalContext";
+import useGetBidders from "@/hooks/useGetBidders";
 
 interface MinerActionButtonProp {
     item: ItemType;
@@ -15,13 +16,15 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
     const { item } = props;
     const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const { getBidders, isModalInit } = useGetBidders();
 
     const { setIsBuyerViewModalVisible, setItem } =
         useContext(BiddersModalContext);
 
-    function handleShowBidders() {
-        setIsBuyerViewModalVisible(true);
+    async function handleShowBidders() {
         setItem(item);
+        await getBidders(item);
+        setIsBuyerViewModalVisible(true);
     }
 
     const theme = useTheme();
@@ -63,7 +66,7 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
                         <Icon name="shopping-bag-outline" />
                     )
                 }
-                disabled={isLoading}
+                disabled={isLoading || isModalInit}
             >
                 {isLoading ? "" : "Mine Now"}
             </Button>
@@ -73,7 +76,10 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
                 size="small"
                 appearance="filled"
                 status="basic"
-                disabled={isLoading}
+                accessoryLeft={
+                    isModalInit ? <ActivityIndicator color="white" /> : <></>
+                }
+                disabled={isLoading || isModalInit}
             >
                 {isLoading ? "" : "Show Bidders"}
             </Button>

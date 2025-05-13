@@ -51,7 +51,7 @@ export function ItemCard(props: PropsInterface) {
                 )}
             </View>
             <View className="flex flex-row justify-between gap-2 px-4 py-2">
-                <ActionButtons item={item}></ActionButtons>
+                <ActionButtons item={item} />
             </View>
         </Pressable>
     );
