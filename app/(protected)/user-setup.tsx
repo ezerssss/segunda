@@ -166,9 +166,8 @@ function UserSetupPage() {
 
             <View className="mt-16 h-12 w-full justify-center">
                 <Button
-                    onPress={
-                        isLoading ? undefined : handleSubmit(handleSetupUser)
-                    }
+                    disabled={isLoading}
+                    onPress={handleSubmit(handleSetupUser)}
                 >
                     {isLoading ? (
                         <ActivityIndicator

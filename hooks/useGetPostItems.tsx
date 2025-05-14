@@ -9,12 +9,16 @@ import {
 } from "@react-native-firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { PostContext } from "@/contexts/postContext";
+import { UserContext } from "@/contexts/userContext";
 
 export function useGetPostItems(postId: string) {
+    const { user } = useContext(UserContext);
     const { setPostItems } = useContext(PostContext);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        if (!user) return;
+
         const unsubsribe = onSnapshot(
             query(
                 itemsCollectionRef,
@@ -32,7 +36,7 @@ export function useGetPostItems(postId: string) {
             (error) => console.error("Error in getting post items: ", error),
         );
         return unsubsribe;
-    }, []);
+    }, [user]);
 
     return { isLoading };
 }

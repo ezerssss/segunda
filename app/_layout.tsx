@@ -35,6 +35,7 @@ export default function RootLayout() {
     });
 
     const [user, setUser] = useState<UserContextData | null>(null);
+    const [isUserLoading, setIsUserLoading] = useState(true);
     const [item, setItem] = useState<ItemType | null>(null);
     const [bidders, setBidders] = useState<BidType[]>([]);
 
@@ -55,11 +56,13 @@ export default function RootLayout() {
         const unsubscribe = auth.onAuthStateChanged((user) => {
             if (!user) {
                 setUser(null);
+                setIsUserLoading(false);
                 return;
             }
 
             (async () => {
                 if (!user) {
+                    setIsUserLoading(false);
                     return;
                 }
 
@@ -72,6 +75,8 @@ export default function RootLayout() {
                     setUser({ ...firebaseUserJson, ...userData });
                 } catch (error) {
                     console.error(error);
+                } finally {
+                    setIsUserLoading(false);
                 }
             })();
         });
@@ -91,7 +96,9 @@ export default function RootLayout() {
                 customMapping={mapping}
                 theme={{ ...eva.light, ...theme }}
             >
-                <UserContext.Provider value={{ user, setUser }}>
+                <UserContext.Provider
+                    value={{ user, setUser, isUserLoading, setIsUserLoading }}
+                >
                     <BiddersModalContext.Provider
                         value={{
                             isSellerViewModalVisible,
@@ -106,11 +113,15 @@ export default function RootLayout() {
                         }}
                     >
                         <StatusBar style="auto" />
-                        <SafeAreaView className="flex-1 bg-white">
-                            <Stack screenOptions={{ headerShown: false }} />
+                        <SafeAreaView className="flex-1">
+                            <Stack
+                                screenOptions={{
+                                    headerShown: false,
+                                    contentStyle: { backgroundColor: "white" },
+                                }}
+                            />
                             <View className="flex items-center">
                                 <BuyerViewBiddersModal />
-
                                 <SellerViewBiddersModal />
                             </View>
                         </SafeAreaView>

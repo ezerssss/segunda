@@ -19,11 +19,10 @@ function SellerItemsPage() {
                     return <SellerItem key={item.id} sellerItem={item} />;
                 }}
                 initialNumToRender={5}
-                removeClippedSubviews={false}
                 ListEmptyComponent={
                     <View className="mt-[40%] h-[350px] items-center justify-center">
                         <Image
-                            source={require("../../assets/images/no-items.png")}
+                            source={require("@/assets/images/no-items.png")}
                             contentFit="contain"
                             className="aspect-square h-[150px] w-[100%]"
                         />

@@ -9,16 +9,19 @@ interface SellerItemProps {
     sellerItem: ItemType;
 }
 
-export default function SellerItem({ sellerItem }: SellerItemProps) {
+export default function SellerItem(props: SellerItemProps) {
+    const { sellerItem } = props;
     const { name, imageUrl, price, blurHash, description } = sellerItem;
     const [isMenuVisible, setIsMenuVisible] = useState(false);
+    const [selectedIndex, setSelectedIndex] = useState<IndexPath | undefined>();
 
-    function onMenuTap(index: number) {
-        if (index === 0) {
+    function onMenuTap(index: IndexPath) {
+        if (index.row === 0) {
             console.log("Edit tapped");
-        } else if (index === 1) {
+        } else if (index.row === 1) {
             console.log("Delete tapped");
         }
+        setSelectedIndex(index);
         setIsMenuVisible(false);
     }
 
@@ -55,23 +58,22 @@ export default function SellerItem({ sellerItem }: SellerItemProps) {
                 </View>
 
                 <OverflowMenu
-                    anchor={() => {
-                        return (
-                            <TouchableOpacity
-                                className="ml-auto"
-                                onPress={() => setIsMenuVisible(true)}
-                            >
-                                <Entypo
-                                    name="dots-three-vertical"
-                                    size={18}
-                                    color="black"
-                                />
-                            </TouchableOpacity>
-                        );
-                    }}
+                    anchor={() => (
+                        <TouchableOpacity
+                            className="ml-auto"
+                            onPress={() => setIsMenuVisible(true)}
+                        >
+                            <Entypo
+                                name="dots-three-vertical"
+                                size={18}
+                                color="black"
+                            />
+                        </TouchableOpacity>
+                    )}
                     visible={isMenuVisible}
                     onBackdropPress={() => setIsMenuVisible(false)}
-                    onSelect={(index: IndexPath) => onMenuTap(index.row)}
+                    onSelect={onMenuTap}
+                    selectedIndex={selectedIndex}
                 >
                     <MenuItem title="Edit" />
                     <MenuItem title="Delete" />

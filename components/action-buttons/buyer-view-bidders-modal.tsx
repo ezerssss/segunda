@@ -14,8 +14,10 @@ import ConfirmBuyActionModal from "./confirm-buy-action-modal";
 import { BiddersModalContext } from "@/contexts/biddersModalContext";
 import { doc, onSnapshot } from "@react-native-firebase/firestore";
 import { itemsCollectionRef } from "@/constants/collections";
+import { UserContext } from "@/contexts/userContext";
 
 function BuyerViewBiddersModal() {
+    const { user } = useContext(UserContext);
     const {
         isBuyerViewModalVisible,
         setIsBuyerViewModalVisible,
@@ -75,7 +77,7 @@ function BuyerViewBiddersModal() {
     }, [item]);
 
     useEffect(() => {
-        if (!itemId) return;
+        if (!itemId || !user) return;
         const currItemRef = doc(itemsCollectionRef, itemId);
         const unsubscribeItem = onSnapshot(
             currItemRef,
@@ -89,7 +91,7 @@ function BuyerViewBiddersModal() {
         );
 
         return unsubscribeItem;
-    }, [itemId]);
+    }, [itemId, user]);
 
     return (
         <Modal

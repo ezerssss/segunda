@@ -26,7 +26,6 @@ export default function BrowsePostsPage() {
             }}
             onEndReached={fetchMorePosts}
             initialNumToRender={MAX_POSTS_PER_LOAD}
-            removeClippedSubviews={false}
             ListEmptyComponent={
                 <View className="min-h-screen flex-1 items-center justify-center bg-white">
                     <Text>There are no posts currently.</Text>

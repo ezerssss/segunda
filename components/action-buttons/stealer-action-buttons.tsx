@@ -23,20 +23,22 @@ function StealerActionButtons(props: Readonly<BuyerActionButtonsProps>) {
 
     return (
         <>
-            <Button
-                className="mx-1 flex-1"
-                onPress={handleShowBidders}
-                style={{
-                    backgroundColor: "#E1306C",
-                    borderWidth: 0,
-                }}
-                size="small"
-                appearance="filled"
-                accessoryLeft={<Icon name="shopping-bag-outline" />}
-                disabled={isModalInit}
-            >
-                Steal
-            </Button>
+            {!item.confirmedBidder && (
+                <Button
+                    className="mx-1 flex-1"
+                    onPress={handleShowBidders}
+                    style={{
+                        backgroundColor: "#E1306C",
+                        borderWidth: 0,
+                    }}
+                    size="small"
+                    appearance="filled"
+                    accessoryLeft={<Icon name="shopping-bag-outline" />}
+                    disabled={isModalInit}
+                >
+                    Steal
+                </Button>
+            )}
             <Button
                 className="mx-1 flex-1"
                 onPress={handleShowBidders}

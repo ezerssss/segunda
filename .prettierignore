@@ -2,3 +2,5 @@ node_modules
 android
 .expo
 .eas
+package.json
+package-lock.json

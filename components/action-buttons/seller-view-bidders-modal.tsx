@@ -10,8 +10,10 @@ import { BiddersModalContext } from "@/contexts/biddersModalContext";
 import { doc, onSnapshot } from "@react-native-firebase/firestore";
 import { itemsCollectionRef } from "@/constants/collections";
 import { ItemType } from "@/types/item";
+import { UserContext } from "@/contexts/userContext";
 
 function SellerViewBiddersModal() {
+    const { user } = useContext(UserContext);
     const {
         isSellerViewModalVisible,
         setIsSellerViewModalVisible,
@@ -33,7 +35,7 @@ function SellerViewBiddersModal() {
     }
 
     useEffect(() => {
-        if (!itemId) return;
+        if (!itemId || !user) return;
         const currItemRef = doc(itemsCollectionRef, itemId);
         const unsubscribeItem = onSnapshot(
             currItemRef,
@@ -46,7 +48,7 @@ function SellerViewBiddersModal() {
         );
 
         return unsubscribeItem;
-    }, [itemId]);
+    }, [itemId, user]);
 
     return (
         <Modal

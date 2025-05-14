@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useRouter } from "expo-router";
+import { useContext, useEffect, useState } from "react";
 
 import {
     GoogleSignin,
@@ -12,6 +11,8 @@ import {
 } from "@react-native-firebase/auth";
 import getErrorStatus from "../utils/getErrorStatus";
 import { ERROR_MESSAGE_TIMEOUT } from "@/constants/timeout";
+import { UserContext } from "@/contexts/userContext";
+import { router } from "expo-router";
 
 GoogleSignin.configure({
     webClientId: process.env.EXPO_PUBLIC_CLIENT_ID,
@@ -21,7 +22,14 @@ function useLogin() {
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
     const [isInternalError, setIsInternalError] = useState(false);
-    const router = useRouter();
+    const { user } = useContext(UserContext);
+
+    useEffect(() => {
+        if (user) {
+            setIsLoading(false);
+            router.push("/(protected)/(tabs)/home");
+        }
+    }, [user]);
 
     async function handleShowError() {
         setIsError(true);
@@ -45,7 +53,6 @@ function useLogin() {
             const { idToken } = res.data;
             const googleCredential = GoogleAuthProvider.credential(idToken);
             await signInWithCredential(auth, googleCredential);
-            router.back();
         } catch (error) {
             if (error instanceof Error) {
                 const status = getErrorStatus(error?.message);
@@ -57,9 +64,8 @@ function useLogin() {
                 }
             }
 
-            console.error(error);
-        } finally {
             setIsLoading(false);
+            console.error(error);
         }
     }
 
