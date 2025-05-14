@@ -6,6 +6,7 @@ export const BidSchema = z.object({
     id: z.string().min(1),
     itemId: z.string().min(1),
     postId: z.string().min(1),
+    chatId: z.string().nullable(),
     bidderId: z.string().min(1),
     bidderData: UserPublicDataSchema,
     price: z.number().nonnegative(),
