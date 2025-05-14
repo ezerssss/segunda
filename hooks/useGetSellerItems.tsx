@@ -16,7 +16,7 @@ export default function useGetSellerItems() {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        if (!sellerId) return;
+        if (!sellerId || !user) return;
 
         setIsLoading(true);
         const itemQuery = query(
@@ -42,7 +42,7 @@ export default function useGetSellerItems() {
         );
 
         return unsubscribeItems;
-    }, []);
+    }, [user]);
 
     return { items, isLoading };
 }

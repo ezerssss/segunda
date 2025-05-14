@@ -1,10 +1,5 @@
-import { View, Text } from "react-native";
-import React from "react";
+import ComingSoon from "@/components/coming-soon";
 
 export default function Catalogue() {
-    return (
-        <View>
-            <Text>Catalogue</Text>
-        </View>
-    );
+    return <ComingSoon />;
 }

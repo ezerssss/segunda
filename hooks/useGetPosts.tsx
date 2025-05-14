@@ -1,5 +1,6 @@
 import { postsCollectionRef } from "@/constants/collections";
 import { MAX_POSTS_PER_LOAD } from "@/constants/post";
+import { UserContext } from "@/contexts/userContext";
 import { PostType } from "@/types/post";
 import {
     FirebaseFirestoreTypes,
@@ -10,9 +11,10 @@ import {
     query,
     startAfter,
 } from "@react-native-firebase/firestore";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 export default function useGetPosts() {
+    const { user } = useContext(UserContext);
     const [posts, setPosts] = useState<PostType[]>([]);
     const [lastPostDoc, setLastPostDoc] =
         useState<
@@ -22,6 +24,8 @@ export default function useGetPosts() {
     const [hasMore, setHasMore] = useState(true);
 
     useEffect(() => {
+        if (!user) return;
+
         setIsLoading(true);
         const postsQuery = query(
             postsCollectionRef,
@@ -63,7 +67,7 @@ export default function useGetPosts() {
         );
 
         return unsubscribePosts;
-    }, []);
+    }, [user]);
 
     async function fetchMorePosts() {
         if (isLoading || !hasMore) return;

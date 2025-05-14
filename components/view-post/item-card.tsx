@@ -17,8 +17,6 @@ export function ItemCard(props: PropsInterface) {
     const { name, price, description, imageUrl, blurHash, index } = item;
     const router = useRouter();
 
-    const confirmed = false; // placeholder for confirmedBidder
-
     function navigateToFullScreen(index: number) {
         router.push(`/(protected)/view-post/full-screen/${index}`);
     }
@@ -35,9 +33,9 @@ export function ItemCard(props: PropsInterface) {
                 />
             </View>
             <View className="m-0 w-full px-4 pb-0 pt-2">
-                {confirmed && (
+                {!!item.confirmedBidder && (
                     <Text category="h6" style={{ color }}>
-                        Sold to: name
+                        Sold to: {item.confirmedBidder.bidderData.name}
                     </Text>
                 )}
                 <Text category="h6" style={{ color }}>
