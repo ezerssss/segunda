@@ -8,6 +8,7 @@ import {
     CancelBidRequestType,
     ConfirmBidRequestType,
 } from "@/types/bidder";
+import { SeenMessageType, SendMessageRequestType } from "@/types/chat";
 
 const functions = getFunctions(app, "asia-southeast1");
 export const setUpUser = httpsCallable<
@@ -32,5 +33,15 @@ export const confirmBid = httpsCallable<
 
 export const cancelBid = httpsCallable<
     CancelBidRequestType,
+    GenericResponseMessage
+>(functions, "cancelBid");
+
+export const sendMessage = httpsCallable<
+    SendMessageRequestType,
+    GenericResponseMessage
+>(functions, "cancelBid");
+
+export const seenMessage = httpsCallable<
+    SeenMessageType,
     GenericResponseMessage
 >(functions, "cancelBid");
