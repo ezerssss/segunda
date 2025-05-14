@@ -1,10 +1,11 @@
-import React, { useState, memo } from "react";
+import React, { memo } from "react";
 import { View } from "react-native";
-import { Button, Icon, Text, useTheme } from "@ui-kitten/components";
+import { Text } from "@ui-kitten/components";
 import { TruncatedText } from "../truncated-text";
 import { ItemType } from "@/types/item";
 import { Image } from "expo-image";
 import { Zoomable } from "@likashefqet/react-native-image-zoom";
+import ActionButtons from "../action-buttons/action-buttons";
 
 interface PropsInterface {
     item: ItemType;
@@ -14,17 +15,7 @@ interface PropsInterface {
 export function FullScreenItemCard(props: PropsInterface) {
     const { item, color = "black" } = props;
     const { name, price, description, imageUrl, blurHash } = item;
-    const [isMined, setIsMined] = useState(false);
-    const theme = useTheme();
     const confirmed = false; // placeholder for confirmedBidder
-
-    function clickedMined() {
-        setIsMined(!isMined);
-    }
-
-    function showBidders() {
-        console.log("Clicked bidders!");
-    }
 
     return (
         <View className="relative flex h-screen w-screen bg-black">
@@ -64,34 +55,7 @@ export function FullScreenItemCard(props: PropsInterface) {
                     )}
                 </View>
                 <View className="flex flex-row justify-between gap-2 px-2 py-4">
-                    {!confirmed && (
-                        <Button
-                            onPress={clickedMined}
-                            style={{
-                                backgroundColor: isMined
-                                    ? theme["color-secondary-500"]
-                                    : theme["color-primary-500"],
-                                borderWidth: 0,
-                                flex: 1,
-                            }}
-                            size="small"
-                            appearance="filled"
-                            accessoryLeft={<Icon name="shopping-bag-outline" />}
-                        >
-                            {isMined ? "Steal" : "Mine Now"}
-                        </Button>
-                    )}
-                    <Button
-                        onPress={showBidders}
-                        size="small"
-                        appearance="filled"
-                        status="basic"
-                        style={{
-                            flex: 1,
-                        }}
-                    >
-                        Show Bidders
-                    </Button>
+                    <ActionButtons item={item} />
                 </View>
             </View>
         </View>

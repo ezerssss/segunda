@@ -2,10 +2,11 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { UserContext, UserContextData } from "../contexts/userContext";
+import { BiddersModalContext } from "@/contexts/biddersModalContext";
 import * as eva from "@eva-design/eva";
 import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
 import { default as theme } from "../custom-theme.json";
@@ -13,13 +14,18 @@ import { default as mapping } from "../custom-mapping.json";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import auth from "@/firebase/auth";
 import { UserDataType } from "@/types/user";
-import { doc, getDoc } from "@react-native-firebase/firestore";
+import { doc, getDoc, Unsubscribe } from "@react-native-firebase/firestore";
 import { usersCollectionRef } from "@/constants/collections";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import BuyerViewBiddersModal from "@/components/action-buttons/buyer-view-bidders-modal";
+import SellerViewBiddersModal from "@/components/action-buttons/seller-view-bidders-modal";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import "../utils/native-wind-config";
 import "../global.css";
+import { ItemType } from "@/types/item";
+import { BidType } from "@/types/bidder";
+import { View } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -30,6 +36,15 @@ export default function RootLayout() {
 
     const [user, setUser] = useState<UserContextData | null>(null);
     const [isUserLoading, setIsUserLoading] = useState(true);
+    const [item, setItem] = useState<ItemType | null>(null);
+    const [bidders, setBidders] = useState<BidType[]>([]);
+
+    const [isBuyerViewModalVisible, setIsBuyerViewModalVisible] =
+        useState<boolean>(false);
+    const [isSellerViewModalVisible, setIsSellerViewModalVisible] =
+        useState<boolean>(false);
+
+    const unsubscribe = useRef<Unsubscribe | null>(null);
 
     useEffect(() => {
         if (loaded) {
@@ -84,10 +99,29 @@ export default function RootLayout() {
                 <UserContext.Provider
                     value={{ user, setUser, isUserLoading, setIsUserLoading }}
                 >
-                    <StatusBar style="auto" />
-                    <SafeAreaView className="flex-1 bg-white">
-                        <Stack screenOptions={{ headerShown: false }} />
-                    </SafeAreaView>
+                    <BiddersModalContext.Provider
+                        value={{
+                            isSellerViewModalVisible,
+                            isBuyerViewModalVisible,
+                            unsubscribe,
+                            item,
+                            bidders,
+                            setIsSellerViewModalVisible,
+                            setIsBuyerViewModalVisible,
+                            setItem,
+                            setBidders,
+                        }}
+                    >
+                        <StatusBar style="auto" />
+                        <SafeAreaView className="flex-1 bg-white">
+                            <Stack screenOptions={{ headerShown: false }} />
+                            <View className="flex items-center">
+                                <BuyerViewBiddersModal />
+
+                                <SellerViewBiddersModal />
+                            </View>
+                        </SafeAreaView>
+                    </BiddersModalContext.Provider>
                 </UserContext.Provider>
             </ApplicationProvider>
         </GestureHandlerRootView>
