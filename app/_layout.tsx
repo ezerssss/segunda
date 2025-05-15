@@ -113,7 +113,7 @@ export default function RootLayout() {
                         }}
                     >
                         <StatusBar style="auto" />
-                        <SafeAreaView className="flex-1">
+                        <SafeAreaView className="flex-1 bg-white">
                             <Stack
                                 screenOptions={{
                                     headerShown: false,
