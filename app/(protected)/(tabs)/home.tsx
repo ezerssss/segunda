@@ -1,18 +1,17 @@
 import { ActivityIndicator, FlatList, View } from "react-native";
 import PostItem from "@/components/browse-posts/post-item";
 import useGetPosts from "@/hooks/useGetPosts";
-import { Text } from "@ui-kitten/components";
+import { Icon, Text, useTheme } from "@ui-kitten/components";
 import { MAX_POSTS_PER_LOAD } from "@/constants/post";
+import SkeletonBrowsePost from "@/components/skeletons/browse-post";
+import React from "react";
 
 export default function BrowsePostsPage() {
     const { posts, fetchMorePosts, isLoading, hasMore } = useGetPosts();
+    const theme = useTheme();
 
     if (isLoading && posts.length === 0) {
-        return (
-            <View className="min-h-screen flex-1 items-center justify-center bg-white">
-                <ActivityIndicator />
-            </View>
-        );
+        return <SkeletonBrowsePost />;
     }
 
     return (
@@ -21,8 +20,15 @@ export default function BrowsePostsPage() {
             showsVerticalScrollIndicator={false}
             keyExtractor={(item) => item.id}
             renderItem={({ item, index }) => {
-                const isLast = index === posts.length - 1;
-                return <PostItem key={item.id} post={item} isLast={isLast} />;
+                const hasDivider =
+                    index === posts.length - 1 || posts.length === 1;
+                return (
+                    <PostItem
+                        key={item.id}
+                        post={item}
+                        hasDivider={hasDivider}
+                    />
+                );
             }}
             onEndReached={fetchMorePosts}
             initialNumToRender={MAX_POSTS_PER_LOAD}
@@ -33,11 +39,17 @@ export default function BrowsePostsPage() {
             }
             ListFooterComponent={
                 hasMore ? (
-                    <View className="w-full items-center justify-center py-2">
+                    <View className="h-24 w-full items-center justify-center py-2">
                         <ActivityIndicator />
                     </View>
                 ) : (
-                    <></>
+                    <View className="flex h-24 items-center justify-center gap-1">
+                        <Icon
+                            name="checkmark-circle-2-outline"
+                            fill={theme["color-primary-500"]}
+                        />
+                        <Text>You're all caught up with sellers</Text>
+                    </View>
                 )
             }
             contentContainerClassName="bg-white"

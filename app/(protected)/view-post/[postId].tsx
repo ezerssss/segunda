@@ -1,4 +1,4 @@
-import { ActivityIndicator, View, FlatList } from "react-native";
+import { View, FlatList } from "react-native";
 import ItemCard from "@/components/view-post/item-card";
 import { useLocalSearchParams } from "expo-router";
 import { PostContext } from "@/contexts/postContext";
@@ -7,6 +7,7 @@ import useGetPost from "@/hooks/useGetPost";
 import PostHeader from "@/components/post-header";
 import React, { useContext } from "react";
 import { Divider, Text } from "@ui-kitten/components";
+import SkeletonViewPost from "@/components/skeletons/view-post";
 
 export default function ViewPostPage() {
     const { postItems, post } = useContext(PostContext);
@@ -18,11 +19,7 @@ export default function ViewPostPage() {
     const isLoading = postIsLoading || postItemsIsLoading;
 
     if (isLoading) {
-        return (
-            <View className="min-h-screen flex-1 items-center justify-center bg-white">
-                <ActivityIndicator />
-            </View>
-        );
+        return <SkeletonViewPost />;
     }
 
     const noContent = !post || postItems.length === 0;
