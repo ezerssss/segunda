@@ -1,6 +1,5 @@
 import { Slot } from "expo-router";
 import { useState } from "react";
-import "react-native-reanimated";
 import { PostContext } from "@/contexts/postContext";
 import { ItemType } from "@/types/item";
 import { PostType } from "@/types/post";
