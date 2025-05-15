@@ -15,8 +15,8 @@ export default function SkeletonViewPost() {
                     <View className="w-full animate-pulse gap-1">
                         <View className="aspect-square w-full bg-gray-200" />
                         <View className="w-full flex-row gap-4 p-4">
-                            <View className="h-6 flex-1 rounded-full bg-gray-200"></View>
-                            <View className="h-6 flex-1 rounded-full bg-gray-200"></View>
+                            <View className="h-6 flex-1 rounded-full bg-gray-200" />
+                            <View className="h-6 flex-1 rounded-full bg-gray-200" />
                         </View>
                     </View>
                     <Divider className="h-1 flex-1 rounded-lg bg-gray-200" />
