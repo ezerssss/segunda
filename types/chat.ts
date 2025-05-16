@@ -8,10 +8,15 @@ export const ChatSchema = z.object({
     sellerData: UserPublicDataSchema,
     buyerId: z.string().min(1),
     buyerData: UserPublicDataSchema,
-    lastMessage: z
-        .string()
-        .trim()
-        .min(1, { message: "Message should have at least one character." }),
+    lastMessage: z.object({
+        message: z
+            .string()
+            .trim()
+            .min(1, { message: "Message should have at least one character." }),
+        senderId: z.string().min(1).nullable(),
+        senderData: UserPublicDataSchema.nullable(),
+        isSystemGenerated: z.boolean(),
+    }),
     isSeen: z.object({
         seller: z.boolean(),
         buyer: z.boolean(),
