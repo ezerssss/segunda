@@ -9,11 +9,10 @@ import { useRouter } from "expo-router";
 
 interface PostItemProps {
     post: PostType;
-    hasDivider: boolean;
 }
 
 function PostItem(props: PostItemProps) {
-    const { post, hasDivider } = props;
+    const { post } = props;
     const { id, sellerData, caption, tags, imageUrls, blurHashes } = post;
 
     const router = useRouter();
@@ -40,9 +39,8 @@ function PostItem(props: PostItemProps) {
                     <PostHearts />
                 </View>
             </View>
-            {hasDivider && (
-                <Divider className="h-1 flex-1 rounded-lg bg-gray-200" />
-            )}
+
+            <Divider className="h-1 flex-1 rounded-lg bg-gray-200" />
         </Pressable>
     );
 }

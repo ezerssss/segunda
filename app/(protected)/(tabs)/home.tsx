@@ -19,16 +19,8 @@ export default function BrowsePostsPage() {
             data={posts}
             showsVerticalScrollIndicator={false}
             keyExtractor={(item) => item.id}
-            renderItem={({ item, index }) => {
-                const hasDivider =
-                    index === posts.length - 1 || posts.length === 1;
-                return (
-                    <PostItem
-                        key={item.id}
-                        post={item}
-                        hasDivider={hasDivider}
-                    />
-                );
+            renderItem={({ item }) => {
+                return <PostItem key={item.id} post={item} />;
             }}
             onEndReached={fetchMorePosts}
             initialNumToRender={MAX_POSTS_PER_LOAD}
