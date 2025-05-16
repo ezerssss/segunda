@@ -2,7 +2,7 @@ import { getFunctions, httpsCallable } from "@react-native-firebase/functions";
 import app from ".";
 import { SetUpUserRequestType } from "@/types/user";
 import { GenericResponseMessage } from "@/types/response";
-import { PostRequestType } from "@/types/post";
+import { DeletePostRequestType, PostRequestType } from "@/types/post";
 import {
     BidRequestType,
     CancelBidRequestType,
@@ -20,6 +20,11 @@ export const createPost = httpsCallable<
     PostRequestType,
     GenericResponseMessage
 >(functions, "createPost");
+
+export const deletePost = httpsCallable<
+    DeletePostRequestType,
+    GenericResponseMessage
+>(functions, "deletePost");
 
 export const bidItem = httpsCallable<BidRequestType, GenericResponseMessage>(
     functions,
