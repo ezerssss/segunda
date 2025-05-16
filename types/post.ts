@@ -79,3 +79,8 @@ export const PostRequestSchema = PostFormSchema.omit({ items: true }).extend({
         .min(1, { message: "There should be at least 1 item in a post." }),
 });
 export type PostRequestType = z.infer<typeof PostRequestSchema>;
+
+export const DeletePostRequestSchema = z.object({
+    postId: z.string().min(1),
+});
+export type DeletePostRequestType = z.infer<typeof DeletePostRequestSchema>;
