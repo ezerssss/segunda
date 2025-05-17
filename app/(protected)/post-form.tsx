@@ -1,4 +1,4 @@
-import { View, ScrollView, ToastAndroid } from "react-native";
+import { View, ScrollView, ToastAndroid, Pressable } from "react-native";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
@@ -15,11 +15,13 @@ import {
     Text,
     Divider,
     ProgressBar,
+    Icon,
 } from "@ui-kitten/components";
 import MultiSelectTags from "@/components/seller/multiselect-tags";
 import { ITEM_IMAGES_FOLDER } from "@/constants/storage";
 import UserHeader from "@/components/user/user-header";
 import { useUserStore } from "@/states/user";
+import { router } from "expo-router";
 
 export default function SellerFormPage() {
     const { user } = useUserStore();
@@ -142,8 +144,13 @@ export default function SellerFormPage() {
         >
             {isLoading && <ProgressBar progress={progress} />}
 
-            <View className="flex-row items-center px-0 py-4">
-                <Text className="flex-1 text-lg">Create Post</Text>
+            <View className="flex-row justify-between px-0 py-4">
+                <View className="flex-row items-center">
+                    <Pressable onPress={() => router.back()}>
+                        <Icon name="arrow-ios-back-outline" />
+                    </Pressable>
+                    <Text className="mx-4 text-lg">Create Post</Text>
+                </View>
                 <Button disabled={isLoading} onPress={handlePost} size="small">
                     POST
                 </Button>
