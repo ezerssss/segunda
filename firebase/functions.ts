@@ -9,7 +9,7 @@ import {
     ConfirmBidRequestType,
 } from "@/types/bidder";
 import { SeenMessageType, SendMessageRequestType } from "@/types/chat";
-import { DeleteItemRequestType } from "@/types/item";
+import { EditItemRequestType, DeleteItemRequestType } from "@/types/item";
 
 const functions = getFunctions(app, "asia-southeast1");
 export const setUpUser = httpsCallable<
@@ -21,6 +21,11 @@ export const createPost = httpsCallable<
     PostRequestType,
     GenericResponseMessage
 >(functions, "createPost");
+
+export const editItem = httpsCallable<
+    EditItemRequestType,
+    GenericResponseMessage
+>(functions, "editItem");
 
 export const deletePost = httpsCallable<
     DeletePostRequestType,
