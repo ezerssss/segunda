@@ -6,7 +6,7 @@ import { TouchableOpacity, View } from "react-native";
 export default function SellerFormBar() {
     const { user } = useUserStore();
     return (
-        <View className="mx-2 my-4 flex-row items-center gap-4">
+        <View className="mx-2 my-4 flex-row items-center gap-2">
             <Avatar
                 source={{
                     uri: user?.imageUrl ?? "",
