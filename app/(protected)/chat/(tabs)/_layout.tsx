@@ -36,8 +36,11 @@ export default function AppLayout() {
                     sceneStyle: { backgroundColor: "white" },
                 }}
             >
-                <TopTabs.Screen name="buyers" options={{ title: "Buyers" }} />
-                <TopTabs.Screen name="sellers" options={{ title: "Sellers" }} />
+                <TopTabs.Screen name="sold-to" options={{ title: "Sold To" }} />
+                <TopTabs.Screen
+                    name="bought-from"
+                    options={{ title: "Bought From" }}
+                />
             </TopTabs>
         </>
     );

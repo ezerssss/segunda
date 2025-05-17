@@ -63,9 +63,9 @@ function useLogin() {
                     handleShowError();
                 }
             }
-
-            setIsLoading(false);
             console.error(error);
+        } finally {
+            setIsLoading(false);
         }
     }
 

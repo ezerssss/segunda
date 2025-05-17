@@ -1,14 +1,17 @@
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import ChatThumbnail from "@/components/chat/thumbnail";
 import SkeletonChatList from "@/components/skeletons/chat-list";
+import { ChatType } from "@/types/chat";
+import { Text } from "@ui-kitten/components";
 
 interface PropsInterface {
-    chatsThumbnailData?: number[]; // acts as placeholder should change to required and associated data type
+    chatListData: ChatType[];
+    isSeller: boolean;
+    isLoading: boolean;
 }
 
 function ChatList(props: PropsInterface) {
-    const { chatsThumbnailData = new Array(15).fill(0) } = props;
-    const isLoading = false;
+    const { chatListData, isSeller, isLoading } = props;
 
     if (isLoading) {
         return <SkeletonChatList />;
@@ -16,16 +19,32 @@ function ChatList(props: PropsInterface) {
 
     return (
         <FlatList
-            data={chatsThumbnailData}
+            data={chatListData}
             showsVerticalScrollIndicator={false}
-            renderItem={(item) => (
-                <ChatThumbnail
-                    key={"chat-thumbnail" + item.index}
-                    senderName="Jhoanna Olana"
-                    lastMessageName="Andrea Jones"
-                    lastMessage="I wanna be a tutubi na walang tinatagong bato sa loob ng bato"
-                />
-            )}
+            renderItem={({ item }) => {
+                const other = isSeller ? item.buyerData : item.sellerData;
+                return (
+                    <ChatThumbnail
+                        key={item.id}
+                        otherName={other.name}
+                        otherImageUrl={other.imageUrl}
+                        lastMessageName={
+                            item.lastMessage.senderData
+                                ? `${item.lastMessage.senderData.name}: `
+                                : ""
+                        }
+                        lastMessage={item.lastMessage.message}
+                        isSeen={
+                            isSeller ? item.isSeen.seller : item.isSeen.buyer
+                        }
+                    />
+                );
+            }}
+            ListEmptyComponent={
+                <View className="h-[80vh] items-center justify-center">
+                    <Text>You have no messages yet.</Text>
+                </View>
+            }
             contentContainerClassName="bg-white p-4"
         />
     );
