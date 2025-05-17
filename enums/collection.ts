@@ -5,4 +5,5 @@ export enum CollectionEnum {
     BIDDERS = "bidders",
     CHATS = "chats",
     MESSAGES = "messages",
+    NOTIFICATIONS = "notifications",
 }
