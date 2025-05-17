@@ -64,3 +64,8 @@ export const EditItemRequestSchema = ItemFormSchema.extend({
     imageUrl: z.string().url(),
 }).omit({ index: true });
 export type EditItemRequestType = z.infer<typeof EditItemRequestSchema>;
+
+export const DeleteItemRequestSchema = z.object({
+    itemId: z.string().min(1),
+});
+export type DeleteItemRequestType = z.infer<typeof DeleteItemRequestSchema>;
