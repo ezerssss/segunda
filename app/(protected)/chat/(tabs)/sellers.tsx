@@ -1,5 +1,5 @@
-import ChatList from "../../../../components/chat/list";
+import ChatList from "@/components/chat/list";
 
-export default function SellersChatList() {
+export default function BuyersChatList() {
     return <ChatList />;
 }
