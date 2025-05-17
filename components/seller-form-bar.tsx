@@ -6,7 +6,7 @@ import { TouchableOpacity, View } from "react-native";
 export default function SellerFormBar() {
     const { user } = useUserStore();
     return (
-        <View className="mx-2 my-4 flex-row items-center">
+        <View className="mx-2 my-4 flex-row items-center gap-4">
             <Avatar
                 source={{
                     uri: user?.imageUrl ?? "",
@@ -22,7 +22,7 @@ export default function SellerFormBar() {
                 <View pointerEvents="none">
                     <Input
                         placeholder={"What would you like to post?"}
-                        className="mx-4 rounded-full"
+                        className="rounded-3xl"
                         style={{ flexGrow: 1 }}
                         textStyle={{ marginLeft: 20 }}
                     />
