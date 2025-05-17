@@ -27,12 +27,12 @@ export default function AppLayout() {
     const { user } = useContext(UserContext);
 
     function navigateToChats() {
-        router.push("/(protected)/chat/chat-list");
+        router.push("/(protected)/chat/(tabs)/buyers");
     }
 
     return (
         <>
-            <View className="flex flex-row items-center justify-between px-4 py-2">
+            <View className="flex flex-row items-center justify-between px-4 py-1">
                 <Text category="h4">Segunda</Text>
                 <View className="flex flex-row gap-4">
                     <Icon name="search-outline" width={28} height={28} />
