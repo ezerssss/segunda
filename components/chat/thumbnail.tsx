@@ -1,38 +1,45 @@
 import { View } from "react-native";
-import { Text, Avatar } from "@ui-kitten/components";
+import { Text, Avatar, Icon } from "@ui-kitten/components";
+import clsx from "clsx";
 
 interface PropsInterface {
-    senderName: string;
-    senderImageUrl?: string; // should be required later on
+    otherName: string;
+    otherImageUrl: string | null;
     lastMessageName: string;
     lastMessage: string;
+    isSeen: boolean;
 }
 
 export default function ChatThumbnail(props: PropsInterface) {
-    const {
-        senderName,
-        senderImageUrl = "https://th.bing.com/th/id/OIP.QwmYgdzR4D8-6QzPKhyOxwAAAA?cb=iwp2&rs=1&pid=ImgDetMain",
-        lastMessageName,
-        lastMessage,
-    } = props;
+    const { otherName, otherImageUrl, lastMessageName, lastMessage, isSeen } =
+        props;
 
     return (
-        <View className="mb-4 flex w-full flex-row items-center gap-4">
-            <Avatar
-                size="giant"
-                source={{
-                    uri: senderImageUrl,
-                }}
-            />
+        <View className="mb-4 flex w-full flex-row items-center justify-center gap-4">
+            {otherImageUrl ? (
+                <Avatar
+                    source={{
+                        uri: otherImageUrl,
+                    }}
+                    size="giant"
+                />
+            ) : (
+                <View className="rounded-full bg-gray-100 p-2">
+                    <Icon name="person" width={42} height={42} fill="gray" />
+                </View>
+            )}
+
             <View className="flex-1">
-                <Text>{senderName}</Text>
+                <Text className={clsx(!isSeen && "font-bold")}>
+                    {otherName}
+                </Text>
                 <Text
                     category="c1"
-                    className="text-gray-500"
+                    className={clsx("text-gray-500", !isSeen && "font-bold")}
                     numberOfLines={1}
                     ellipsizeMode="tail"
                 >
-                    {`${lastMessageName}: ${lastMessage}`}
+                    {`${lastMessageName}${lastMessage}`}
                 </Text>
             </View>
         </View>

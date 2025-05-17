@@ -1,5 +1,4 @@
 import { View, FlatList } from "react-native";
-import { Text } from "@ui-kitten/components";
 
 export default function SkeletonChatList() {
     const placeholderData = new Array(12).fill(0);
@@ -21,11 +20,6 @@ export default function SkeletonChatList() {
                 </View>
             )}
             contentContainerClassName="bg-white m-4"
-            ListHeaderComponent={
-                <Text category="h4" className="mb-4">
-                    Chats
-                </Text>
-            }
         />
     );
 }

@@ -27,7 +27,7 @@ export default function AppLayout() {
     const { user } = useContext(UserContext);
 
     function navigateToChats() {
-        router.push("/(protected)/chat/(tabs)/buyers");
+        router.push("/(protected)/chat/(tabs)/sold-to");
     }
 
     return (
