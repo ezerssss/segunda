@@ -7,13 +7,13 @@ import {
     FirebaseFirestoreTypes,
     onSnapshot,
 } from "@react-native-firebase/firestore";
-import { useContext, useEffect, useState } from "react";
-import { PostContext } from "@/contexts/postContext";
-import { UserContext } from "@/contexts/userContext";
+import { useEffect, useState } from "react";
+import { useUserStore } from "@/states/user";
+import { usePostStore } from "@/states/post";
 
 export function useGetPostItems(postId: string) {
-    const { user } = useContext(UserContext);
-    const { setPostItems } = useContext(PostContext);
+    const { user } = useUserStore();
+    const { setPostItems } = usePostStore();
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {

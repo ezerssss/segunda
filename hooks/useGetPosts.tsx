@@ -1,6 +1,6 @@
 import { postsCollectionRef } from "@/constants/collections";
 import { MAX_POSTS_PER_LOAD } from "@/constants/post";
-import { UserContext } from "@/contexts/userContext";
+import { useUserStore } from "@/states/user";
 import { PostType } from "@/types/post";
 import {
     FirebaseFirestoreTypes,
@@ -11,10 +11,10 @@ import {
     query,
     startAfter,
 } from "@react-native-firebase/firestore";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function useGetPosts() {
-    const { user } = useContext(UserContext);
+    const { user } = useUserStore();
     const [posts, setPosts] = useState<PostType[]>([]);
     const [lastPostDoc, setLastPostDoc] =
         useState<

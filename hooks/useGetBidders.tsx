@@ -5,16 +5,16 @@ import {
     query,
     doc,
 } from "@react-native-firebase/firestore";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { CollectionEnum } from "@/enums/collection";
 import { BidType } from "@/types/bidder";
-import { BiddersModalContext } from "@/contexts/biddersModalContext";
 import { itemsCollectionRef } from "@/constants/collections";
 import { ItemType } from "@/types/item";
+import { useBidderModalStore } from "@/states/modal";
 
 function useGetBidders() {
     const [isModalInit, setIsModalInit] = useState(false);
-    const { setBidders, unsubscribe } = useContext(BiddersModalContext);
+    const { setBidders, unsubscribe, setUnsubscribe } = useBidderModalStore();
 
     async function getBidders(item: ItemType) {
         if (!item) return;
@@ -31,7 +31,7 @@ function useGetBidders() {
             orderBy("dateCreated", "asc"),
         );
         try {
-            if (unsubscribe?.current) unsubscribe.current();
+            unsubscribe();
             const unsubscribeBidders = onSnapshot(
                 biddersQuery,
                 (biddersQuerySnapshot) => {
@@ -47,7 +47,8 @@ function useGetBidders() {
                     console.error(error);
                 },
             );
-            if (unsubscribe) unsubscribe.current = unsubscribeBidders;
+
+            setUnsubscribe(unsubscribeBidders);
         } catch (e) {
             console.error(e);
         }

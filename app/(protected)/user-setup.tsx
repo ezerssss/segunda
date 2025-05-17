@@ -1,11 +1,11 @@
 import * as ImagePicker from "expo-image-picker";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { setUpUser } from "@/firebase/functions";
 import { SetUpUserRequestType, SetUpUserRequestSchema } from "@/types/user";
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserContext } from "@/contexts/userContext";
+import { useUserStore } from "@/states/user";
 import { CampusEnum } from "@/enums/campus";
 import useUploadImage from "@/hooks/useUploadImage";
 import { useRouter } from "expo-router";
@@ -18,7 +18,7 @@ import AvatarOptions from "../../components/user/avatar-options";
 import CampusSelectionButtons from "../../components/user/campus-buttons";
 
 function UserSetupPage() {
-    const { user } = useContext(UserContext);
+    const { user } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
     const { uploadImages } = useUploadImage();
     const router = useRouter();

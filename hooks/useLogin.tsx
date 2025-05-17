@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
     GoogleSignin,
@@ -11,7 +11,7 @@ import {
 } from "@react-native-firebase/auth";
 import getErrorStatus from "../utils/getErrorStatus";
 import { ERROR_MESSAGE_TIMEOUT } from "@/constants/timeout";
-import { UserContext } from "@/contexts/userContext";
+import { useUserStore } from "@/states/user";
 import { router } from "expo-router";
 
 GoogleSignin.configure({
@@ -22,7 +22,7 @@ function useLogin() {
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
     const [isInternalError, setIsInternalError] = useState(false);
-    const { user } = useContext(UserContext);
+    const { user } = useUserStore();
 
     useEffect(() => {
         if (user) {

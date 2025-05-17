@@ -1,15 +1,14 @@
 import { FlatList, Dimensions, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import { PostContext } from "@/contexts/postContext";
 import FullScreenItemCard from "@/components/view-post/full-screen-item-card";
-import { useContext } from "react";
 import { Text } from "@ui-kitten/components";
+import { usePostStore } from "@/states/post";
 
 export default function FullScreenPage() {
     const { width } = Dimensions.get("window");
 
     const { index } = useLocalSearchParams();
-    const { postItems, post } = useContext(PostContext);
+    const { postItems, post } = usePostStore();
     const initialIndex = parseInt(index[0], 10);
 
     if (!post || postItems.length === 0) {

@@ -1,6 +1,6 @@
 import { View, ScrollView, ToastAndroid } from "react-native";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { PostFormSchema, PostFormType, PostRequestType } from "@/types/post";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,13 +16,13 @@ import {
     Divider,
     ProgressBar,
 } from "@ui-kitten/components";
-import { UserContext } from "@/contexts/userContext";
 import MultiSelectTags from "@/components/seller/multiselect-tags";
 import { ITEM_IMAGES_FOLDER } from "@/constants/storage";
 import UserHeader from "@/components/user/user-header";
+import { useUserStore } from "@/states/user";
 
 export default function SellerFormPage() {
-    const { user } = useContext(UserContext);
+    const { user } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
     const { uploadImages, progress } = useUploadImage();
 

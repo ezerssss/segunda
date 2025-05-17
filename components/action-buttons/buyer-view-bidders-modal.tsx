@@ -2,7 +2,7 @@ import BidderDetails from "./bidder-details";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BidRequestSchema, BidRequestType } from "@/types/bidder";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import Modal from "react-native-modal";
 import { ScrollView, View, ActivityIndicator } from "react-native";
@@ -11,19 +11,20 @@ import { bidItem } from "@/firebase/functions";
 
 import NoBidders from "./no-bidders";
 import ConfirmBuyActionModal from "./confirm-buy-action-modal";
-import { BiddersModalContext } from "@/contexts/biddersModalContext";
 import { doc, onSnapshot } from "@react-native-firebase/firestore";
 import { itemsCollectionRef } from "@/constants/collections";
-import { UserContext } from "@/contexts/userContext";
+import { useUserStore } from "@/states/user";
+import { useBidderModalStore } from "@/states/modal";
 
 function BuyerViewBiddersModal() {
-    const { user } = useContext(UserContext);
+    const { user } = useUserStore();
     const {
         isBuyerViewModalVisible,
         setIsBuyerViewModalVisible,
         item,
         bidders,
-    } = useContext(BiddersModalContext);
+    } = useBidderModalStore();
+
     const itemId = item?.id ?? "";
     const [isSteal, setIsSteal] = useState(false);
     const theme = useTheme();
