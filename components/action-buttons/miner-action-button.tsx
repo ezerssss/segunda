@@ -1,12 +1,12 @@
 import { ItemType } from "@/types/item";
 import { Button, Icon, useTheme } from "@ui-kitten/components";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { BidRequestType } from "@/types/bidder";
 import { bidItem } from "@/firebase/functions";
 import ConfirmBuyActionModal from "./confirm-buy-action-modal";
 import { ActivityIndicator } from "react-native";
-import { BiddersModalContext } from "@/contexts/biddersModalContext";
 import useGetBidders from "@/hooks/useGetBidders";
+import { useBidderModalStore } from "@/states/modal";
 
 interface MinerActionButtonProp {
     item: ItemType;
@@ -18,8 +18,7 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
     const [isLoading, setIsLoading] = useState(false);
     const { getBidders, isModalInit } = useGetBidders();
 
-    const { setIsBuyerViewModalVisible, setItem } =
-        useContext(BiddersModalContext);
+    const { setIsBuyerViewModalVisible, setItem } = useBidderModalStore();
 
     async function handleShowBidders() {
         setItem(item);

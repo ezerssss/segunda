@@ -1,26 +1,26 @@
 import BidderDetails from "./bidder-details";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "react-native-modal";
 import { ScrollView, View } from "react-native";
 import { Button, Text, useTheme } from "@ui-kitten/components";
 import ConfirmBidderModal from "./confirm-bidder-modal";
 import { BidType } from "@/types/bidder";
 import NoBidders from "./no-bidders";
-import { BiddersModalContext } from "@/contexts/biddersModalContext";
 import { doc, onSnapshot } from "@react-native-firebase/firestore";
 import { itemsCollectionRef } from "@/constants/collections";
 import { ItemType } from "@/types/item";
-import { UserContext } from "@/contexts/userContext";
+import { useUserStore } from "@/states/user";
+import { useBidderModalStore } from "@/states/modal";
 
 function SellerViewBiddersModal() {
-    const { user } = useContext(UserContext);
+    const { user } = useUserStore();
     const {
         isSellerViewModalVisible,
         setIsSellerViewModalVisible,
         item,
         bidders,
         setItem,
-    } = useContext(BiddersModalContext);
+    } = useBidderModalStore();
 
     const hasConfirmedBidder = item?.confirmedBidder !== null;
     const itemId = item?.id ?? "";

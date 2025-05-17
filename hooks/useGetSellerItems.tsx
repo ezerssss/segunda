@@ -4,13 +4,13 @@ import {
     query,
     where,
 } from "@react-native-firebase/firestore";
-import { UserContext } from "@/contexts/userContext";
-import { useContext, useEffect, useState } from "react";
+import { useUserStore } from "@/states/user";
+import { useEffect, useState } from "react";
 import { itemsCollectionRef } from "@/constants/collections";
 import { ItemType } from "@/types/item";
 
 export default function useGetSellerItems() {
-    const { user } = useContext(UserContext);
+    const { user } = useUserStore();
     const sellerId = user?.id;
     const [items, setItems] = useState<ItemType[]>([]);
     const [isLoading, setIsLoading] = useState(false);

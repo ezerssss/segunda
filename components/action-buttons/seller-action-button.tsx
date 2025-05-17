@@ -1,9 +1,8 @@
 import { Button } from "@ui-kitten/components";
 import { ItemType } from "@/types/item";
-import { useContext } from "react";
-import { BiddersModalContext } from "@/contexts/biddersModalContext";
 import useGetBidders from "@/hooks/useGetBidders";
 import { ActivityIndicator } from "react-native";
+import { useBidderModalStore } from "@/states/modal";
 
 interface SellerActionButtonProp {
     item: ItemType;
@@ -11,8 +10,7 @@ interface SellerActionButtonProp {
 
 function SellerActionButton(props: Readonly<SellerActionButtonProp>) {
     const { item } = props;
-    const { setIsSellerViewModalVisible, setItem } =
-        useContext(BiddersModalContext);
+    const { setIsSellerViewModalVisible, setItem } = useBidderModalStore();
     const { getBidders, isModalInit } = useGetBidders();
 
     async function handleShowModal() {

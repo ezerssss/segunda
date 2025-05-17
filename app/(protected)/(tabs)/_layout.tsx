@@ -8,8 +8,7 @@ import {
     createMaterialTopTabNavigator,
 } from "@react-navigation/material-top-tabs";
 import { ParamListBase, TabNavigationState } from "@react-navigation/native";
-import { useContext } from "react";
-import { UserContext } from "@/contexts/userContext";
+import { useUserStore } from "@/states/user";
 
 const { Navigator } = createMaterialTopTabNavigator();
 
@@ -24,7 +23,7 @@ export default function AppLayout() {
     const router = useRouter();
     const theme = useTheme();
     const indicatorColor = theme["color-primary-500"];
-    const { user } = useContext(UserContext);
+    const { user } = useUserStore();
 
     function navigateToChats() {
         router.push("/(protected)/chat/(tabs)/sold-to");

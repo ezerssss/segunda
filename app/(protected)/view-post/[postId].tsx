@@ -1,24 +1,36 @@
 import { View, FlatList } from "react-native";
 import ItemCard from "@/components/view-post/item-card";
 import { useLocalSearchParams } from "expo-router";
-import { PostContext } from "@/contexts/postContext";
 import useGetPostItems from "@/hooks/useGetPostItems";
 import useGetPost from "@/hooks/useGetPost";
 import PostHeader from "@/components/post-header";
-import React, { useContext } from "react";
+import React, { useRef } from "react";
 import { Divider, Text } from "@ui-kitten/components";
 import SkeletonViewPost from "@/components/skeletons/view-post";
+import { usePostStore } from "@/states/post";
 
 export default function ViewPostPage() {
-    const { postItems, post } = useContext(PostContext);
+    const { postItems, post, scrollPosition, setScrollPosition } =
+        usePostStore();
     const { postId } = useLocalSearchParams();
+
+    const flatListRef = useRef<FlatList>(null);
+
+    function scrollToPreviousPosition() {
+        flatListRef.current?.scrollToOffset({
+            offset: scrollPosition,
+            animated: false,
+        });
+    }
+
+    const isPostAlreadyLoaded = post && post.id === postId;
 
     const { isLoading: postItemsIsLoading } = useGetPostItems(postId as string);
     const { isLoading: postIsLoading } = useGetPost(postId as string);
 
     const isLoading = postIsLoading || postItemsIsLoading;
 
-    if (isLoading) {
+    if (isLoading && !isPostAlreadyLoaded) {
         return <SkeletonViewPost />;
     }
 
@@ -38,6 +50,7 @@ export default function ViewPostPage() {
     return (
         <FlatList
             data={postItems}
+            ref={flatListRef}
             showsVerticalScrollIndicator={false}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => {
@@ -50,7 +63,6 @@ export default function ViewPostPage() {
                     </React.Fragment>
                 );
             }}
-            initialNumToRender={5}
             ListHeaderComponent={
                 <PostHeader
                     postId={id}
@@ -61,6 +73,11 @@ export default function ViewPostPage() {
                 />
             }
             contentContainerClassName="bg-white"
+            onScroll={(event) =>
+                setScrollPosition(event.nativeEvent.contentOffset.y)
+            }
+            onLayout={scrollToPreviousPosition}
+            onContentSizeChange={scrollToPreviousPosition}
         />
     );
 }

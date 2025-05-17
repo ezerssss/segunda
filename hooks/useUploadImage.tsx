@@ -6,11 +6,11 @@ import {
     getDownloadURL,
 } from "@react-native-firebase/storage";
 import uuid from "react-native-uuid";
-import { useContext, useState } from "react";
-import { UserContext } from "@/contexts/userContext";
+import { useState } from "react";
+import { useUserStore } from "@/states/user";
 
 export function useUploadImage() {
-    const { user } = useContext(UserContext);
+    const { user } = useUserStore();
     const [progress, setProgress] = useState(0);
 
     async function uploadImages(

@@ -1,20 +1,21 @@
 import { UserDataType } from "@/types/user";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
-import { createContext } from "react";
+import { create } from "zustand";
 
 export interface UserContextData
     extends UserDataType,
         Omit<FirebaseAuthTypes.User, "email"> {}
 
-interface UserContextInterface {
+interface UserStateInterface {
     user: UserContextData | null;
     setUser: (u: UserContextData | null) => void;
     isUserLoading: boolean;
     setIsUserLoading: (data: boolean) => void;
 }
-export const UserContext = createContext<UserContextInterface>({
+
+export const useUserStore = create<UserStateInterface>((set) => ({
     user: null,
-    setUser: () => {},
+    setUser: (u) => set(() => ({ user: u })),
     isUserLoading: true,
-    setIsUserLoading: () => {},
-});
+    setIsUserLoading: (data) => set(() => ({ isUserLoading: data })),
+}));

@@ -5,9 +5,9 @@ import {
     FirebaseFirestoreTypes,
     onSnapshot,
 } from "@react-native-firebase/firestore";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { chatsCollectionRef } from "@/constants/collections";
-import { UserContext } from "@/contexts/userContext";
+import { useUserStore } from "@/states/user";
 import { ChatType } from "@/types/chat";
 
 interface ParamsInterface {
@@ -16,7 +16,7 @@ interface ParamsInterface {
 
 export function useGetChatList(params: ParamsInterface) {
     const { isSeller } = params;
-    const { user } = useContext(UserContext);
+    const { user } = useUserStore();
     const [isLoading, setIsLoading] = useState(true);
     const [chatList, setchatList] = useState<ChatType[]>([]);
     const senderId = isSeller ? "sellerId" : "buyerId";
