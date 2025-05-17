@@ -58,3 +58,8 @@ export const ItemFormSchema = ItemSchema.omit({
     imageUrl: z.string().min(1, { message: "Item image is required." }),
 });
 export type ItemFormType = z.infer<typeof ItemFormSchema>;
+
+export const DeleteItemRequestSchema = z.object({
+    itemId: z.string().min(1),
+});
+export type DeleteItemRequestType = z.infer<typeof DeleteItemRequestSchema>;
