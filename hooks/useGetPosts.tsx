@@ -38,7 +38,7 @@ export default function useGetPosts() {
             async (postsQuerySnapshot) => {
                 const docs = postsQuerySnapshot.docs;
 
-                setHasMore(docs.length > 0);
+                setHasMore(docs.length === MAX_POSTS_PER_LOAD);
                 const newPosts: PostType[] = docs.map(
                     (doc) => doc.data() as PostType,
                 );
@@ -84,7 +84,7 @@ export default function useGetPosts() {
             const postsQuerySnapshot = await getDocs(postsQuery);
             const docs = postsQuerySnapshot.docs;
 
-            setHasMore(docs.length > 0);
+            setHasMore(docs.length === MAX_POSTS_PER_LOAD);
             const newPosts: PostType[] = docs.map(
                 (doc) => doc.data() as PostType,
             );
