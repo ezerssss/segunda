@@ -10,6 +10,7 @@ import {
 } from "@/types/bidder";
 import { SeenMessageType, SendMessageRequestType } from "@/types/chat";
 import { EditItemRequestType, DeleteItemRequestType } from "@/types/item";
+import { ReceiveNotificationType } from "@/types/notification";
 
 const functions = getFunctions(app, "asia-southeast1");
 export const setUpUser = httpsCallable<
@@ -61,3 +62,13 @@ export const seenMessage = httpsCallable<
     SeenMessageType,
     GenericResponseMessage
 >(functions, "cancelBid");
+
+export const receiveNotification = httpsCallable<
+    ReceiveNotificationType,
+    GenericResponseMessage
+>(functions, "receiveNotification");
+
+export const receiveAllNotifications = httpsCallable<
+    void,
+    GenericResponseMessage
+>(functions, "receiveAllNotifications");
