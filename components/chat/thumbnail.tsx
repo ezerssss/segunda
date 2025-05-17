@@ -20,7 +20,7 @@ export default function ChatThumbnail(props: PropsInterface) {
     const theme = useTheme();
 
     return (
-        <View className="mb-4 flex w-full flex-row items-center">
+        <View className="mb-4 flex w-full flex-row items-center gap-4">
             <View className="relative">
                 <Avatar
                     size="giant"
@@ -41,7 +41,7 @@ export default function ChatThumbnail(props: PropsInterface) {
                     </Text>
                 </View>
             </View>
-            <View className="ml-4 w-80">
+            <View className="flex-1">
                 <Text>{senderName}</Text>
                 <Text
                     category="c1"

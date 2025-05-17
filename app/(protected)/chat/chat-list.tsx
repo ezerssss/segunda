@@ -4,7 +4,7 @@ import ChatThumbnail from "@/components/chat/thumbnail";
 import SkeletonChatList from "@/components/skeletons/chat-list";
 
 function ChatList() {
-    const isLoading = true;
+    const isLoading = false;
     const chatsThumbnailData = new Array(15).fill(0);
 
     if (isLoading) {
@@ -24,7 +24,7 @@ function ChatList() {
                     isSeller={item.index % 3 === 0}
                 />
             )}
-            contentContainerClassName="bg-white m-4"
+            contentContainerClassName="bg-white p-4"
             ListHeaderComponent={
                 <Text category="h4" className="mb-4">
                     Chats
