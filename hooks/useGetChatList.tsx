@@ -1,6 +1,7 @@
 import {
     query,
     where,
+    orderBy,
     FirebaseFirestoreTypes,
     onSnapshot,
 } from "@react-native-firebase/firestore";
@@ -23,8 +24,14 @@ export function useGetChatList(params: ParamsInterface) {
     useEffect(() => {
         if (!user) return;
 
+        const chatQuery = query(
+            chatsCollectionRef,
+            where(senderId, "==", user.id),
+            orderBy("dateUpdated", "desc"),
+        );
+
         const unsubsribe = onSnapshot(
-            query(chatsCollectionRef, where(senderId, "==", user.id)),
+            chatQuery,
             (chatsQuerySnapshot: FirebaseFirestoreTypes.QuerySnapshot) => {
                 const chats: ChatType[] = [];
                 chatsQuerySnapshot.forEach((chatDoc) => {

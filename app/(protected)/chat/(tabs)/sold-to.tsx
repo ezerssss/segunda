@@ -1,5 +1,5 @@
 import ChatList from "@/components/chat/list";
-import useGetChatList from "@/hooks/useGetBuyersChatList";
+import useGetChatList from "@/hooks/useGetChatList";
 
 export default function SoldToChatList() {
     const { chatList, isLoading } = useGetChatList({ isSeller: true });
