@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { BidRequestSchema, BidRequestType } from "@/types/bidder";
 import { useEffect, useState } from "react";
 
-import Modal from "react-native-modal";
 import { ScrollView, View, ActivityIndicator } from "react-native";
 import { Button, Icon, Input, Text, useTheme } from "@ui-kitten/components";
 import { bidItem } from "@/firebase/functions";
@@ -15,15 +14,11 @@ import { doc, onSnapshot } from "@react-native-firebase/firestore";
 import { itemsCollectionRef } from "@/constants/collections";
 import { useUserStore } from "@/states/user";
 import { useBidderModalStore } from "@/states/modal";
+import ActionSheet from "react-native-actions-sheet";
 
 function BuyerViewBiddersModal() {
     const { user } = useUserStore();
-    const {
-        isBuyerViewModalVisible,
-        setIsBuyerViewModalVisible,
-        item,
-        bidders,
-    } = useBidderModalStore();
+    const { item, bidders } = useBidderModalStore();
 
     const itemId = item?.id ?? "";
     const [isSteal, setIsSteal] = useState(false);
@@ -31,7 +26,6 @@ function BuyerViewBiddersModal() {
     const [isLoading, setIsLoading] = useState(false);
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
     const [bidData, setBidData] = useState<BidRequestType | null>(null);
-
     const {
         handleSubmit,
         formState: { errors },
@@ -95,15 +89,10 @@ function BuyerViewBiddersModal() {
     }, [itemId, user]);
 
     return (
-        <Modal
-            isVisible={isBuyerViewModalVisible}
-            onBackdropPress={() => setIsBuyerViewModalVisible(false)}
-            onBackButtonPress={() => setIsBuyerViewModalVisible(false)}
-            animationIn="slideInUp"
-            animationOut="slideOutDown"
-            useNativeDriver={false}
-            backdropTransitionOutTiming={1}
-            style={{ justifyContent: "flex-end", margin: 0 }}
+        <ActionSheet
+            gestureEnabled={true}
+            isModal={false}
+            keyboardHandlerEnabled={false}
         >
             <View className="max-h-[75vh] min-h-60 rounded-t-3xl bg-white p-4">
                 <Text category="h4" className="mb-4 w-full text-left">
@@ -206,7 +195,7 @@ function BuyerViewBiddersModal() {
                     setIsModalVisible={setIsConfirmVisible}
                 />
             </View>
-        </Modal>
+        </ActionSheet>
     );
 }
 

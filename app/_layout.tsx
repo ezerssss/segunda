@@ -18,6 +18,8 @@ import * as SplashScreen from "expo-splash-screen";
 import "../utils/native-wind-config";
 import "../global.css";
 import "react-native-reanimated";
+import "../components/action-buttons/sheet.tsx";
+import { SheetProvider } from "react-native-actions-sheet";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -46,19 +48,21 @@ export default function RootLayout() {
                 customMapping={mapping}
                 theme={{ ...eva.light, ...theme }}
             >
-                <StatusBar style="auto" />
-                <SafeAreaView className="flex-1 bg-white">
-                    <Stack
-                        screenOptions={{
-                            headerShown: false,
-                            contentStyle: { backgroundColor: "white" },
-                        }}
-                    />
-                    <View className="flex items-center">
-                        <BuyerViewBiddersModal />
-                        <SellerViewBiddersModal />
-                    </View>
-                </SafeAreaView>
+                <SheetProvider>
+                    <StatusBar style="auto" />
+                    <SafeAreaView className="flex-1 bg-white">
+                        <Stack
+                            screenOptions={{
+                                headerShown: false,
+                                contentStyle: { backgroundColor: "white" },
+                            }}
+                        />
+                        <View className="flex items-center">
+                            <BuyerViewBiddersModal />
+                            <SellerViewBiddersModal />
+                        </View>
+                    </SafeAreaView>
+                </SheetProvider>
             </ApplicationProvider>
         </GestureHandlerRootView>
     );

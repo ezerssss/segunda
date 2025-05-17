@@ -1,10 +1,10 @@
-import { View, FlatList } from "react-native";
+import { View, FlatList, BackHandler } from "react-native";
 import ItemCard from "@/components/view-post/item-card";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import useGetPostItems from "@/hooks/useGetPostItems";
 import useGetPost from "@/hooks/useGetPost";
 import PostHeader from "@/components/post-header";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Divider, Text } from "@ui-kitten/components";
 import SkeletonViewPost from "@/components/skeletons/view-post";
 import { usePostStore } from "@/states/post";
@@ -22,6 +22,20 @@ export default function ViewPostPage() {
             animated: false,
         });
     }
+
+    useEffect(() => {
+        const onBackPress = () => {
+            router.back();
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            onBackPress,
+        );
+
+        return () => backHandler.remove();
+    }, []);
 
     const isPostAlreadyLoaded = post && post.id === postId;
 

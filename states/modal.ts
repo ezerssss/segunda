@@ -3,10 +3,6 @@ import { ItemType } from "@/types/item";
 import { create } from "zustand";
 
 interface BiddersModalStateInterface {
-    isBuyerViewModalVisible: boolean;
-    setIsBuyerViewModalVisible: (data: boolean) => void;
-    isSellerViewModalVisible: boolean;
-    setIsSellerViewModalVisible: (data: boolean) => void;
     item: ItemType | null;
     setItem: (item: ItemType) => void;
     bidders: BidType[];
@@ -17,12 +13,6 @@ interface BiddersModalStateInterface {
 
 export const useBidderModalStore = create<BiddersModalStateInterface>(
     (set) => ({
-        isBuyerViewModalVisible: false,
-        setIsBuyerViewModalVisible: (data) =>
-            set(() => ({ isBuyerViewModalVisible: data })),
-        isSellerViewModalVisible: false,
-        setIsSellerViewModalVisible: (data) =>
-            set(() => ({ isSellerViewModalVisible: data })),
         item: null,
         setItem: (data) => set(() => ({ item: data })),
         bidders: [],

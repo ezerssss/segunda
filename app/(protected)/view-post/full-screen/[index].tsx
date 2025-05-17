@@ -1,8 +1,9 @@
-import { FlatList, Dimensions, View } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { FlatList, Dimensions, View, BackHandler } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
 import FullScreenItemCard from "@/components/view-post/full-screen-item-card";
 import { Text } from "@ui-kitten/components";
 import { usePostStore } from "@/states/post";
+import { useEffect } from "react";
 
 export default function FullScreenPage() {
     const { width } = Dimensions.get("window");
@@ -10,6 +11,20 @@ export default function FullScreenPage() {
     const { index } = useLocalSearchParams();
     const { postItems, post } = usePostStore();
     const initialIndex = parseInt(index[0], 10);
+
+    useEffect(() => {
+        const onBackPress = () => {
+            router.back();
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            onBackPress,
+        );
+
+        return () => backHandler.remove();
+    }, []);
 
     if (!post || postItems.length === 0) {
         return (

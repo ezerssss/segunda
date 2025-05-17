@@ -3,6 +3,7 @@ import { ItemType } from "@/types/item";
 import useGetBidders from "@/hooks/useGetBidders";
 import { ActivityIndicator } from "react-native";
 import { useBidderModalStore } from "@/states/modal";
+import { SheetManager } from "react-native-actions-sheet";
 
 interface BuyerActionButtonsProps {
     item: ItemType;
@@ -10,12 +11,12 @@ interface BuyerActionButtonsProps {
 
 function StealerActionButtons(props: Readonly<BuyerActionButtonsProps>) {
     const { item } = props;
-    const { setIsBuyerViewModalVisible, setItem } = useBidderModalStore();
+    const { setItem } = useBidderModalStore();
 
     async function handleShowBidders() {
         setItem(item);
         await getBidders(item);
-        setIsBuyerViewModalVisible(true);
+        SheetManager.show("buyer-modal");
     }
     const { getBidders, isModalInit } = useGetBidders();
 
