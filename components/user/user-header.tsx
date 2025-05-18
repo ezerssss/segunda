@@ -1,5 +1,5 @@
 import { formatHeaderDate } from "@/utils/date";
-import { Avatar, Text } from "@ui-kitten/components";
+import { Avatar, Icon, Text } from "@ui-kitten/components";
 import { View, ImageBackground } from "react-native";
 
 interface UserHeaderProps {
@@ -22,7 +22,13 @@ function UserHeader(props: UserHeaderProps) {
             <View>
                 <Text category="h6">{name ?? ""}</Text>
                 <View className="flex-row items-center gap-2">
-                    <View className="rounded-lg border border-gray-200 px-2 py-1">
+                    <View className="flex-row items-center gap-[1px] rounded-lg border border-gray-200 px-2 py-1">
+                        <Icon
+                            name="pin-outline"
+                            fill="gray"
+                            width={16}
+                            height={16}
+                        />
                         <Text className="text-xs">{campus}</Text>
                     </View>
                     {date && (

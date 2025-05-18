@@ -1,5 +1,5 @@
 import { formatChatTimestamp } from "@/utils/date";
-import { Avatar } from "@ui-kitten/components";
+import { Avatar, useTheme } from "@ui-kitten/components";
 import clsx from "clsx";
 import { Image } from "expo-image";
 import { memo } from "react";
@@ -15,6 +15,7 @@ interface PropsInterface {
 
 function Message(props: PropsInterface) {
     const { message, date, senderImageUrl, imageUrl, isOther } = props;
+    const theme = useTheme();
 
     return (
         <View
@@ -34,10 +35,13 @@ function Message(props: PropsInterface) {
                 <View
                     className={clsx(
                         "max-w-[85%] shrink self-start rounded-3xl px-4 py-3",
-                        isOther
-                            ? "items-start bg-gray-200"
-                            : "items-end bg-blue-200",
+                        isOther ? "items-start" : "items-end",
                     )}
+                    style={{
+                        backgroundColor: isOther
+                            ? theme["color-gray-200"]
+                            : theme["color-primary-500"],
+                    }}
                 >
                     {imageUrl && (
                         <Image
@@ -46,7 +50,9 @@ function Message(props: PropsInterface) {
                             source={{ uri: imageUrl }}
                         />
                     )}
-                    <Text>{message}</Text>
+                    <Text className={clsx(!isOther && "text-white")}>
+                        {message}
+                    </Text>
                 </View>
 
                 <Text className="text-xs text-gray-400">
