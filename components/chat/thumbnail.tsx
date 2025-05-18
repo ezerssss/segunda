@@ -1,8 +1,10 @@
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import { Text, Avatar, Icon } from "@ui-kitten/components";
 import clsx from "clsx";
+import { useRouter } from "expo-router";
 
 interface PropsInterface {
+    chatId: string;
     otherName: string;
     otherImageUrl: string | null;
     lastMessageName: string;
@@ -11,11 +13,25 @@ interface PropsInterface {
 }
 
 export default function ChatThumbnail(props: PropsInterface) {
-    const { otherName, otherImageUrl, lastMessageName, lastMessage, isSeen } =
-        props;
+    const {
+        chatId,
+        otherName,
+        otherImageUrl,
+        lastMessageName,
+        lastMessage,
+        isSeen,
+    } = props;
+    const router = useRouter();
+
+    function navigateToChat() {
+        router.push(`/(protected)/chat/${chatId}`);
+    }
 
     return (
-        <View className="mb-4 flex w-full flex-row items-center justify-center gap-4">
+        <Pressable
+            className="mb-4 flex w-full flex-row items-center justify-center gap-4"
+            onPress={navigateToChat}
+        >
             {otherImageUrl ? (
                 <Avatar
                     source={{
@@ -42,6 +58,6 @@ export default function ChatThumbnail(props: PropsInterface) {
                     {`${lastMessageName}${lastMessage}`}
                 </Text>
             </View>
-        </View>
+        </Pressable>
     );
 }

@@ -36,7 +36,7 @@ export default function ViewPostPage() {
 
     const noContent = !post || postItems.length === 0;
 
-    if (noContent) {
+    if (noContent && !isPostAlreadyLoaded) {
         return (
             <View className="min-h-screen flex-1 items-center justify-center bg-white">
                 <Text>There are no posts currently.</Text>

@@ -2,11 +2,15 @@ import { withLayoutContext } from "expo-router";
 import { useTheme, Text } from "@ui-kitten/components";
 
 import {
+    MaterialTopTabBarProps,
     MaterialTopTabNavigationEventMap,
     MaterialTopTabNavigationOptions,
     createMaterialTopTabNavigator,
 } from "@react-navigation/material-top-tabs";
 import { ParamListBase, TabNavigationState } from "@react-navigation/native";
+import { useChatNotifStore } from "@/states/chat";
+import { TouchableOpacity, View } from "react-native";
+import clsx from "clsx";
 
 const { Navigator } = createMaterialTopTabNavigator();
 
@@ -16,6 +20,69 @@ export const TopTabs = withLayoutContext<
     TabNavigationState<ParamListBase>,
     MaterialTopTabNavigationEventMap
 >(Navigator);
+
+function CustomTopTabBar(props: MaterialTopTabBarProps) {
+    const { state, navigation } = props;
+    const { hasSoldToNotif, hasBoughtFromNotif } = useChatNotifStore();
+
+    function handlePress(index: number) {
+        const route = state.routes[index];
+        const event = navigation.emit({
+            type: "tabPress",
+            target: route.key,
+            canPreventDefault: true,
+        });
+
+        if (state.index !== index && !event.defaultPrevented) {
+            navigation.navigate(route.name);
+        }
+    }
+
+    const currentIndex = state.index;
+
+    return (
+        <View className="flex-row gap-3 p-4">
+            <TouchableOpacity
+                className={clsx(
+                    "relative self-start rounded-2xl p-3",
+                    currentIndex === 0 && "bg-gray-200",
+                )}
+                onPress={() => handlePress(0)}
+            >
+                <Text
+                    className={clsx(
+                        currentIndex === 0 && "text-blue-600",
+                        "mx-2 font-bold",
+                    )}
+                >
+                    Sold To
+                </Text>
+                {hasSoldToNotif && (
+                    <View className="absolute right-3 top-3 h-2 w-2 rounded-full bg-red-500" />
+                )}
+            </TouchableOpacity>
+            <TouchableOpacity
+                className={clsx(
+                    "relative self-start rounded-2xl p-3",
+                    currentIndex === 1 && "bg-gray-200",
+                )}
+                onPress={() => handlePress(1)}
+            >
+                <Text
+                    className={clsx(
+                        currentIndex === 1 && "text-blue-600",
+                        "mx-2 font-bold",
+                    )}
+                >
+                    Bought From
+                </Text>
+                {hasBoughtFromNotif && (
+                    <View className="absolute right-3 top-3 h-2 w-2 rounded-full bg-red-500" />
+                )}
+            </TouchableOpacity>
+        </View>
+    );
+}
 
 export default function AppLayout() {
     const theme = useTheme();
@@ -35,6 +102,7 @@ export default function AppLayout() {
                     tabBarInactiveTintColor: "black",
                     sceneStyle: { backgroundColor: "white" },
                 }}
+                tabBar={CustomTopTabBar}
             >
                 <TopTabs.Screen name="sold-to" options={{ title: "Sold To" }} />
                 <TopTabs.Screen

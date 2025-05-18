@@ -26,6 +26,7 @@ function ChatList(props: PropsInterface) {
                 return (
                     <ChatThumbnail
                         key={item.id}
+                        chatId={item.id}
                         otherName={other.name}
                         otherImageUrl={other.imageUrl}
                         lastMessageName={
