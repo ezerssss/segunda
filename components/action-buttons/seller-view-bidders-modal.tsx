@@ -49,6 +49,7 @@ function SellerViewBiddersModal() {
             gestureEnabled={true}
             isModal={false}
             keyboardHandlerEnabled={false}
+            withNestedSheetProvider
         >
             <View className="max-h-[75vh] min-h-60 rounded-t-3xl bg-white p-4">
                 <Text category="h4" className="mb-4">

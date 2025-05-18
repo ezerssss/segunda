@@ -1,8 +1,8 @@
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { View } from "react-native";
+import { BackHandler, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
 import { default as theme } from "../custom-theme.json";
@@ -27,6 +27,19 @@ export default function RootLayout() {
     const [loaded] = useFonts({
         SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     });
+    useEffect(() => {
+        const onBackPress = () => {
+            router.back();
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            onBackPress,
+        );
+
+        return () => backHandler.remove();
+    }, []);
 
     useEffect(() => {
         if (loaded) {
@@ -48,9 +61,9 @@ export default function RootLayout() {
                 customMapping={mapping}
                 theme={{ ...eva.light, ...theme }}
             >
-                <SheetProvider>
-                    <StatusBar style="auto" />
-                    <SafeAreaView className="flex-1 bg-white">
+                <StatusBar style="auto" />
+                <SafeAreaView className="flex-1 bg-white">
+                    <SheetProvider>
                         <Stack
                             screenOptions={{
                                 headerShown: false,
@@ -61,8 +74,8 @@ export default function RootLayout() {
                             <BuyerViewBiddersModal />
                             <SellerViewBiddersModal />
                         </View>
-                    </SafeAreaView>
-                </SheetProvider>
+                    </SheetProvider>
+                </SafeAreaView>
             </ApplicationProvider>
         </GestureHandlerRootView>
     );

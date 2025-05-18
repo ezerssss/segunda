@@ -91,8 +91,10 @@ function BuyerViewBiddersModal() {
     return (
         <ActionSheet
             gestureEnabled={true}
-            isModal={false}
+            isModal={true}
+            overdrawEnabled={false}
             keyboardHandlerEnabled={false}
+            withNestedSheetProvider
         >
             <View className="max-h-[75vh] min-h-60 rounded-t-3xl bg-white p-4">
                 <Text category="h4" className="mb-4 w-full text-left">
