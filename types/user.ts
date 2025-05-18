@@ -13,6 +13,7 @@ export const UserDataSchema = z.object({
     campus: CampusEnum,
     dateCreated: z.string().datetime(),
     dateUpdated: z.string().datetime(),
+    isSetup: z.boolean(),
 });
 export type UserDataType = z.infer<typeof UserDataSchema>;
 
