@@ -20,7 +20,8 @@ export default function NewMessage(props: PropsInterface) {
     const { uploadImages } = useUploadImage();
 
     async function handleSendMessage(imageUri?: string) {
-        if (isSending || (!message.trim() && !imageUri)) {
+        const notValidMessage = !message.trim() && !imageUri;
+        if (isSending || notValidMessage) {
             return;
         }
 
