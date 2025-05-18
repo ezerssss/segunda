@@ -144,7 +144,7 @@ export default function SellerFormPage() {
         >
             {isLoading && <ProgressBar progress={progress} />}
 
-            <View className="flex-row justify-between px-0 py-4">
+            <View className="flex-row items-center justify-between px-0 py-4">
                 <View className="flex-row items-center">
                     <Pressable onPress={() => router.back()}>
                         <Icon name="arrow-ios-back-outline" />
@@ -158,7 +158,11 @@ export default function SellerFormPage() {
             <Divider />
 
             {!!user && (
-                <UserHeader name={user?.name} imageUrl={user?.imageUrl} />
+                <UserHeader
+                    name={user?.name}
+                    imageUrl={user?.imageUrl}
+                    date={new Date()}
+                />
             )}
             <View className="space-y-14 bg-white px-2">
                 <Controller

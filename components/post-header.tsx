@@ -9,12 +9,15 @@ interface PostHeaderProps {
     postId: string;
     userName?: string;
     userImageUrl?: string;
+    date: string;
+    campus: string;
     caption: string;
     tags: string[];
 }
 
 function PostHeader(props: PostHeaderProps) {
-    const { postId, userName, userImageUrl, caption, tags } = props;
+    const { postId, userName, userImageUrl, caption, tags, date, campus } =
+        props;
     const actionSheetRef = useRef<ActionSheetRef>(null);
 
     function handleReport() {
@@ -28,6 +31,8 @@ function PostHeader(props: PostHeaderProps) {
                     key={postId}
                     name={userName}
                     imageUrl={userImageUrl}
+                    date={new Date(date)}
+                    campus={campus}
                 />
                 <Text
                     className="mr-1 mt-3 text-xl font-bold text-black"
@@ -36,7 +41,7 @@ function PostHeader(props: PostHeaderProps) {
                     ...
                 </Text>
             </View>
-            <View className="w-full px-2">
+            <View className="mt-2 w-full px-2">
                 <TruncatedText text={caption} isItemCard={false} />
                 <View className="mb-2 mt-1 flex-row flex-wrap gap-1">
                     {tags.map((tag) => (

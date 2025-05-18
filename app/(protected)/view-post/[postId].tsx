@@ -44,7 +44,7 @@ export default function ViewPostPage() {
         );
     }
 
-    const { id, sellerData, caption, tags } = post;
+    const { id, sellerData, caption, tags, dateCreated } = post;
     const lastIndex = postItems.length - 1;
 
     return (
@@ -70,6 +70,8 @@ export default function ViewPostPage() {
                     userImageUrl={sellerData.imageUrl ?? ""}
                     caption={caption}
                     tags={tags}
+                    date={dateCreated}
+                    campus={sellerData.campus}
                 />
             }
             contentContainerClassName="bg-white"
