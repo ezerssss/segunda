@@ -2,7 +2,7 @@ import BidderDetails from "./bidder-details";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BidRequestSchema, BidRequestType } from "@/types/bidder";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ScrollView, View, ActivityIndicator } from "react-native";
 import { Button, Icon, Input, Text, useTheme } from "@ui-kitten/components";
@@ -14,13 +14,21 @@ import { doc, onSnapshot } from "@react-native-firebase/firestore";
 import { itemsCollectionRef } from "@/constants/collections";
 import { useUserStore } from "@/states/user";
 import { useBidderModalStore } from "@/states/modal";
-import ActionSheet from "react-native-actions-sheet";
+import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
 
 function BuyerViewBiddersModal() {
     const { user } = useUserStore();
-    const { item, bidders } = useBidderModalStore();
+    const { item, bidders, setShowBuyersModal } = useBidderModalStore();
+    const actionSheetRef = useRef<ActionSheetRef>(null);
+
+    useEffect(() => {
+        if (!actionSheetRef.current) return;
+        setShowBuyersModal(actionSheetRef.current.show);
+    }, [actionSheetRef]);
 
     const itemId = item?.id ?? "";
+    const hasConfirmedBidder = item?.confirmedBidder !== null;
+
     const [isSteal, setIsSteal] = useState(false);
     const theme = useTheme();
     const [isLoading, setIsLoading] = useState(false);
@@ -90,13 +98,11 @@ function BuyerViewBiddersModal() {
 
     return (
         <ActionSheet
-            gestureEnabled={true}
-            isModal={false}
-            overdrawEnabled={false}
+            ref={actionSheetRef}
+            enableGesturesInScrollView={true}
             keyboardHandlerEnabled={false}
-            withNestedSheetProvider
         >
-            <View className="max-h-[75vh] min-h-60 rounded-t-3xl bg-white p-4">
+            <View className="flex max-h-[75vh] rounded-t-3xl p-4 align-bottom">
                 <Text category="h4" className="mb-4 w-full text-left">
                     Active Bidders
                 </Text>
@@ -136,7 +142,9 @@ function BuyerViewBiddersModal() {
                                         status={
                                             errors.price ? "danger" : "basic"
                                         }
-                                        disabled={isLoading}
+                                        disabled={
+                                            isLoading || hasConfirmedBidder
+                                        }
                                     />
                                 )}
                             />
@@ -156,6 +164,7 @@ function BuyerViewBiddersModal() {
                                         <Icon name="shopping-bag-outline" />
                                     )
                                 }
+                                disabled={hasConfirmedBidder || isLoading}
                             >
                                 {isLoading ? "" : "Steal"}
                             </Button>

@@ -7,7 +7,6 @@ import ConfirmBuyActionModal from "./confirm-buy-action-modal";
 import { ActivityIndicator } from "react-native";
 import useGetBidders from "@/hooks/useGetBidders";
 import { useBidderModalStore } from "@/states/modal";
-import { SheetManager } from "react-native-actions-sheet";
 
 interface MinerActionButtonProp {
     item: ItemType;
@@ -19,12 +18,12 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
     const [isLoading, setIsLoading] = useState(false);
     const { getBidders, isModalInit } = useGetBidders();
 
-    const { setItem } = useBidderModalStore();
+    const { setItem, showBuyersModal } = useBidderModalStore();
 
     async function handleShowBidders() {
         setItem(item);
         await getBidders(item);
-        SheetManager.show("buyer-modal");
+        showBuyersModal();
     }
 
     const theme = useTheme();
