@@ -26,26 +26,24 @@ export const ChatSchema = z.object({
 });
 export type ChatType = z.infer<typeof ChatSchema>;
 
-export const AssociatedItemSchema = z
-    .object({
-        bidId: z.string().min(1),
-        item: ItemSchema,
-        showApproveButton: z.boolean(),
-    })
-    .nullable();
-export type AssociatedItemType = z.infer<typeof AssociatedItemSchema>;
+export const SystemGeneratedMessageSchema = z.object({
+    title: z.string().min(1),
+    message: z.string().min(1),
+    item: ItemSchema.nullable(),
+    bidId: z.string().min(1).nullable(),
+    showActionButton: z.boolean(),
+});
+export type SystemGeneratedMessageType = z.infer<
+    typeof SystemGeneratedMessageSchema
+>;
 
 export const MessageSchema = z.object({
     id: z.string().min(1),
     senderId: z.string().min(1).nullable(),
     senderData: UserPublicDataSchema.nullable(),
-    message: z
-        .string()
-        .trim()
-        .min(1, { message: "Message should have at least one character." }),
+    message: z.string(),
     imageUrl: z.string().url().nullable(),
-    associatedBid: AssociatedItemSchema,
-    isSystemGenerated: z.boolean(),
+    systemGeneratedMessage: SystemGeneratedMessageSchema.nullable(),
     dateCreated: z.string().datetime(),
 });
 export type MessageType = z.infer<typeof MessageSchema>;
