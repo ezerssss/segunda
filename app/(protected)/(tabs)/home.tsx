@@ -17,7 +17,6 @@ export default function BrowsePostsPage() {
 
     return (
         <FlatList
-            ListHeaderComponent={<SellerFormBar />}
             data={posts}
             showsVerticalScrollIndicator={false}
             keyExtractor={(item) => item.id}
@@ -31,6 +30,7 @@ export default function BrowsePostsPage() {
                     <Text>There are no posts currently.</Text>
                 </View>
             }
+            ListHeaderComponent={<SellerFormBar />}
             ListFooterComponent={
                 hasMore ? (
                     <View className="h-24 w-full items-center justify-center py-2">

@@ -91,7 +91,7 @@ function BuyerViewBiddersModal() {
     return (
         <ActionSheet
             gestureEnabled={true}
-            isModal={true}
+            isModal={false}
             overdrawEnabled={false}
             keyboardHandlerEnabled={false}
             withNestedSheetProvider
