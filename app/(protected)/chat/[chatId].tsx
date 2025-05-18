@@ -19,11 +19,12 @@ import {
 function ChatInstancePage() {
     const { user } = useUserStore();
     const { chatId } = useLocalSearchParams();
-    const { chat, messages, isLoading, fetchMoreMessages, hasMore } =
-        useGetMessages(chatId as string);
+    const { chat, messages, fetchMoreMessages, hasMore } = useGetMessages(
+        chatId as string,
+    );
     useSeenChat(chatId as string);
 
-    if (!chat || !user || isLoading) {
+    if (!chat || !user) {
         return (
             <View className="h-screen w-screen items-center justify-center">
                 <ActivityIndicator />
