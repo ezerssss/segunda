@@ -2,9 +2,8 @@ import BidderDetails from "./bidder-details";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BidRequestSchema, BidRequestType } from "@/types/bidder";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import Modal from "react-native-modal";
 import { ScrollView, View, ActivityIndicator } from "react-native";
 import { Button, Icon, Input, Text, useTheme } from "@ui-kitten/components";
 import { bidItem } from "@/firebase/functions";
@@ -15,23 +14,26 @@ import { doc, onSnapshot } from "@react-native-firebase/firestore";
 import { itemsCollectionRef } from "@/constants/collections";
 import { useUserStore } from "@/states/user";
 import { useBidderModalStore } from "@/states/modal";
+import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
 
 function BuyerViewBiddersModal() {
     const { user } = useUserStore();
-    const {
-        isBuyerViewModalVisible,
-        setIsBuyerViewModalVisible,
-        item,
-        bidders,
-    } = useBidderModalStore();
+    const { item, bidders, setShowBuyersModal } = useBidderModalStore();
+    const actionSheetRef = useRef<ActionSheetRef>(null);
+
+    useEffect(() => {
+        if (!actionSheetRef.current) return;
+        setShowBuyersModal(actionSheetRef.current.show);
+    }, [actionSheetRef]);
 
     const itemId = item?.id ?? "";
+    const hasConfirmedBidder = item?.confirmedBidder !== null;
+
     const [isSteal, setIsSteal] = useState(false);
     const theme = useTheme();
     const [isLoading, setIsLoading] = useState(false);
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
     const [bidData, setBidData] = useState<BidRequestType | null>(null);
-
     const {
         handleSubmit,
         formState: { errors },
@@ -95,17 +97,12 @@ function BuyerViewBiddersModal() {
     }, [itemId, user]);
 
     return (
-        <Modal
-            isVisible={isBuyerViewModalVisible}
-            onBackdropPress={() => setIsBuyerViewModalVisible(false)}
-            onBackButtonPress={() => setIsBuyerViewModalVisible(false)}
-            animationIn="slideInUp"
-            animationOut="slideOutDown"
-            useNativeDriver={false}
-            backdropTransitionOutTiming={1}
-            style={{ justifyContent: "flex-end", margin: 0 }}
+        <ActionSheet
+            ref={actionSheetRef}
+            enableGesturesInScrollView={true}
+            keyboardHandlerEnabled={false}
         >
-            <View className="max-h-[75vh] min-h-60 rounded-t-3xl bg-white p-4">
+            <View className="flex max-h-[75vh] rounded-t-3xl p-4 align-bottom">
                 <Text category="h4" className="mb-4 w-full text-left">
                     Active Bidders
                 </Text>
@@ -145,7 +142,9 @@ function BuyerViewBiddersModal() {
                                         status={
                                             errors.price ? "danger" : "basic"
                                         }
-                                        disabled={isLoading}
+                                        disabled={
+                                            isLoading || hasConfirmedBidder
+                                        }
                                     />
                                 )}
                             />
@@ -165,6 +164,7 @@ function BuyerViewBiddersModal() {
                                         <Icon name="shopping-bag-outline" />
                                     )
                                 }
+                                disabled={hasConfirmedBidder || isLoading}
                             >
                                 {isLoading ? "" : "Steal"}
                             </Button>
@@ -206,7 +206,7 @@ function BuyerViewBiddersModal() {
                     setIsModalVisible={setIsConfirmVisible}
                 />
             </View>
-        </Modal>
+        </ActionSheet>
     );
 }
 

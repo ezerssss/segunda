@@ -3,26 +3,24 @@ import { ItemType } from "@/types/item";
 import { create } from "zustand";
 
 interface BiddersModalStateInterface {
-    isBuyerViewModalVisible: boolean;
-    setIsBuyerViewModalVisible: (data: boolean) => void;
-    isSellerViewModalVisible: boolean;
-    setIsSellerViewModalVisible: (data: boolean) => void;
     item: ItemType | null;
     setItem: (item: ItemType) => void;
     bidders: BidType[];
     setBidders: (bids: BidType[]) => void;
     unsubscribe: () => void;
     setUnsubscribe: (fn: () => void) => void;
+    showBuyersModal: (snapIndex?: number) => void;
+    setShowBuyersModal: (fn: (snapIndex?: number) => void) => void;
+    showSellersModal: (snapIndex?: number) => void;
+    setShowSellersModal: (fn: (snapIndex?: number) => void) => void;
 }
 
 export const useBidderModalStore = create<BiddersModalStateInterface>(
     (set) => ({
-        isBuyerViewModalVisible: false,
-        setIsBuyerViewModalVisible: (data) =>
-            set(() => ({ isBuyerViewModalVisible: data })),
-        isSellerViewModalVisible: false,
-        setIsSellerViewModalVisible: (data) =>
-            set(() => ({ isSellerViewModalVisible: data })),
+        showBuyersModal: (snapIndex?: number) => {},
+        setShowBuyersModal: (fn) => set(() => ({ showBuyersModal: fn })),
+        showSellersModal: (snapIndex?: number) => {},
+        setShowSellersModal: (fn) => set(() => ({ showSellersModal: fn })),
         item: null,
         setItem: (data) => set(() => ({ item: data })),
         bidders: [],

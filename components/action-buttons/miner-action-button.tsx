@@ -18,12 +18,12 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
     const [isLoading, setIsLoading] = useState(false);
     const { getBidders, isModalInit } = useGetBidders();
 
-    const { setIsBuyerViewModalVisible, setItem } = useBidderModalStore();
+    const { setItem, showBuyersModal } = useBidderModalStore();
 
     async function handleShowBidders() {
         setItem(item);
         await getBidders(item);
-        setIsBuyerViewModalVisible(true);
+        showBuyersModal();
     }
 
     const theme = useTheme();

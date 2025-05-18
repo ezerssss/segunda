@@ -18,6 +18,7 @@ import * as SplashScreen from "expo-splash-screen";
 import "../utils/native-wind-config";
 import "../global.css";
 import "react-native-reanimated";
+import "../components/action-buttons/sheet.tsx";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -54,7 +55,7 @@ export default function RootLayout() {
                             contentStyle: { backgroundColor: "white" },
                         }}
                     />
-                    <View className="flex items-center">
+                    <View className="flex items-center align-bottom">
                         <BuyerViewBiddersModal />
                         <SellerViewBiddersModal />
                     </View>

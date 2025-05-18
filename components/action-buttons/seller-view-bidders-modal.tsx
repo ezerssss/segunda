@@ -1,6 +1,5 @@
 import BidderDetails from "./bidder-details";
-import { useEffect, useState } from "react";
-import Modal from "react-native-modal";
+import { useEffect, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Button, Text, useTheme } from "@ui-kitten/components";
 import ConfirmBidderModal from "./confirm-bidder-modal";
@@ -11,16 +10,12 @@ import { itemsCollectionRef } from "@/constants/collections";
 import { ItemType } from "@/types/item";
 import { useUserStore } from "@/states/user";
 import { useBidderModalStore } from "@/states/modal";
+import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
 
 function SellerViewBiddersModal() {
     const { user } = useUserStore();
-    const {
-        isSellerViewModalVisible,
-        setIsSellerViewModalVisible,
-        item,
-        bidders,
-        setItem,
-    } = useBidderModalStore();
+    const { item, bidders, setItem, setShowSellersModal } =
+        useBidderModalStore();
 
     const hasConfirmedBidder = item?.confirmedBidder !== null;
     const itemId = item?.id ?? "";
@@ -28,6 +23,13 @@ function SellerViewBiddersModal() {
     const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
     const [approvedBidder, setApprovedBidder] = useState<BidType>();
     const theme = useTheme();
+
+    const actionSheetRef = useRef<ActionSheetRef>(null);
+
+    useEffect(() => {
+        if (!actionSheetRef.current) return;
+        setShowSellersModal(actionSheetRef.current.show);
+    }, [actionSheetRef]);
 
     function handleApprove(bidder: BidType) {
         setApprovedBidder(bidder);
@@ -51,15 +53,10 @@ function SellerViewBiddersModal() {
     }, [itemId, user]);
 
     return (
-        <Modal
-            isVisible={isSellerViewModalVisible}
-            onBackdropPress={() => setIsSellerViewModalVisible(false)}
-            onBackButtonPress={() => setIsSellerViewModalVisible(false)}
-            animationIn="slideInUp"
-            animationOut="slideOutDown"
-            useNativeDriver={false}
-            backdropTransitionOutTiming={1}
-            style={{ justifyContent: "flex-end", margin: 0 }}
+        <ActionSheet
+            ref={actionSheetRef}
+            enableGesturesInScrollView={true}
+            keyboardHandlerEnabled={false}
         >
             <View className="max-h-[75vh] min-h-60 rounded-t-3xl bg-white p-4">
                 <Text category="h4" className="mb-4">
@@ -119,7 +116,7 @@ function SellerViewBiddersModal() {
                     itemID={item.id}
                 />
             )}
-        </Modal>
+        </ActionSheet>
     );
 }
 
