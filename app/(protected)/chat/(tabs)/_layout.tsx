@@ -24,6 +24,7 @@ export const TopTabs = withLayoutContext<
 function CustomTopTabBar(props: MaterialTopTabBarProps) {
     const { state, navigation } = props;
     const { hasSoldToNotif, hasBoughtFromNotif } = useChatNotifStore();
+    const theme = useTheme();
 
     function handlePress(index: number) {
         const route = state.routes[index];
@@ -43,10 +44,13 @@ function CustomTopTabBar(props: MaterialTopTabBarProps) {
     return (
         <View className="flex-row gap-3 p-4">
             <TouchableOpacity
-                className={clsx(
-                    "relative self-start rounded-2xl p-3",
-                    currentIndex === 0 && "bg-gray-200",
-                )}
+                className="relative self-start rounded-3xl p-3"
+                style={{
+                    backgroundColor:
+                        currentIndex === 0
+                            ? theme["color-primary-100"]
+                            : "white",
+                }}
                 onPress={() => handlePress(0)}
             >
                 <Text
@@ -62,10 +66,13 @@ function CustomTopTabBar(props: MaterialTopTabBarProps) {
                 )}
             </TouchableOpacity>
             <TouchableOpacity
-                className={clsx(
-                    "relative self-start rounded-2xl p-3",
-                    currentIndex === 1 && "bg-gray-200",
-                )}
+                className="relative self-start rounded-3xl p-3"
+                style={{
+                    backgroundColor:
+                        currentIndex === 1
+                            ? theme["color-primary-100"]
+                            : "white",
+                }}
                 onPress={() => handlePress(1)}
             >
                 <Text
