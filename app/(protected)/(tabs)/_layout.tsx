@@ -9,6 +9,7 @@ import {
 } from "@react-navigation/material-top-tabs";
 import { ParamListBase, TabNavigationState } from "@react-navigation/native";
 import { useUserStore } from "@/states/user";
+import { useChatNotifStore } from "@/states/chat";
 
 const { Navigator } = createMaterialTopTabNavigator();
 
@@ -25,6 +26,9 @@ export default function AppLayout() {
     const indicatorColor = theme["color-primary-500"];
     const { user } = useUserStore();
 
+    const { hasBoughtFromNotif, hasSoldToNotif } = useChatNotifStore();
+    const hasNotification = hasBoughtFromNotif || hasSoldToNotif;
+
     function navigateToChats() {
         router.push("/(protected)/chat/(tabs)/sold-to");
     }
@@ -35,8 +39,14 @@ export default function AppLayout() {
                 <Text category="h4">Segunda</Text>
                 <View className="flex flex-row gap-4">
                     <Icon name="search-outline" width={28} height={28} />
-                    <TouchableOpacity onPress={navigateToChats}>
+                    <TouchableOpacity
+                        onPress={navigateToChats}
+                        className="relative"
+                    >
                         <Icon name="message-circle" width={28} height={28} />
+                        {hasNotification && (
+                            <View className="absolute right-0 h-3 w-3 rounded-full bg-red-500" />
+                        )}
                     </TouchableOpacity>
                 </View>
             </View>

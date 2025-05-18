@@ -1,9 +1,11 @@
 import { Redirect, Slot } from "expo-router";
 import { useUserStore } from "@/states/user";
 import { ActivityIndicator, View } from "react-native";
+import useGetChatNotif from "@/hooks/useGetChatNotif";
 
 export default function AppLayout() {
     const { user, isUserLoading } = useUserStore();
+    useGetChatNotif();
 
     if (isUserLoading) {
         return (
