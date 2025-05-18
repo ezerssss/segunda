@@ -121,11 +121,7 @@ export default function NewMessage(props: PropsInterface) {
                         name="navigation-2"
                         width={30}
                         height={30}
-                        fill={
-                            hasValidMessage && !isSending
-                                ? theme["color-primary-500"]
-                                : "gray"
-                        }
+                        fill={hasValidMessage && theme["color-primary-500"]}
                     />
                 )}
             </TouchableOpacity>
