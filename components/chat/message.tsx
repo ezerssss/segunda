@@ -4,6 +4,7 @@ import { formatChatTimestamp } from "@/utils/date";
 import { Avatar, useTheme, Text } from "@ui-kitten/components";
 import clsx from "clsx";
 import { Image } from "expo-image";
+import { router } from "expo-router";
 import { memo, useState } from "react";
 import { View, Pressable, TouchableOpacity } from "react-native";
 
@@ -11,7 +12,7 @@ interface PropsInterface {
     message: string;
     imageUrl: string | null;
     isOther: boolean;
-    senderImageUrl: string | null;
+    senderImageUrl: string | null | undefined;
     date: string;
     systemGeneratedMessage: SystemGeneratedMessageType | null;
 }
@@ -37,6 +38,18 @@ function Message(props: PropsInterface) {
 
         const { item } = systemGeneratedMessage;
 
+        function navigateToItem() {
+            if (!item) {
+                return;
+            }
+
+            if (item.isDeleted) {
+                return;
+            }
+
+            router.push(`/(protected)/view-post/${item.postId}`);
+        }
+
         return (
             <View className="mt-2 items-center">
                 <Text className="text-center text-xs text-gray-400">
@@ -44,7 +57,10 @@ function Message(props: PropsInterface) {
                 </Text>
                 <View className="w-3/4 items-center overflow-hidden rounded-2xl border border-gray-200 bg-gray-100">
                     {item && (
-                        <TouchableOpacity className="w-full">
+                        <TouchableOpacity
+                            className="w-full"
+                            onPress={navigateToItem}
+                        >
                             <Image
                                 contentFit="cover"
                                 className="w-full"
