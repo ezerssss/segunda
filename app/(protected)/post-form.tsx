@@ -155,13 +155,13 @@ export default function SellerFormPage() {
                     POST
                 </Button>
             </View>
-            <Divider />
+            <Divider className="mb-4" />
 
             {!!user && (
                 <UserHeader
                     name={user?.name}
                     imageUrl={user?.imageUrl}
-                    date={new Date()}
+                    campus={user.campus}
                 />
             )}
             <View className="space-y-14 bg-white px-2">

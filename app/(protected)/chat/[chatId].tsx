@@ -42,9 +42,12 @@ function ChatInstancePage() {
                     renderItem={({ item, index }) => (
                         <Message
                             message="Hello world "
-                            imageUrl={null}
+                            imageUrl={
+                                index % 2 === 0
+                                    ? "https://i.natgeofe.com/n/4cebbf38-5df4-4ed0-864a-4ebeb64d33a4/NationalGeographic_1468962.jpg"
+                                    : null
+                            }
                             isOther={index % 3 === 0}
-                            senderName="Ezra Magbanua"
                             senderImageUrl="https://images.squarespace-cdn.com/content/v1/607f89e638219e13eee71b1e/1684821560422-SD5V37BAG28BURTLIXUQ/michael-sum-LEpfefQf4rU-unsplash.jpg"
                             date={new Date().toISOString()}
                         />

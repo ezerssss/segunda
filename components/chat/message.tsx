@@ -1,6 +1,7 @@
 import { formatChatTimestamp } from "@/utils/date";
 import { Avatar } from "@ui-kitten/components";
 import clsx from "clsx";
+import { Image } from "expo-image";
 import { memo } from "react";
 import { View, Text } from "react-native";
 
@@ -8,13 +9,12 @@ interface PropsInterface {
     message: string;
     imageUrl: string | null;
     isOther: boolean;
-    senderName: string;
     senderImageUrl: string | null;
     date: string;
 }
 
 function Message(props: PropsInterface) {
-    const { message, date, senderImageUrl, isOther } = props;
+    const { message, date, senderImageUrl, imageUrl, isOther } = props;
 
     return (
         <View
@@ -33,14 +33,22 @@ function Message(props: PropsInterface) {
             >
                 <View
                     className={clsx(
-                        "max-w-[85%] shrink self-start rounded-lg p-4",
-                        isOther ? "bg-gray-200" : "bg-blue-200",
+                        "max-w-[85%] shrink self-start rounded-3xl px-4 py-3",
+                        isOther
+                            ? "items-start bg-gray-200"
+                            : "items-end bg-blue-200",
                     )}
                 >
-                    <Text>
-                        {message.repeat(Math.floor(Math.random() * 10) + 1)}
-                    </Text>
+                    {imageUrl && (
+                        <Image
+                            contentFit="contain"
+                            className="mb-3 aspect-square w-full rounded-2xl bg-black"
+                            source={{ uri: imageUrl }}
+                        />
+                    )}
+                    <Text>{message}</Text>
                 </View>
+
                 <Text className="text-xs text-gray-400">
                     {formatChatTimestamp(new Date(date))}
                 </Text>

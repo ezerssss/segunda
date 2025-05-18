@@ -12,7 +12,7 @@ export default function NewMessage() {
             <Input
                 multiline
                 placeholder="Message"
-                className="flex-1"
+                className="flex-1 rounded-3xl"
                 textClassName="px-3"
                 value={message}
                 onChangeText={setMessage}
