@@ -41,7 +41,11 @@ function ChatInstancePage() {
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => (
                         <Message
-                            message="Hello world "
+                            message={
+                                index % 2 === 0
+                                    ? "WHAT A CUTE CAT"
+                                    : "No Image message"
+                            }
                             imageUrl={
                                 index % 2 === 0
                                     ? "https://i.natgeofe.com/n/4cebbf38-5df4-4ed0-864a-4ebeb64d33a4/NationalGeographic_1468962.jpg"
