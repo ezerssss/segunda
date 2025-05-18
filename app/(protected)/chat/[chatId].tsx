@@ -3,6 +3,7 @@ import NewMessage from "@/components/chat/new-message";
 import UserHeader from "@/components/user/user-header";
 import { MAX_MESSAGES_PER_LOAD } from "@/constants/post";
 import useGetMessages from "@/hooks/useGetMessages";
+import useSeenChat from "@/hooks/useSeenChat";
 import { useUserStore } from "@/states/user";
 import { Icon, Divider } from "@ui-kitten/components";
 import { router, useLocalSearchParams } from "expo-router";
@@ -20,6 +21,7 @@ function ChatInstancePage() {
     const { chatId } = useLocalSearchParams();
     const { chat, messages, isLoading, fetchMoreMessages, hasMore } =
         useGetMessages(chatId as string);
+    useSeenChat(chatId as string);
 
     if (!chat || !user || isLoading) {
         return (
@@ -84,7 +86,7 @@ function ChatInstancePage() {
                     }
                 />
 
-                <NewMessage />
+                <NewMessage chatId={chatId as string} />
             </KeyboardAvoidingView>
         </>
     );

@@ -56,12 +56,12 @@ export const cancelBid = httpsCallable<
 export const sendMessage = httpsCallable<
     SendMessageRequestType,
     GenericResponseMessage
->(functions, "cancelBid");
+>(functions, "sendMessage");
 
 export const seenMessage = httpsCallable<
     SeenMessageType,
     GenericResponseMessage
->(functions, "cancelBid");
+>(functions, "seenMessage");
 
 export const receiveNotification = httpsCallable<
     ReceiveNotificationType,

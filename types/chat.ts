@@ -50,10 +50,7 @@ export type MessageType = z.infer<typeof MessageSchema>;
 
 export const SendMessageRequestSchema = z.object({
     chatId: z.string().min(1),
-    message: z
-        .string()
-        .trim()
-        .min(1, { message: "Message should have at least one character." }),
+    message: z.string().trim(),
     imageUrl: z.string().url().nullable(),
 });
 export type SendMessageRequestType = z.infer<typeof SendMessageRequestSchema>;

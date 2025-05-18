@@ -1,12 +1,52 @@
 import { Input, Icon, useTheme } from "@ui-kitten/components";
 import { useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, TouchableOpacity, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { SendMessageRequestType } from "@/types/chat";
+import useUploadImage from "@/hooks/useUploadImage";
+import { MESSAGE_IMAGES_FOLDER } from "@/constants/storage";
+import { sendMessage } from "@/firebase/functions";
 
-export default function NewMessage() {
+interface PropsInterface {
+    chatId: string;
+}
+
+export default function NewMessage(props: PropsInterface) {
+    const { chatId } = props;
     const [message, setMessage] = useState("");
+    const [isSending, setIsSending] = useState(false);
     const hasValidMessage = message.trim().length > 0;
     const theme = useTheme();
+    const { uploadImages } = useUploadImage();
+
+    async function handleSendMessage(imageUri?: string) {
+        if (isSending || (!message.trim() && !imageUri)) {
+            return;
+        }
+
+        try {
+            setIsSending(true);
+            let imageUrl: string | null = null;
+            if (imageUri) {
+                imageUrl = (
+                    await uploadImages([imageUri], MESSAGE_IMAGES_FOLDER)
+                )[0];
+            }
+
+            const messageRequest: SendMessageRequestType = {
+                chatId,
+                message,
+                imageUrl,
+            };
+
+            await sendMessage(messageRequest);
+            setMessage("");
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsSending(false);
+        }
+    }
 
     async function openImageLibrary() {
         try {
@@ -18,7 +58,7 @@ export default function NewMessage() {
             });
 
             if (!res.canceled) {
-                console.log(res.assets[0].uri);
+                handleSendMessage(res.assets[0].uri);
             }
         } catch (error) {
             console.error(error);
@@ -34,7 +74,7 @@ export default function NewMessage() {
             });
 
             if (!res.canceled) {
-                console.log(res.assets[0].uri);
+                handleSendMessage(res.assets[0].uri);
             }
         } catch (error) {
             console.error(error);
@@ -48,7 +88,7 @@ export default function NewMessage() {
                     name="camera"
                     width={30}
                     height={30}
-                    fill={hasValidMessage ? theme["color-primary-500"] : "gray"}
+                    fill={theme["color-primary-500"]}
                 />
             </TouchableOpacity>
             <TouchableOpacity onPress={openImageLibrary}>
@@ -56,7 +96,7 @@ export default function NewMessage() {
                     name="image-2"
                     width={30}
                     height={30}
-                    fill={hasValidMessage ? theme["color-primary-500"] : "gray"}
+                    fill={theme["color-primary-500"]}
                 />
             </TouchableOpacity>
             <Input
@@ -66,14 +106,27 @@ export default function NewMessage() {
                 textClassName="px-3"
                 value={message}
                 onChangeText={setMessage}
+                disabled={isSending}
+                editable={!isSending}
             />
-            <TouchableOpacity disabled={!hasValidMessage}>
-                <Icon
-                    name="navigation-2"
-                    width={30}
-                    height={30}
-                    fill={hasValidMessage ? theme["color-primary-500"] : "gray"}
-                />
+            <TouchableOpacity
+                disabled={!hasValidMessage || isSending}
+                onPress={() => handleSendMessage()}
+            >
+                {isSending ? (
+                    <ActivityIndicator />
+                ) : (
+                    <Icon
+                        name="navigation-2"
+                        width={30}
+                        height={30}
+                        fill={
+                            hasValidMessage && !isSending
+                                ? theme["color-primary-500"]
+                                : "gray"
+                        }
+                    />
+                )}
             </TouchableOpacity>
         </View>
     );
