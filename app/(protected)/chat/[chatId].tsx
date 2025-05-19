@@ -1,7 +1,7 @@
-import Message from "@/components/chat/message";
+import Message from "@/components/chat/message/message";
 import NewMessage from "@/components/chat/new-message";
 import UserHeader from "@/components/user/user-header";
-import { MAX_MESSAGES_PER_LOAD } from "@/constants/post";
+import { MAX_MESSAGES_PER_LOAD } from "@/constants/message";
 import useGetMessages from "@/hooks/useGetMessages";
 import useSeenChat from "@/hooks/useSeenChat";
 import { useUserStore } from "@/states/user";

@@ -118,14 +118,14 @@ export default function NewMessage(props: PropsInterface) {
                     <ActivityIndicator />
                 ) : (
                     <Icon
-                        name="navigation-2"
+                        name={
+                            hasValidMessage
+                                ? "navigation-2"
+                                : "navigation-2-outline"
+                        }
                         width={30}
                         height={30}
-                        fill={
-                            hasValidMessage
-                                ? theme["color-primary-500"]
-                                : "gray"
-                        }
+                        fill={theme["color-primary-500"]}
                     />
                 )}
             </TouchableOpacity>

@@ -15,6 +15,21 @@ export default function BrowsePostsPage() {
         return <SkeletonBrowsePost />;
     }
 
+    const nonEmptyListFooter = hasMore ? (
+        <View className="h-24 w-full items-center justify-center py-2">
+            <ActivityIndicator />
+        </View>
+    ) : (
+        <View className="flex h-24 items-center justify-center gap-1">
+            <Icon
+                name="checkmark-circle-2-outline"
+                fill={theme["color-primary-500"]}
+            />
+            <Text>You're all caught up with sellers</Text>
+        </View>
+    );
+    const listFooter = posts.length < 1 ? null : nonEmptyListFooter;
+
     return (
         <FlatList
             data={posts}
@@ -26,27 +41,12 @@ export default function BrowsePostsPage() {
             onEndReached={fetchMorePosts}
             initialNumToRender={MAX_POSTS_PER_LOAD}
             ListEmptyComponent={
-                <View className="min-h-screen flex-1 items-center justify-center bg-white">
+                <View className="h-[80vh] items-center justify-center self-center">
                     <Text>There are no posts currently.</Text>
                 </View>
             }
             ListHeaderComponent={<SellerFormBar />}
-            ListFooterComponent={
-                hasMore ? (
-                    <View className="h-24 w-full items-center justify-center py-2">
-                        <ActivityIndicator />
-                    </View>
-                ) : (
-                    <View className="flex h-24 items-center justify-center gap-1">
-                        <Icon
-                            name="checkmark-circle-2-outline"
-                            fill={theme["color-primary-500"]}
-                        />
-                        <Text>You're all caught up with sellers</Text>
-                    </View>
-                )
-            }
-            contentContainerClassName="bg-white"
+            ListFooterComponent={listFooter}
         />
     );
 }

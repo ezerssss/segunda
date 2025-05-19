@@ -1,5 +1,5 @@
 import { chatsCollectionRef } from "@/constants/collections";
-import { MAX_MESSAGES_PER_LOAD } from "@/constants/post";
+import { MAX_MESSAGES_PER_LOAD } from "@/constants/message";
 import { CollectionEnum } from "@/enums/collection";
 import { useUserStore } from "@/states/user";
 import { ChatType, MessageType } from "@/types/chat";
