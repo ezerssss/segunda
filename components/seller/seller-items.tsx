@@ -1,9 +1,11 @@
 import { View, TouchableOpacity } from "react-native";
 import { Text, OverflowMenu, MenuItem, IndexPath } from "@ui-kitten/components";
+import Modal from "react-native-modal";
 import { ItemType } from "@/types/item";
 import { Image } from "expo-image";
 import { Entypo } from "@expo/vector-icons";
 import { useState } from "react";
+import { useRouter } from "expo-router";
 
 interface SellerItemProps {
     sellerItem: ItemType;
@@ -11,15 +13,18 @@ interface SellerItemProps {
 
 export default function SellerItem(props: SellerItemProps) {
     const { sellerItem } = props;
-    const { name, imageUrl, price, blurHash, description } = sellerItem;
+    const { id, name, imageUrl, price, blurHash, description } = sellerItem;
     const [isMenuVisible, setIsMenuVisible] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState<IndexPath | undefined>();
+
+    const router = useRouter();
 
     function onMenuTap(index: IndexPath) {
         if (index.row === 0) {
-            console.log("Edit tapped");
+            router.push(`/(protected)/edit-item/${id}`);
         } else if (index.row === 1) {
-            console.log("Delete tapped");
+            setIsModalVisible(true);
         }
         setSelectedIndex(index);
         setIsMenuVisible(false);
@@ -79,6 +84,41 @@ export default function SellerItem(props: SellerItemProps) {
                     <MenuItem title="Delete" />
                 </OverflowMenu>
             </View>
+            <Modal
+                isVisible={isModalVisible}
+                onBackdropPress={() => setIsModalVisible(false)}
+                onBackButtonPress={() => setIsModalVisible(false)}
+                animationIn="fadeIn"
+                animationOut="fadeOut"
+                useNativeDriver={false}
+                backdropTransitionOutTiming={1}
+                backdropOpacity={0.5}
+            >
+                <View className="rounded-lg bg-white p-5">
+                    <Text className="mb-2 text-lg font-bold">
+                        Confirm Delete
+                    </Text>
+                    <Text className="mb-4 text-gray-600">
+                        Are you sure you want to delete this item?
+                    </Text>
+
+                    <View className="flex-row justify-end">
+                        <TouchableOpacity
+                            className="px-3 py-1"
+                            onPress={() => setIsModalVisible(false)}
+                        >
+                            <Text className="text-blue-500">Cancel</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            className="px-3 py-1"
+                            onPress={() => setIsModalVisible(false)}
+                        >
+                            <Text className="text-red-500">Delete</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 }
