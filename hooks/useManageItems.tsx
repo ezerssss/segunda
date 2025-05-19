@@ -1,13 +1,19 @@
 import { db } from "@/firebase/db";
+import { useUserStore } from "@/states/user";
 import { ItemFormType } from "@/types/item";
 import { doc, getDoc } from "@react-native-firebase/firestore";
 import { useEffect, useState } from "react";
 
 export default function useManageItems(itemId?: string) {
+    const { user } = useUserStore();
     const [item, setItem] = useState<ItemFormType>();
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        if (!user || !itemId) {
+            return;
+        }
+
         if (itemId) {
             fetchItem(itemId);
         }
