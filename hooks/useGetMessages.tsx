@@ -92,7 +92,7 @@ export default function useGetMessages(chatId: string) {
     }, [user]);
 
     async function fetchMoreMessages() {
-        if (isLoading || !hasMore) return;
+        if (isLoading || !hasMore || !lastMessageDoc) return;
 
         setIsLoading(true);
         try {

@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { memo, useState } from "react";
-import { View, Pressable, TouchableOpacity } from "react-native";
+import { View, Pressable, TouchableOpacity, ToastAndroid } from "react-native";
 
 interface PropsInterface {
     message: string;
@@ -44,10 +44,20 @@ function Message(props: PropsInterface) {
             }
 
             if (item.isDeleted) {
+                ToastAndroid.show(
+                    "The item does not exist.",
+                    ToastAndroid.SHORT,
+                );
                 return;
             }
 
             router.push(`/(protected)/view-post/${item.postId}`);
+        }
+
+        function handleCancelBid() {
+            if (!isActionButtonVisible) {
+                return;
+            }
         }
 
         return (
@@ -92,6 +102,7 @@ function Message(props: PropsInterface) {
                                 style={{
                                     backgroundColor: theme["color-danger-500"],
                                 }}
+                                onPress={handleCancelBid}
                             >
                                 <Text className="text-sm text-white">
                                     Cancel Transaction

@@ -41,7 +41,7 @@ function PostHeader(props: PostHeaderProps) {
                     ...
                 </Text>
             </View>
-            <View className="mt-2 w-full px-2">
+            <View className="mt-2 w-full px-3">
                 <TruncatedText text={caption} isItemCard={false} />
                 <View className="mb-2 mt-1 flex-row flex-wrap gap-1">
                     {tags.map((tag) => (
