@@ -59,7 +59,7 @@ export default function NewMessage(props: PropsInterface) {
             });
 
             if (!res.canceled) {
-                handleSendMessage(res.assets[0].uri);
+                await handleSendMessage(res.assets[0].uri);
             }
         } catch (error) {
             console.error(error);
@@ -75,7 +75,7 @@ export default function NewMessage(props: PropsInterface) {
             });
 
             if (!res.canceled) {
-                handleSendMessage(res.assets[0].uri);
+                await handleSendMessage(res.assets[0].uri);
             }
         } catch (error) {
             console.error(error);
@@ -121,7 +121,11 @@ export default function NewMessage(props: PropsInterface) {
                         name="navigation-2"
                         width={30}
                         height={30}
-                        fill={hasValidMessage && theme["color-primary-500"]}
+                        fill={
+                            hasValidMessage
+                                ? theme["color-primary-500"]
+                                : "gray"
+                        }
                     />
                 )}
             </TouchableOpacity>
