@@ -1,8 +1,8 @@
-import { db } from "@/firebase/db";
 import { useUserStore } from "@/states/user";
 import { ItemFormType } from "@/types/item";
 import { doc, getDoc } from "@react-native-firebase/firestore";
 import { useEffect, useState } from "react";
+import { itemsCollectionRef } from "@/constants/collections";
 
 export default function useManageItems(itemId?: string) {
     const { user } = useUserStore();
@@ -10,19 +10,16 @@ export default function useManageItems(itemId?: string) {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        if (!user || !itemId) {
+        if (!itemId || !user) {
             return;
         }
-
-        if (itemId) {
-            fetchItem(itemId);
-        }
-    }, [itemId]);
+        fetchItem(itemId);
+    }, [user, itemId]);
 
     async function fetchItem(itemId: string) {
         setIsLoading(true);
         try {
-            const itemRef = doc(db, "items", itemId);
+            const itemRef = doc(itemsCollectionRef, itemId);
             const itemSnap = await getDoc(itemRef);
 
             if (itemSnap.exists) {

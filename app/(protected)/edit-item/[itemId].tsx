@@ -1,16 +1,15 @@
-import { Text, Icon } from "@ui-kitten/components";
+import { Text, Icon, Button, Input } from "@ui-kitten/components";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Image, Pressable } from "react-native";
 import { ItemFormType } from "@/types/item";
-import useManageItems from "@/hooks/useManageItems";
-import { useForm } from "react-hook-form";
+import useGetItem from "@/hooks/useGetItem";
+import { Controller, useForm } from "react-hook-form";
 import { useEffect } from "react";
-import EditItemForm from "@/components/seller/edit-item-form";
 import * as ImagePicker from "expo-image-picker";
 
 export default function EditItemPage() {
     const { itemId } = useLocalSearchParams<{ itemId: string }>();
-    const { item } = useManageItems(itemId);
+    const { item, isLoading } = useGetItem(itemId);
     const router = useRouter();
 
     const {
@@ -18,7 +17,7 @@ export default function EditItemPage() {
         watch,
         reset,
         setValue,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm<ItemFormType>({
         defaultValues: {
             name: "",
@@ -74,34 +73,180 @@ export default function EditItemPage() {
         }
     }
 
+    function handleRemoveImage() {
+        setValue("imageUrl", "");
+    }
+
     return (
         <>
-            <View className="p-2">
-                <View className="flex-row items-center p-2">
-                    <TouchableOpacity
-                        onPress={() =>
-                            router.push("/(protected)/(tabs)/my-items")
-                        }
-                    >
-                        <Icon name="arrow-ios-back-outline" />
-                    </TouchableOpacity>
-                    <Text className="p-4 text-[25px] font-bold color-black">
-                        Edit item
-                    </Text>
-                    <TouchableOpacity className="ml-auto mr-4">
-                        <Text className="text-xl">Save</Text>
-                    </TouchableOpacity>
+            <View className="p-2 px-4">
+                <View className="flex-row items-center justify-between py-4">
+                    <View className="flex-row items-center">
+                        <Pressable
+                            onPress={() =>
+                                router.push("/(protected)/(tabs)/my-items")
+                            }
+                        >
+                            <Icon name="arrow-ios-back-outline" />
+                        </Pressable>
+                        <Text className="mx-4 text-lg">Edit item</Text>
+                    </View>
+                    <Button disabled={isLoading} size="small">
+                        SAVE
+                    </Button>
                 </View>
-                <View className="p-4">
-                    <EditItemForm
-                        control={control}
-                        errors={errors}
-                        item={sellerItem}
-                        setValue={setValue}
-                        openImageLibrary={openImageLibrary}
-                        openCamera={openCamera}
-                        isLoading={isSubmitting}
-                    />
+                <View className="p-2">
+                    <View className="mb-2">
+                        <Text
+                            category="label"
+                            className="mb-2 mt-4 font-semibold"
+                        >
+                            Upload Image
+                        </Text>
+
+                        <View className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-100">
+                            {sellerItem.imageUrl ? (
+                                <Image
+                                    source={{ uri: sellerItem.imageUrl }}
+                                    className="h-full w-full"
+                                    resizeMode="cover"
+                                />
+                            ) : (
+                                <View className="absolute inset-0 items-center justify-center">
+                                    <Text appearance="hint">
+                                        Tap below to upload
+                                    </Text>
+                                </View>
+                            )}
+
+                            {!!sellerItem.imageUrl && (
+                                <TouchableOpacity
+                                    onPress={handleRemoveImage}
+                                    className="absolute right-2 top-2 z-10 h-7 w-7 items-center justify-center rounded-full bg-gray-300/50"
+                                >
+                                    <Text className="text-sm">✕</Text>
+                                </TouchableOpacity>
+                            )}
+                        </View>
+
+                        <View className="mt-3 flex flex-row justify-between gap-2">
+                            <Button
+                                disabled={isLoading}
+                                size="small"
+                                appearance="outline"
+                                status="basic"
+                                onPress={openImageLibrary}
+                                className="flex-1"
+                            >
+                                Gallery
+                            </Button>
+                            <Button
+                                disabled={isLoading}
+                                size="small"
+                                appearance="outline"
+                                status="basic"
+                                onPress={openCamera}
+                                className="flex-1"
+                            >
+                                Camera
+                            </Button>
+                        </View>
+
+                        {errors.imageUrl && (
+                            <Text status="danger" className="mt-1">
+                                {errors.imageUrl?.message}
+                            </Text>
+                        )}
+
+                        <View className="mb-2 mt-4 flex-row items-center">
+                            <Text
+                                category="label"
+                                className="mr-2 w-12 font-semibold"
+                            >
+                                Item:
+                            </Text>
+                            <View className="flex-1">
+                                <Controller
+                                    control={control}
+                                    name="name"
+                                    render={({
+                                        field: { onChange, onBlur, value },
+                                    }) => (
+                                        <Input
+                                            disabled={isLoading}
+                                            placeholder="Enter item name"
+                                            onBlur={onBlur}
+                                            onChangeText={onChange}
+                                            value={value}
+                                            status={
+                                                errors.name ? "danger" : "basic"
+                                            }
+                                            caption={errors.name?.message}
+                                            textClassName="px-3 outline-none"
+                                        />
+                                    )}
+                                />
+                            </View>
+                        </View>
+
+                        <View className="mb-4 flex-row items-center">
+                            <Text
+                                category="label"
+                                className="mr-2 w-12 font-semibold"
+                            >
+                                Price:
+                            </Text>
+                            <View className="flex-1">
+                                <Controller
+                                    control={control}
+                                    name="price"
+                                    render={({
+                                        field: { onChange, onBlur, value },
+                                    }) => (
+                                        <Input
+                                            disabled={isLoading}
+                                            placeholder="0.00"
+                                            keyboardType="numeric"
+                                            onBlur={onBlur}
+                                            onChangeText={onChange}
+                                            value={
+                                                value === 0 ? "" : String(value)
+                                            }
+                                            status={
+                                                errors.price
+                                                    ? "danger"
+                                                    : "basic"
+                                            }
+                                            caption={errors.price?.message}
+                                            textClassName="px-3 outline-none"
+                                        />
+                                    )}
+                                />
+                            </View>
+                        </View>
+
+                        <Controller
+                            control={control}
+                            name="description"
+                            render={({
+                                field: { onChange, onBlur, value },
+                            }) => (
+                                <Input
+                                    disabled={isLoading}
+                                    placeholder="Write a description..."
+                                    multiline
+                                    className="border-0 bg-white"
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    status={
+                                        errors.description ? "danger" : "basic"
+                                    }
+                                    caption={errors.description?.message}
+                                />
+                            )}
+                        />
+                    </View>
                 </View>
             </View>
         </>
