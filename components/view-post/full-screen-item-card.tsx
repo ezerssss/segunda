@@ -31,7 +31,7 @@ export function FullScreenItemCard(props: PropsInterface) {
                     source={{
                         uri: imageUrl,
                     }}
-                    placeholder={{ blurHash }}
+                    placeholder={{ blurhash: blurHash }}
                     className="aspect-square w-full"
                 />
             </Zoomable>

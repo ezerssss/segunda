@@ -4,6 +4,7 @@ import { Button, Text } from "@ui-kitten/components";
 import { Dispatch, SetStateAction, useState } from "react";
 import { confirmBid } from "@/firebase/functions";
 import { ConfirmBidRequestType } from "@/types/bidder";
+import { router } from "expo-router";
 
 interface ConfirmBidderModalProps {
     setIsModalVisible: Dispatch<SetStateAction<boolean>>;
@@ -34,7 +35,9 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
                 bidId: bidderID,
                 itemId: itemID,
             } as ConfirmBidRequestType;
-            await confirmBid(data);
+            const res = await confirmBid(data);
+            setIsModalVisible(false);
+            router.push(`/(protected)/chat/${res.data.chatId}`);
         } catch (e) {
             console.error(e);
         } finally {

@@ -66,9 +66,10 @@ export default function SellerFormPage() {
                     imageUrl: urls[index],
                 })),
             };
-            await createPost(post);
+            const res = await createPost(post);
             ToastAndroid.show("Your post was shared.", ToastAndroid.SHORT);
             reset();
+            router.replace(`/(protected)/view-post/${res.data.postId}`);
         } catch (error) {
             console.error("Post Failed:", error);
         } finally {
