@@ -9,7 +9,7 @@ function SellerItemsPage() {
 
     return (
         <>
-            <Text className="bg-white p-4 text-[25px] font-bold color-black">
+            <Text className="bg-white p-4 text-[20px] font-bold color-black">
                 My items
             </Text>
             <FlatList
@@ -28,8 +28,8 @@ function SellerItemsPage() {
                         />
                     </View>
                 }
-                contentContainerStyle={{ paddingBottom: 30 }}
-                className="bg-white p-2"
+                contentContainerStyle={{ paddingBottom: 40 }}
+                className="bg-white pb-2 pl-2 pr-2"
             />
         </>
     );

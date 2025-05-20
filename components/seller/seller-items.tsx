@@ -4,6 +4,8 @@ import { ItemType } from "@/types/item";
 import { Image } from "expo-image";
 import { Entypo } from "@expo/vector-icons";
 import { useState } from "react";
+import { useRouter } from "expo-router";
+import ConfirmCancelModal from "../confirm-cancel-modal";
 
 interface SellerItemProps {
     sellerItem: ItemType;
@@ -11,22 +13,25 @@ interface SellerItemProps {
 
 export default function SellerItem(props: SellerItemProps) {
     const { sellerItem } = props;
-    const { name, imageUrl, price, blurHash, description } = sellerItem;
+    const { id, name, imageUrl, price, blurHash, description } = sellerItem;
     const [isMenuVisible, setIsMenuVisible] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState<IndexPath | undefined>();
+
+    const router = useRouter();
 
     function onMenuTap(index: IndexPath) {
         if (index.row === 0) {
-            console.log("Edit tapped");
+            router.push(`/(protected)/edit-item/${id}`);
         } else if (index.row === 1) {
-            console.log("Delete tapped");
+            setIsModalVisible(true);
         }
         setSelectedIndex(index);
         setIsMenuVisible(false);
     }
 
     return (
-        <View className="mt-2 flex p-2">
+        <View className="flex p-2">
             <View className="flex-row">
                 <Image
                     source={{ uri: imageUrl }}
@@ -45,13 +50,13 @@ export default function SellerItem(props: SellerItemProps) {
 
                     {description ? (
                         <Text
-                            className="mt-2 text-[13px] text-gray-500"
+                            className="text-[13px] text-gray-500"
                             numberOfLines={2}
                         >
                             {description}
                         </Text>
                     ) : (
-                        <Text className="mt-2 text-[13px] text-gray-500">
+                        <Text className="text-[13px] text-gray-500">
                             No item description
                         </Text>
                     )}
@@ -79,6 +84,17 @@ export default function SellerItem(props: SellerItemProps) {
                     <MenuItem title="Delete" />
                 </OverflowMenu>
             </View>
+            <ConfirmCancelModal
+                isVisible={isModalVisible}
+                setIsVisible={setIsModalVisible}
+                icon={<Entypo name="warning" size={30} color="#D32F2F" />}
+                title="Confirm Delete"
+                body="Are you sure you want to delete this item?"
+                confirmButtonText="Delete"
+                cancelButtonText="Cancel"
+                isDanger={true}
+                onConfirm={() => setIsModalVisible(false)}
+            />
         </View>
     );
 }
