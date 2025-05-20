@@ -11,7 +11,8 @@
         "web": "expo start --web",
         "test": "jest --watchAll",
         "lint": "expo lint",
-        "prepare": "husky"
+        "prepare": "husky", 
+        "postinstall": "patch-package"
     },
     "jest": {
         "preset": "jest-expo"
@@ -65,6 +66,7 @@
         "expo-web-browser": "~14.0.2",
         "http-status-codes": "^2.3.0",
         "nativewind": "^4.1.23",
+        "patch-package": "^8.0.0",
         "react": "18.3.1",
         "react-dom": "18.3.1",
         "react-hook-form": "^7.56.0",

@@ -1,0 +1,45 @@
+diff --git a/node_modules/@ui-kitten/components/ui/card/card.component.js b/node_modules/@ui-kitten/components/ui/card/card.component.js
+index 76b57a3..5afc03f 100644
+--- a/node_modules/@ui-kitten/components/ui/card/card.component.js
++++ b/node_modules/@ui-kitten/components/ui/card/card.component.js
+@@ -70,7 +70,7 @@ let Card = class Card extends react_1.default.Component {
+             container: containerParameters,
+             body: {
+                 paddingVertical: bodyPaddingVertical,
+-                paddingHorizontal: bodyPaddingHorizontal,
++                paddingHorizontal: 0,
+             },
+             accent: {
+                 height: accentHeight,
+@@ -87,21 +87,21 @@ let Card = class Card extends react_1.default.Component {
+         };
+     };
+     renderStatusAccent = (evaStyle) => {
+-        return (<react_native_1.View style={evaStyle}/>);
++        return (<react_native_1.View style={evaStyle} />);
+     };
+     render() {
+         const { eva, style, children, accent, header, footer, ...touchableProps } = this.props;
+         const evaStyle = this.getComponentStyle(eva.style);
+         return (<devsupport_1.TouchableWeb {...touchableProps} style={[styles.container, evaStyle.container, style]} onPressIn={this.onPressIn} onPressOut={this.onPressOut}>
+-        <devsupport_1.FalsyFC style={evaStyle.accent} fallback={this.renderStatusAccent(evaStyle.accent)} component={accent}/>
+-        <devsupport_1.FalsyFC style={[styles.transparent, evaStyle.header]} component={header}/>
+-        {header && <divider_component_1.Divider />}
+-        <react_native_1.View style={[styles.content, evaStyle.body]}>
+-          {children}
+-        </react_native_1.View>
+-        {footer && <divider_component_1.Divider />}
+-        <devsupport_1.FalsyFC style={[styles.transparent, evaStyle.footer]} component={footer}/>
+-      </devsupport_1.TouchableWeb>);
++            <devsupport_1.FalsyFC style={evaStyle.accent} fallback={this.renderStatusAccent(evaStyle.accent)} component={accent} />
++            <devsupport_1.FalsyFC style={[styles.transparent, evaStyle.header]} component={header} />
++            {header && <divider_component_1.Divider />}
++            <react_native_1.View style={[styles.content, evaStyle.body]}>
++                {children}
++            </react_native_1.View>
++            {footer && <divider_component_1.Divider />}
++            <devsupport_1.FalsyFC style={[styles.transparent, evaStyle.footer]} component={footer} />
++        </devsupport_1.TouchableWeb>);
+     }
+ };
+ Card = __decorate([
