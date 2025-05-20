@@ -11,7 +11,7 @@
         "web": "expo start --web",
         "test": "jest --watchAll",
         "lint": "expo lint",
-        "prepare": "husky", 
+        "prepare": "husky",
         "postinstall": "patch-package"
     },
     "jest": {
