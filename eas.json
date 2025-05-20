@@ -21,6 +21,16 @@
             "env": {
                 "GOOGLE_SERVICES_JSON": "{{GOOGLE_SERVICES_JSON}}"
             }
+        },
+        "preview": {
+            "android": {
+                "gradleCommand": ":app:assembleDebug",
+                "credentialsSource": "remote",
+                "buildType": "apk"
+            },
+            "env": {
+                "GOOGLE_SERVICES_JSON": "{{GOOGLE_SERVICES_JSON}}"
+            }
         }
     },
     "submit": {
