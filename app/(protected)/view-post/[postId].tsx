@@ -36,7 +36,7 @@ export default function ViewPostPage() {
 
     const noContent = !post || postItems.length === 0;
 
-    if (noContent) {
+    if (noContent && !isPostAlreadyLoaded) {
         return (
             <View className="min-h-screen flex-1 items-center justify-center bg-white">
                 <Text>There are no posts currently.</Text>
@@ -44,7 +44,7 @@ export default function ViewPostPage() {
         );
     }
 
-    const { id, sellerData, caption, tags } = post;
+    const { id, sellerData, caption, tags, dateCreated } = post;
     const lastIndex = postItems.length - 1;
 
     return (
@@ -70,6 +70,8 @@ export default function ViewPostPage() {
                     userImageUrl={sellerData.imageUrl ?? ""}
                     caption={caption}
                     tags={tags}
+                    date={dateCreated}
+                    campus={sellerData.campus}
                 />
             }
             contentContainerClassName="bg-white"

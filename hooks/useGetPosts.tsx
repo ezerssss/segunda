@@ -70,7 +70,7 @@ export default function useGetPosts() {
     }, [user]);
 
     async function fetchMorePosts() {
-        if (isLoading || !hasMore) return;
+        if (isLoading || !hasMore || !lastPostDoc) return;
 
         setIsLoading(true);
         try {

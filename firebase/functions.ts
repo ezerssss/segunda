@@ -1,7 +1,11 @@
 import { getFunctions, httpsCallable } from "@react-native-firebase/functions";
 import app from ".";
 import { SetUpUserRequestType } from "@/types/user";
-import { GenericResponseMessage } from "@/types/response";
+import {
+    ConfirmBidResponseMessage,
+    CreatePostResponseMessage,
+    GenericResponseMessage,
+} from "@/types/response";
 import { DeletePostRequestType, PostRequestType } from "@/types/post";
 import {
     BidRequestType,
@@ -20,7 +24,7 @@ export const setUpUser = httpsCallable<
 
 export const createPost = httpsCallable<
     PostRequestType,
-    GenericResponseMessage
+    CreatePostResponseMessage
 >(functions, "createPost");
 
 export const editItem = httpsCallable<
@@ -45,7 +49,7 @@ export const bidItem = httpsCallable<BidRequestType, GenericResponseMessage>(
 
 export const confirmBid = httpsCallable<
     ConfirmBidRequestType,
-    GenericResponseMessage
+    ConfirmBidResponseMessage
 >(functions, "confirmBid");
 
 export const cancelBid = httpsCallable<
@@ -56,12 +60,12 @@ export const cancelBid = httpsCallable<
 export const sendMessage = httpsCallable<
     SendMessageRequestType,
     GenericResponseMessage
->(functions, "cancelBid");
+>(functions, "sendMessage");
 
 export const seenMessage = httpsCallable<
     SeenMessageType,
     GenericResponseMessage
->(functions, "cancelBid");
+>(functions, "seenMessage");
 
 export const receiveNotification = httpsCallable<
     ReceiveNotificationType,

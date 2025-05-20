@@ -29,7 +29,7 @@ export function ItemCard(props: PropsInterface) {
                     source={{
                         uri: imageUrl,
                     }}
-                    placeholder={{ blurHash }}
+                    placeholder={{ blurhash: blurHash }}
                 />
             </View>
             <View className="m-0 w-full px-4 pb-0 pt-2">

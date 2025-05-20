@@ -13,7 +13,15 @@ interface PostItemProps {
 
 function PostItem(props: PostItemProps) {
     const { post } = props;
-    const { id, sellerData, caption, tags, imageUrls, blurHashes } = post;
+    const {
+        id,
+        sellerData,
+        caption,
+        tags,
+        imageUrls,
+        blurHashes,
+        dateCreated,
+    } = post;
 
     const router = useRouter();
 
@@ -22,7 +30,7 @@ function PostItem(props: PostItemProps) {
     }
 
     return (
-        <Pressable onPress={() => navigateToViewPost(id)}>
+        <Pressable onPress={() => navigateToViewPost(id)} className="my-3">
             <View className="mb-2 flex flex-col">
                 <PostHeader
                     postId={id}
@@ -30,6 +38,8 @@ function PostItem(props: PostItemProps) {
                     userImageUrl={sellerData.imageUrl ?? ""}
                     caption={caption}
                     tags={tags}
+                    date={dateCreated}
+                    campus={sellerData.campus}
                 />
                 <View className="w-full">
                     <PostItemImages
