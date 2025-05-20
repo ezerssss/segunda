@@ -14,8 +14,7 @@ export default function CatalogueItem(props: Readonly<CatalogueItemProps>) {
 
     return (
         <Card
-            className="max-w-[49%] self-start"
-            style={{ flex: 0.5 }}
+            className="max-w-[49%] flex-1 self-start"
             onPress={() => {
                 console.log(item.id);
             }}
