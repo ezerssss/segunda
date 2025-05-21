@@ -24,7 +24,7 @@
         },
         "preview": {
             "android": {
-                "gradleCommand": ":app:assembleDebug",
+                "gradleCommand": ":app:assembleRelease",
                 "credentialsSource": "remote",
                 "buildType": "apk",
                 "developmentClient": "false"
