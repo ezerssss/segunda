@@ -26,7 +26,8 @@
             "android": {
                 "gradleCommand": ":app:assembleDebug",
                 "credentialsSource": "remote",
-                "buildType": "apk"
+                "buildType": "apk",
+                "developmentClient": "false"
             },
             "env": {
                 "GOOGLE_SERVICES_JSON": "{{GOOGLE_SERVICES_JSON}}"
