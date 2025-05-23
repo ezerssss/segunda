@@ -21,6 +21,17 @@
             "env": {
                 "GOOGLE_SERVICES_JSON": "{{GOOGLE_SERVICES_JSON}}"
             }
+        },
+        "preview": {
+            "developmentClient": "false",
+            "distribution": "internal",
+            "android": {
+                "credentialsSource": "remote",
+                "buildType": "apk"
+            },
+            "env": {
+                "GOOGLE_SERVICES_JSON": "{{GOOGLE_SERVICES_JSON}}"
+            }
         }
     },
     "submit": {
