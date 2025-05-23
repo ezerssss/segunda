@@ -23,11 +23,11 @@
             }
         },
         "preview": {
+            "developmentClient": "false",
+            "distribution": "internal",
             "android": {
-                "gradleCommand": ":app:assembleRelease",
                 "credentialsSource": "remote",
-                "buildType": "apk",
-                "developmentClient": "false"
+                "buildType": "apk"
             },
             "env": {
                 "GOOGLE_SERVICES_JSON": "{{GOOGLE_SERVICES_JSON}}"
