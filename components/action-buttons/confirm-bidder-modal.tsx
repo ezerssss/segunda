@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { confirmBid } from "@/firebase/functions";
 import { ConfirmBidRequestType } from "@/types/bidder";
 import { router } from "expo-router";
+import { useBidderModalStore } from "@/states/modal";
 
 interface ConfirmBidderModalProps {
     setIsModalVisible: Dispatch<SetStateAction<boolean>>;
@@ -27,6 +28,7 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
         itemID,
     } = props;
     const [isLoading, setIsLoading] = useState(false);
+    const { hideSellersModal } = useBidderModalStore();
 
     async function handleApproveBidder() {
         setIsLoading(true);
@@ -37,6 +39,7 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
             } as ConfirmBidRequestType;
             const res = await confirmBid(data);
             setIsModalVisible(false);
+            hideSellersModal();
             router.push(`/(protected)/chat/${res.data.chatId}`);
         } catch (e) {
             console.error(e);
@@ -69,9 +72,9 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
                     />
                 </View>
                 <Text className="my-5">PHP {bidderPrice ?? ""}</Text>
-                <View className="w-1/2 flex-row justify-between">
+                <View className="flex-row justify-between gap-2">
                     <Button
-                        className="mx-1 flex-1"
+                        className="mx-1 min-w-20"
                         onPress={handleApproveBidder}
                         style={{
                             backgroundColor: "#E1306C",
@@ -91,7 +94,7 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
                         {isLoading ? "" : "Confirm"}
                     </Button>
                     <Button
-                        className="mx-1 flex-1"
+                        className="mx-1 min-w-20"
                         onPress={() => setIsModalVisible(false)}
                         size="small"
                         appearance="filled"

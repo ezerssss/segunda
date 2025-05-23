@@ -14,7 +14,7 @@ import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
 
 function SellerViewBiddersModal() {
     const { user } = useUserStore();
-    const { item, bidders, setItem, setShowSellersModal } =
+    const { item, bidders, setItem, setShowSellersModal, setHideSellersModal } =
         useBidderModalStore();
 
     const hasConfirmedBidder = item?.confirmedBidder !== null;
@@ -29,6 +29,7 @@ function SellerViewBiddersModal() {
     useEffect(() => {
         if (!actionSheetRef.current) return;
         setShowSellersModal(actionSheetRef.current.show);
+        setHideSellersModal(actionSheetRef.current.hide);
     }, [actionSheetRef]);
 
     function handleApprove(bidder: BidType) {
