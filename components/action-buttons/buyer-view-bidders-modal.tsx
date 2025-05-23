@@ -149,13 +149,12 @@ function BuyerViewBiddersModal() {
                                 )}
                             />
                             <Button
-                                className="mx-1 w-32"
+                                className="mx-1"
                                 onPress={handleSubmit(setConfirmModalParams)}
                                 style={{
                                     backgroundColor: "#E1306C",
                                     borderWidth: 0,
                                 }}
-                                size="small"
                                 appearance="filled"
                                 accessoryLeft={
                                     isLoading ? (
@@ -164,6 +163,7 @@ function BuyerViewBiddersModal() {
                                         <Icon name="shopping-bag-outline" />
                                     )
                                 }
+                                size="small"
                                 disabled={hasConfirmedBidder || isLoading}
                             >
                                 {isLoading ? "" : "Steal"}

@@ -36,9 +36,9 @@ function ConfirmBuyActionModal(props: Readonly<ConfirmBuyActionModalProps>) {
                 <Text category="h4" className="my-5 text-center">
                     Do you really want to confirm this action?
                 </Text>
-                <View className="w-1/2 flex-row justify-between">
+                <View className="flex-row justify-between gap-2">
                     <Button
-                        className="mx-1 flex-1"
+                        className="mx-1 min-w-20"
                         onPress={handleYes}
                         style={{
                             backgroundColor: isSteal
@@ -52,7 +52,7 @@ function ConfirmBuyActionModal(props: Readonly<ConfirmBuyActionModalProps>) {
                         Confirm
                     </Button>
                     <Button
-                        className="mx-1 flex-1"
+                        className="mx-1 min-w-20"
                         onPress={() => setIsModalVisible(false)}
                         size="small"
                         appearance="filled"
