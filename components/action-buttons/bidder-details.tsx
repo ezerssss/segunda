@@ -27,7 +27,7 @@ function BidderDetails(props: Readonly<BidderDetailsProps>) {
         <View className="flex-row items-center">
             <Avatar source={{ uri: imgURI }} size="large" />
             <View className="ml-3 flex-col">
-                <Text category="h5">₱ {bid}</Text>
+                <Text category="h5">₱{bid}</Text>
                 <Text category="s1">{name}</Text>
                 <Text category="s2">{formattedDate}</Text>
             </View>
