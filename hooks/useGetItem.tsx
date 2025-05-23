@@ -1,12 +1,12 @@
 import { useUserStore } from "@/states/user";
-import { ItemFormType } from "@/types/item";
+import { EditItemRequestType } from "@/types/item";
 import { doc, getDoc } from "@react-native-firebase/firestore";
 import { useEffect, useState } from "react";
 import { itemsCollectionRef } from "@/constants/collections";
 
 export default function useManageItems(itemId?: string) {
     const { user } = useUserStore();
-    const [item, setItem] = useState<ItemFormType>();
+    const [item, setItem] = useState<EditItemRequestType>();
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -23,7 +23,7 @@ export default function useManageItems(itemId?: string) {
             const itemSnap = await getDoc(itemRef);
 
             if (itemSnap.exists) {
-                setItem(itemSnap.data() as ItemFormType);
+                setItem(itemSnap.data() as EditItemRequestType);
             }
         } catch (error) {
             console.error(error);
