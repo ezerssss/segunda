@@ -1,52 +1,48 @@
 import CatalogueItem from "@/components/search-items/catalogue-item";
-import { ItemType } from "@/types/item";
 import { FlatList, View } from "react-native";
+import { InstantSearch, useInfiniteHits } from "react-instantsearch-core";
+import { ALGOLIA_INDEX_NAME } from "@/constants/algolia";
+import { searchClient } from "@/algolia";
+import { ItemType } from "@/types/item";
 
-export default function Catalogue() {
-    const mockItemsData: ItemType[] = [];
-    for (let i = 0; i < 9; i++)
-        mockItemsData.push({ ...mockItem, id: i.toString() });
+export default function CataloguePage() {
     return (
         <View className="flex-1">
-            <FlatList
-                data={mockItemsData}
-                keyExtractor={(item) => item.id}
-                numColumns={2}
-                contentContainerClassName="flex justify-start gap-2 p-2"
-                columnWrapperStyle={{
-                    justifyContent: "space-between",
-                    gap: 4,
+            <InstantSearch
+                searchClient={searchClient}
+                indexName={ALGOLIA_INDEX_NAME}
+                future={{
+                    preserveSharedStateOnUnmount: true,
                 }}
-                renderItem={({ item, index }) => {
-                    return <CatalogueItem key={item.id} item={item} />;
-                }}
-            />
+            >
+                <CatalogueList />
+            </InstantSearch>
         </View>
     );
 }
 
-const mockItem: ItemType = {
-    blurHash: "ULF=w8NLSg9E_NMwbbozIpITV@xux^ozMwkC",
-    confirmedBidder: null,
-    dateCreated: "2025-05-17T11:34:50.017Z",
-    dateUpdated: "2025-05-17T11:41:24.782Z",
-    description: "For hs projects",
-    id: "wJUfZSgmHUEcGYD1yIOl",
-    imageUrl: "https://picsum.photos/300",
-    index: 0,
-    isDeleted: false,
-    miner: null,
-    name: "Chips Packets",
-    postId: "5EW84BiH9zzBpsGrySxw",
-    price: 10,
-    sellerData: {
-        campus: "Miagao Campus",
-        email: "jrolana@up.edu.ph",
-        imageUrl:
-            "https://lh3.googleusercontent.com/a/ACg8ocKJKCt1ikqlpCr15YedT8xGZPovZkLt_Y-RMCNevAug-bdKHbI=s96-c",
-        name: "Jhoanna Olana",
-        isSetup: true,
-    },
-    sellerId: "qMf5HlRlg4NZmNnBssa78zwozmq1",
-    tags: ["Clothes", "Shoes"],
-};
+function CatalogueList() {
+    const { items, isLastPage, showMore } = useInfiniteHits();
+    const fetchedItems = items as unknown as ItemType[];
+
+    return (
+        <FlatList
+            data={fetchedItems}
+            keyExtractor={(item) => item.id}
+            numColumns={2}
+            contentContainerClassName="flex justify-start gap-2 p-2"
+            columnWrapperStyle={{
+                justifyContent: "space-between",
+                gap: 4,
+            }}
+            onEndReached={() => {
+                if (!isLastPage) {
+                    showMore();
+                }
+            }}
+            renderItem={({ item }) => {
+                return <CatalogueItem key={item.id} item={item} />;
+            }}
+        />
+    );
+}

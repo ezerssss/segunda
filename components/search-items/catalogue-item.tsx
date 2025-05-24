@@ -3,21 +3,25 @@ import { Card, Text } from "@ui-kitten/components";
 import { Image } from "expo-image";
 import { View } from "react-native";
 import { TruncatedText } from "../truncated-text";
+import { memo } from "react";
+import { router } from "expo-router";
 
 interface CatalogueItemProps {
     item: ItemType;
 }
 
-export default function CatalogueItem(props: Readonly<CatalogueItemProps>) {
+function CatalogueItem(props: Readonly<CatalogueItemProps>) {
     const { item } = props;
-    const { name, price, description, imageUrl, blurHash } = item;
+    const { name, price, description, imageUrl, blurHash, postId } = item;
+
+    function navigateToPost() {
+        router.push(`/(protected)/view-post/${postId}`);
+    }
 
     return (
         <Card
             className="max-w-[49%] flex-1 self-start"
-            onPress={() => {
-                console.log(item.id);
-            }}
+            onPress={navigateToPost}
             header={
                 <Image
                     source={{ uri: imageUrl }}
@@ -29,7 +33,7 @@ export default function CatalogueItem(props: Readonly<CatalogueItemProps>) {
             }
         >
             <View className="w-full px-2">
-                <Text category="h6">PHP{price}</Text>
+                <Text category="h6">₱{price}</Text>
                 <Text category="s1" numberOfLines={1} ellipsizeMode="tail">
                     {name}
                 </Text>
@@ -38,3 +42,5 @@ export default function CatalogueItem(props: Readonly<CatalogueItemProps>) {
         </Card>
     );
 }
+
+export default memo(CatalogueItem);
