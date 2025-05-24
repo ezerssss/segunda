@@ -28,6 +28,7 @@ export default function Catalogue() {
 const mockItem: ItemType = {
     blurHash: "ULF=w8NLSg9E_NMwbbozIpITV@xux^ozMwkC",
     confirmedBidder: null,
+    isSold: false,
     dateCreated: "2025-05-17T11:34:50.017Z",
     dateUpdated: "2025-05-17T11:41:24.782Z",
     description: "For hs projects",

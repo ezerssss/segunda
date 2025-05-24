@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { BidSchema } from "./bidder";
 import { UserPublicDataSchema } from "./user";
-import { PostTagsEnum } from "../enums/post";
+import { PostTagsEnum } from "@/enums/post";
 
 export const ItemSchema = z.object({
     id: z.string().min(1),
@@ -56,17 +56,18 @@ export const ItemFormSchema = ItemSchema.omit({
     dateUpdated: true,
     isDeleted: true,
 }).extend({
-    price: z.coerce.number().nonnegative(),
+    price: z.coerce.number().nonnegative("Price must be nonnegative."),
+    imageUrl: z.string().min(1, { message: "Item image is required." }),
 });
 export type ItemFormType = z.infer<typeof ItemFormSchema>;
-
-export const DeleteItemRequestSchema = z.object({
-    itemId: z.string().min(1),
-});
-export type DeleteItemRequestType = z.infer<typeof DeleteItemRequestSchema>;
 
 export const EditItemRequestSchema = ItemFormSchema.extend({
     id: z.string().min(1),
     imageUrl: z.string().url(),
 }).omit({ index: true });
 export type EditItemRequestType = z.infer<typeof EditItemRequestSchema>;
+
+export const DeleteItemRequestSchema = z.object({
+    itemId: z.string().min(1),
+});
+export type DeleteItemRequestType = z.infer<typeof DeleteItemRequestSchema>;
