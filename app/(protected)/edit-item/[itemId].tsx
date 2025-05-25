@@ -14,13 +14,15 @@ import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { editItem } from "@/firebase/functions";
+import useUploadImage from "@/hooks/useUploadImage";
+import { ITEM_IMAGES_FOLDER } from "@/constants/storage";
 
 export default function EditItemPage() {
     const { itemId } = useLocalSearchParams<{ itemId: string }>();
     const { item, isLoading } = useGetItem(itemId);
     const [isEditing, setIsEditing] = useState(false);
-    const [editProgress, setEditProgress] = useState(0);
     const router = useRouter();
+    const { uploadImages, progress } = useUploadImage();
 
     const {
         control,
@@ -91,10 +93,20 @@ export default function EditItemPage() {
 
     async function onSave(data: EditItemRequestType) {
         setIsEditing(true);
-        setEditProgress(1);
         try {
+            let finalUrl = data.imageUrl;
+
+            if (data.imageUrl.startsWith("file://")) {
+                const [uploadedUrl] = await uploadImages(
+                    [data.imageUrl],
+                    ITEM_IMAGES_FOLDER,
+                );
+                finalUrl = uploadedUrl;
+            }
+
             const updatedItem: EditItemRequestType = {
                 ...data,
+                imageUrl: finalUrl,
                 id: itemId,
             };
             await editItem(updatedItem);
@@ -105,14 +117,13 @@ export default function EditItemPage() {
             console.error("Updating item failed: ", error);
         } finally {
             setIsEditing(false);
-            setEditProgress(0);
         }
     }
 
     return (
         <>
             <ScrollView showsVerticalScrollIndicator={false}>
-                {isEditing && <ProgressBar progress={editProgress} />}
+                {isEditing && <ProgressBar progress={progress} />}
                 <View className="p-2 px-4">
                     <View className="flex-row items-center justify-between py-4">
                         <View className="flex-row items-center">
