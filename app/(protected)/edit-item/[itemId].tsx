@@ -132,11 +132,7 @@ export default function EditItemPage() {
                 <View className="p-2 px-4">
                     <View className="flex-row items-center justify-between py-4">
                         <View className="flex-row items-center">
-                            <Pressable
-                                onPress={() =>
-                                    router.push("/(protected)/(tabs)/my-items")
-                                }
-                            >
+                            <Pressable onPress={() => router.back()}>
                                 <Icon name="arrow-ios-back-outline" />
                             </Pressable>
                             <Text className="mx-4 text-lg">Edit item</Text>
