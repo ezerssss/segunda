@@ -6,9 +6,17 @@ interface PropsInterface {
     text: string;
     color?: string;
     isItemCard?: boolean;
+    maxNumLines?: number;
+    showSeeMore?: boolean;
 }
 export function TruncatedText(props: PropsInterface) {
-    const { text, color = "black", isItemCard = true } = props;
+    const {
+        text,
+        color = "black",
+        isItemCard = true,
+        maxNumLines = 2,
+        showSeeMore = true,
+    } = props;
     const [isExpanded, setIsExpanded] = useState(false);
     const [numLines, setNumLines] = useState(0);
 
@@ -27,13 +35,13 @@ export function TruncatedText(props: PropsInterface) {
             <Text
                 className={`text-${color}`}
                 onTextLayout={handleTextLayout}
-                numberOfLines={isExpanded ? undefined : 2}
+                numberOfLines={isExpanded ? undefined : maxNumLines}
                 ellipsizeMode="clip"
                 category={isItemCard ? "c1" : "s1"}
             >
                 {text}
             </Text>
-            {!isExpanded && numLines > 2 && (
+            {!isExpanded && numLines > maxNumLines && showSeeMore && (
                 <TouchableOpacity onPress={toggleExpanded}>
                     <Text
                         className={`text-${seeMoreColor}`}

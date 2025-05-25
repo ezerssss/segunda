@@ -1,77 +1,34 @@
-import {
-    View,
-    Keyboard,
-    TouchableWithoutFeedback,
-    FlatList,
-} from "react-native";
+import { View, Keyboard, TouchableWithoutFeedback } from "react-native";
 import SearchBar from "@/components/search-items/search-bar";
-import React, { useEffect, useState } from "react";
-import { ItemType } from "@/types/item";
-import CatalogueItem from "@/components/search-items/catalogue-item";
-import NoSearchResults from "@/components/search-items/no-search-results";
+import React, { useRef } from "react";
+import { Configure, InstantSearch } from "react-instantsearch-core";
+import { ALGOLIA_INDEX_NAME } from "@/constants/algolia";
+import { searchClient } from "@/algolia";
+import SearchResults from "@/components/search-items/results";
+import { FlatList } from "react-native-gesture-handler";
 
-export default function SearchItems() {
-    const [searchQuery, setSearchQuery] = useState("");
+export default function SearchItemsPage() {
+    const listRef = useRef<FlatList>(null);
 
-    const [mockItemsData, setMockItemsData] = useState<ItemType[]>([]);
-
-    useEffect(() => {
-        const tempArr: ItemType[] = [];
-        for (let index = 0; index < searchQuery.length; index++) {
-            tempArr.push({ ...mockItem, id: index.toString() });
-        }
-        setMockItemsData(tempArr);
-    }, [searchQuery]);
+    function scrollToTop() {
+        listRef.current?.scrollToOffset({ animated: false, offset: 0 });
+    }
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View className="flex-1">
-                <SearchBar
-                    searchQuery={searchQuery}
-                    setSearchQuery={setSearchQuery}
-                />
-                {mockItemsData.length === 0 && <NoSearchResults />}
-                <FlatList
-                    data={mockItemsData}
-                    keyExtractor={(item) => item.id}
-                    numColumns={2}
-                    contentContainerClassName="flex justify-start gap-2 p-2"
-                    columnWrapperStyle={{
-                        justifyContent: "space-between",
-                        gap: 4,
+                <InstantSearch
+                    searchClient={searchClient}
+                    indexName={ALGOLIA_INDEX_NAME}
+                    future={{
+                        preserveSharedStateOnUnmount: true,
                     }}
-                    renderItem={({ item, index }) => {
-                        return <CatalogueItem key={item.id} item={item} />;
-                    }}
-                />
+                >
+                    <Configure filters="isDeleted:false" />
+                    <SearchBar onChange={scrollToTop} />
+                    <SearchResults listRef={listRef} />
+                </InstantSearch>
             </View>
         </TouchableWithoutFeedback>
     );
 }
-
-const mockItem: ItemType = {
-    blurHash: "ULF=w8NLSg9E_NMwbbozIpITV@xux^ozMwkC",
-    confirmedBidder: null,
-    isSold: false,
-    dateCreated: "2025-05-17T11:34:50.017Z",
-    dateUpdated: "2025-05-17T11:41:24.782Z",
-    description: "For hs projects",
-    id: "wJUfZSgmHUEcGYD1yIOl",
-    imageUrl: "https://picsum.photos/300",
-    index: 0,
-    isDeleted: false,
-    miner: null,
-    name: "Chips Packets",
-    postId: "5EW84BiH9zzBpsGrySxw",
-    price: 10,
-    sellerData: {
-        campus: "Miagao Campus",
-        email: "jrolana@up.edu.ph",
-        imageUrl:
-            "https://lh3.googleusercontent.com/a/ACg8ocKJKCt1ikqlpCr15YedT8xGZPovZkLt_Y-RMCNevAug-bdKHbI=s96-c",
-        name: "Jhoanna Olana",
-        isSetup: true,
-    },
-    sellerId: "qMf5HlRlg4NZmNnBssa78zwozmq1",
-    tags: ["Clothes", "Shoes"],
-};
