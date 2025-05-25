@@ -10,11 +10,12 @@ interface SellerActionButtonProp {
 
 function SellerActionButton(props: Readonly<SellerActionButtonProp>) {
     const { item } = props;
-    const { setItem, showSellersModal } = useBidderModalStore();
+    const { setItem, showSellersModal, setBidders } = useBidderModalStore();
     const { getBidders, isModalInit } = useGetBidders();
 
     async function handleShowModal() {
         setItem(item);
+        setBidders([]);
         await getBidders(item);
         showSellersModal();
     }

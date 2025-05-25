@@ -10,14 +10,15 @@ interface BuyerActionButtonsProps {
 
 function StealerActionButtons(props: Readonly<BuyerActionButtonsProps>) {
     const { item } = props;
-    const { setItem, showBuyersModal } = useBidderModalStore();
+    const { setItem, showBuyersModal, setBidders } = useBidderModalStore();
+    const { getBidders, isModalInit } = useGetBidders();
 
     async function handleShowBidders() {
         setItem(item);
+        setBidders([]);
         await getBidders(item);
         showBuyersModal();
     }
-    const { getBidders, isModalInit } = useGetBidders();
 
     return (
         <>

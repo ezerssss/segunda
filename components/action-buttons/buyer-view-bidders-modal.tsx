@@ -38,7 +38,6 @@ function BuyerViewBiddersModal() {
         handleSubmit,
         formState: { errors },
         control,
-        getValues,
         reset,
     } = useForm<BidRequestType>({
         resolver: zodResolver(BidRequestSchema),
@@ -75,7 +74,7 @@ function BuyerViewBiddersModal() {
         if (!item) return;
         reset({
             itemId: item.id,
-            price: getValues("price") ?? undefined,
+            price: undefined,
         });
     }, [item]);
 
