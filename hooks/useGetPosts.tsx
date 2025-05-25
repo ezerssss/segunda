@@ -10,6 +10,7 @@ import {
     orderBy,
     query,
     startAfter,
+    where,
 } from "@react-native-firebase/firestore";
 import { useEffect, useState } from "react";
 
@@ -29,6 +30,7 @@ export default function useGetPosts() {
         setIsLoading(true);
         const postsQuery = query(
             postsCollectionRef,
+            where("isDeleted", "==", false),
             orderBy("dateUpdated", "desc"),
             limit(MAX_POSTS_PER_LOAD),
         );

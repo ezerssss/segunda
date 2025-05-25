@@ -23,6 +23,7 @@ export function useGetPostItems(postId: string) {
             query(
                 itemsCollectionRef,
                 where("postId", "==", postId),
+                where("isDeleted", "==", false),
                 orderBy("index"),
             ),
             (itemsQuerySnapshot: FirebaseFirestoreTypes.QuerySnapshot) => {

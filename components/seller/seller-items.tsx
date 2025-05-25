@@ -1,4 +1,4 @@
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, ToastAndroid } from "react-native";
 import { Text, OverflowMenu, MenuItem, IndexPath } from "@ui-kitten/components";
 import { ItemType } from "@/types/item";
 import { Image } from "expo-image";
@@ -6,6 +6,8 @@ import { Entypo } from "@expo/vector-icons";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import ConfirmCancelModal from "../confirm-cancel-modal";
+import { deleteItem } from "@/firebase/functions";
+import { DeleteItemRequestType } from "@/types/item";
 
 interface SellerItemProps {
     sellerItem: ItemType;
@@ -28,6 +30,18 @@ export default function SellerItem(props: SellerItemProps) {
         }
         setSelectedIndex(index);
         setIsMenuVisible(false);
+    }
+
+    async function handleDeleteItem(data: DeleteItemRequestType) {
+        try {
+            await deleteItem(data);
+            ToastAndroid.show("Item deleted.", ToastAndroid.SHORT);
+        } catch (error) {
+            console.error("Failed deleting item: ", error);
+        } finally {
+            setIsModalVisible(false);
+            setSelectedIndex(undefined);
+        }
     }
 
     return (
@@ -93,7 +107,9 @@ export default function SellerItem(props: SellerItemProps) {
                 confirmButtonText="Delete"
                 cancelButtonText="Cancel"
                 isDanger={true}
-                onConfirm={() => setIsModalVisible(false)}
+                onConfirm={() =>
+                    handleDeleteItem({ itemId: id } as DeleteItemRequestType)
+                }
             />
         </View>
     );

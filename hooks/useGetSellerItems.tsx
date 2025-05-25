@@ -22,6 +22,7 @@ export default function useGetSellerItems() {
         const itemQuery = query(
             itemsCollectionRef,
             where("sellerId", "==", sellerId),
+            where("isDeleted", "==", false),
             orderBy("dateUpdated", "desc"),
             orderBy("postId"),
         );

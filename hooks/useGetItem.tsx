@@ -4,7 +4,7 @@ import { doc, getDoc } from "@react-native-firebase/firestore";
 import { useEffect, useState } from "react";
 import { itemsCollectionRef } from "@/constants/collections";
 
-export default function useManageItems(itemId?: string) {
+export default function useGetItem(itemId?: string) {
     const { user } = useUserStore();
     const [item, setItem] = useState<ItemFormType>();
     const [isLoading, setIsLoading] = useState(false);
