@@ -7,18 +7,26 @@ import {
 import { ItemType } from "@/types/item";
 import NoSearchResults from "./no-search-results";
 
-export default function SearchResults(props: UseInfiniteHitsProps) {
-    const { items, isLastPage, showMore } = useInfiniteHits(props);
+interface PropsInterface {
+    listRef: React.RefObject<FlatList>;
+}
+
+export default function SearchResults(
+    props: PropsInterface & UseInfiniteHitsProps,
+) {
+    const { listRef, ...infiniteHitProps } = props;
+    const { items, isLastPage, showMore } = useInfiniteHits(infiniteHitProps);
     const fetchedItems = items as unknown as ItemType[];
 
     return (
-        <View className="flex-1">
+        <View className="relative flex-1">
             {items.length === 0 && <NoSearchResults />}
             <FlatList
+                ref={listRef}
                 data={fetchedItems}
                 keyExtractor={(item) => item.id}
                 numColumns={2}
-                contentContainerClassName="flex justify-start gap-2 p-2"
+                contentContainerClassName="flex justify-start gap-2 px-2 pt-2 pb-6"
                 columnWrapperStyle={{
                     justifyContent: "space-between",
                     gap: 4,

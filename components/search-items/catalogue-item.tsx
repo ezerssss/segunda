@@ -2,7 +2,6 @@ import { ItemType } from "@/types/item";
 import { Card, Text } from "@ui-kitten/components";
 import { Image } from "expo-image";
 import { View } from "react-native";
-import { TruncatedText } from "../truncated-text";
 import { memo } from "react";
 import { router } from "expo-router";
 
@@ -37,7 +36,9 @@ function CatalogueItem(props: Readonly<CatalogueItemProps>) {
                 <Text category="s1" numberOfLines={1} ellipsizeMode="tail">
                     {name}
                 </Text>
-                {!!description && <TruncatedText text={description} />}
+                <Text category="c1" numberOfLines={1} ellipsizeMode="tail">
+                    {description}
+                </Text>
             </View>
         </Card>
     );

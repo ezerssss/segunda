@@ -4,14 +4,24 @@ import { useRef, useState } from "react";
 import { Pressable, View } from "react-native";
 import { useSearchBox, UseSearchBoxProps } from "react-instantsearch-core";
 
-export default function SearchBar(props: UseSearchBoxProps) {
-    const { query, refine } = useSearchBox(props);
+interface PropsInterface {
+    onChange: () => void;
+}
+
+export default function SearchBar(props: PropsInterface & UseSearchBoxProps) {
+    const { onChange, ...searchBoxProps } = props;
+    const { query, refine } = useSearchBox(searchBoxProps);
     const inputRef = useRef<Input>(null);
     const [inputValue, setInputValue] = useState(query);
 
     function setQuery(newQuery: string) {
         setInputValue(newQuery);
         refine(newQuery);
+        onChange();
+    }
+
+    if (query !== inputValue && !inputRef.current?.isFocused()) {
+        setInputValue(query);
     }
 
     return (
