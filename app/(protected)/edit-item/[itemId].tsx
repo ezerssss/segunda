@@ -23,6 +23,7 @@ export default function EditItemPage() {
     const [isEditing, setIsEditing] = useState(false);
     const router = useRouter();
     const { uploadImages, progress } = useUploadImage();
+    const [originalImageUrl, setOriginalImageUrl] = useState("");
 
     const {
         control,
@@ -49,6 +50,7 @@ export default function EditItemPage() {
                 description: item.description,
                 imageUrl: item.imageUrl ?? "",
             });
+            setOriginalImageUrl(item.imageUrl ?? "");
         }
     }, [item, reset]);
 
@@ -96,7 +98,10 @@ export default function EditItemPage() {
         try {
             let finalUrl = data.imageUrl;
 
-            if (data.imageUrl.startsWith("file://")) {
+            const isChanged = data.imageUrl !== originalImageUrl;
+            const isNewImage = data.imageUrl.startsWith("file://");
+
+            if (isChanged && isNewImage) {
                 const [uploadedUrl] = await uploadImages(
                     [data.imageUrl],
                     ITEM_IMAGES_FOLDER,

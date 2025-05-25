@@ -54,7 +54,6 @@ export default function SellerFormPage() {
 
     async function onSubmit(data: PostFormType) {
         setIsLoading(true);
-
         try {
             const uris = data.items.map((item) => item.imageUrl);
             const urls = await uploadImages(uris, ITEM_IMAGES_FOLDER);
