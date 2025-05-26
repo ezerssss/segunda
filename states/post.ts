@@ -6,9 +6,7 @@ interface PostStateInterface {
     postItems: ItemType[];
     setPostItems: (data: ItemType[]) => void;
     post: PostType | null;
-    setPost: (data: PostType) => void;
-    scrollPosition: number;
-    setScrollPosition: (data: number) => void;
+    setPost: (data: PostType | null) => void;
 }
 
 export const usePostStore = create<PostStateInterface>((set) => ({
@@ -16,6 +14,4 @@ export const usePostStore = create<PostStateInterface>((set) => ({
     setPostItems: (data) => set(() => ({ postItems: data })),
     post: null,
     setPost: (data) => set(() => ({ post: data })),
-    scrollPosition: 0,
-    setScrollPosition: (data) => set(() => ({ scrollPosition: data })),
 }));

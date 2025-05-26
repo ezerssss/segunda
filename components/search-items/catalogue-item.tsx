@@ -14,7 +14,7 @@ function CatalogueItem(props: Readonly<CatalogueItemProps>) {
     const { name, price, description, imageUrl, blurHash, postId } = item;
 
     function navigateToPost() {
-        router.push(`/(protected)/view-post/${postId}`);
+        router.push(`/(protected)/view-post/${postId}?index=${item.index}`);
     }
 
     return (

@@ -10,10 +10,11 @@ import ActionButtons from "../action-buttons/action-buttons";
 interface PropsInterface {
     item: ItemType;
     color?: string;
+    setItemHeight: (index: number, height: number) => void;
 }
 
 export function ItemCard(props: PropsInterface) {
-    const { item, color = "black" } = props;
+    const { item, color = "black", setItemHeight } = props;
     const { name, price, description, imageUrl, blurHash, index } = item;
     const router = useRouter();
 
@@ -22,7 +23,12 @@ export function ItemCard(props: PropsInterface) {
     }
 
     return (
-        <Pressable onPress={() => navigateToFullScreen(index)}>
+        <Pressable
+            onPress={() => navigateToFullScreen(index)}
+            onLayout={(event) =>
+                setItemHeight(item.index, event.nativeEvent.layout.height)
+            }
+        >
             <View className="aspect-square w-full items-center justify-center overflow-hidden">
                 <Image
                     className="h-full w-full"

@@ -36,7 +36,9 @@ function SystemGeneratedMessage(props: PropsInterface) {
             return;
         }
 
-        router.push(`/(protected)/view-post/${item.postId}`);
+        router.push(
+            `/(protected)/view-post/${item.postId}?index=${item.index}`,
+        );
     }
 
     async function handleCancelBid() {

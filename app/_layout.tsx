@@ -53,6 +53,7 @@ export default function RootLayout() {
                         screenOptions={{
                             headerShown: false,
                             contentStyle: { backgroundColor: "white" },
+                            animation: "none",
                         }}
                     />
                     <View className="flex items-center align-bottom">
