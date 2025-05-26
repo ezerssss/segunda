@@ -22,9 +22,11 @@ import { ITEM_IMAGES_FOLDER } from "@/constants/storage";
 import UserHeader from "@/components/user/user-header";
 import { useUserStore } from "@/states/user";
 import { router } from "expo-router";
+import useResetStore from "@/hooks/useResetStore";
 
 export default function SellerFormPage() {
     const { user } = useUserStore();
+    const { resetPostStore } = useResetStore();
     const [isLoading, setIsLoading] = useState(false);
     const { uploadImages, progress } = useUploadImage();
 
@@ -68,6 +70,7 @@ export default function SellerFormPage() {
             const res = await createPost(post);
             ToastAndroid.show("Your post was shared.", ToastAndroid.SHORT);
             reset();
+            resetPostStore();
             router.replace(`/(protected)/view-post/${res.data.postId}`);
         } catch (error) {
             console.error("Post Failed:", error);

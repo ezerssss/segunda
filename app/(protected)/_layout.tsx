@@ -2,12 +2,10 @@ import { Redirect, Stack } from "expo-router";
 import { useUserStore } from "@/states/user";
 import { ActivityIndicator, View } from "react-native";
 import useGetChatNotif from "@/hooks/useGetChatNotif";
-import useResetStore from "@/hooks/useResetStore";
 
 export default function AppLayout() {
     const { user, isUserLoading } = useUserStore();
     useGetChatNotif();
-    useResetStore();
 
     if (isUserLoading) {
         return (
@@ -26,7 +24,7 @@ export default function AppLayout() {
             screenOptions={{
                 headerShown: false,
                 contentStyle: { backgroundColor: "white" },
-                animation: "none",
+                animation: "slide_from_right",
             }}
         />
     );

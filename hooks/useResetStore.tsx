@@ -1,14 +1,14 @@
 import { usePostStore } from "@/states/post";
-import { useEffect } from "react";
 
 function useResetStore() {
-    const { setPost, setPostItems, setScrollPosition } = usePostStore();
+    const { setPost, setPostItems } = usePostStore();
 
-    useEffect(() => {
+    function resetPostStore() {
         setPost(null);
         setPostItems([]);
-        setScrollPosition(0);
-    }, []);
+    }
+
+    return { resetPostStore };
 }
 
 export default useResetStore;
