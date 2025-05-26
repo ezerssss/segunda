@@ -7,9 +7,9 @@ import { usePostStore } from "@/states/post";
 export default function FullScreenPage() {
     const { width } = Dimensions.get("window");
 
-    const { index } = useLocalSearchParams();
+    const { index } = useLocalSearchParams<{ index: string }>();
     const { postItems, post } = usePostStore();
-    const initialIndex = parseInt(index[0], 10);
+    const initialIndex = parseInt(index, 10);
 
     if (!post || postItems.length === 0) {
         return (

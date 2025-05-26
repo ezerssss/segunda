@@ -5,7 +5,8 @@ import { Divider } from "@ui-kitten/components";
 import PostItemImages from "./post-images";
 import PostHearts from "./post-hearts";
 import { memo } from "react";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
+import useResetStore from "@/hooks/useResetStore";
 
 interface PostItemProps {
     post: PostType;
@@ -23,14 +24,15 @@ function PostItem(props: PostItemProps) {
         dateCreated,
     } = post;
 
-    const router = useRouter();
+    const { resetPostStore } = useResetStore();
 
-    function navigateToViewPost(postId: string) {
-        router.push(`/(protected)/view-post/${postId}`);
+    function navigateToViewPost() {
+        resetPostStore();
+        router.push(`/(protected)/view-post/${id}`);
     }
 
     return (
-        <Pressable onPress={() => navigateToViewPost(id)} className="my-3">
+        <Pressable onPress={navigateToViewPost} className="my-3">
             <View className="mb-2 flex flex-col">
                 <PostHeader
                     postId={id}
@@ -43,6 +45,7 @@ function PostItem(props: PostItemProps) {
                 />
                 <View className="w-full">
                     <PostItemImages
+                        postId={id}
                         imageUrls={imageUrls}
                         blurHashes={blurHashes}
                     />

@@ -8,6 +8,7 @@ import { memo, useState } from "react";
 import { View, TouchableOpacity, ToastAndroid } from "react-native";
 import { cancelBid } from "@/firebase/functions";
 import ConfirmCancelModal from "@/components/confirm-cancel-modal";
+import useResetStore from "@/hooks/useResetStore";
 
 interface PropsInterface {
     date: string;
@@ -19,6 +20,7 @@ function SystemGeneratedMessage(props: PropsInterface) {
     const { showActionButton, item } = systemGeneratedMessage;
 
     const { user } = useUserStore();
+    const { resetPostStore } = useResetStore();
     const theme = useTheme();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +38,10 @@ function SystemGeneratedMessage(props: PropsInterface) {
             return;
         }
 
-        router.push(`/(protected)/view-post/${item.postId}`);
+        resetPostStore();
+        router.push(
+            `/(protected)/view-post/${item.postId}?index=${item.index}`,
+        );
     }
 
     async function handleCancelBid() {

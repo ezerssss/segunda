@@ -4,6 +4,7 @@ import { Image } from "expo-image";
 import { View } from "react-native";
 import { memo } from "react";
 import { router } from "expo-router";
+import useResetStore from "@/hooks/useResetStore";
 
 interface CatalogueItemProps {
     item: ItemType;
@@ -12,9 +13,11 @@ interface CatalogueItemProps {
 function CatalogueItem(props: Readonly<CatalogueItemProps>) {
     const { item } = props;
     const { name, price, description, imageUrl, blurHash, postId } = item;
+    const { resetPostStore } = useResetStore();
 
     function navigateToPost() {
-        router.push(`/(protected)/view-post/${postId}`);
+        resetPostStore();
+        router.push(`/(protected)/view-post/${postId}?index=${item.index}`);
     }
 
     return (

@@ -4,29 +4,65 @@ import { useLocalSearchParams } from "expo-router";
 import useGetPostItems from "@/hooks/useGetPostItems";
 import useGetPost from "@/hooks/useGetPost";
 import PostHeader from "@/components/post-header";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Divider, Text } from "@ui-kitten/components";
 import SkeletonViewPost from "@/components/skeletons/view-post";
 import { usePostStore } from "@/states/post";
 
 export default function ViewPostPage() {
-    const { postItems, post, scrollPosition, setScrollPosition } =
-        usePostStore();
-    const { postId } = useLocalSearchParams();
+    const { postId, index } = useLocalSearchParams<{
+        postId: string;
+        index?: string;
+    }>();
+    const initialIndex = index ? parseInt(index, 10) : 0;
+
+    const { postItems, post } = usePostStore();
 
     const flatListRef = useRef<FlatList>(null);
+    const [itemHeights, setItemHeights] = useState<Record<number, number>>({});
 
-    function scrollToPreviousPosition() {
-        flatListRef.current?.scrollToOffset({
-            offset: scrollPosition,
-            animated: false,
-        });
+    function handleSetItemHeight(index: number, height: number) {
+        if (index > 3 || index < 0) {
+            return;
+        }
+
+        setItemHeights((prev) => ({ ...prev, [index]: height }));
     }
+
+    useEffect(() => {
+        if (!flatListRef.current) {
+            return;
+        }
+
+        const maxItemHeightsLength = Math.min(postItems.length, 4);
+        if (Object.keys(itemHeights).length < maxItemHeightsLength) {
+            return;
+        }
+
+        const heightsArray = Object.keys(itemHeights).map(
+            (key) => itemHeights[parseInt(key)],
+        );
+        const aboveOffset = heightsArray.reduce(
+            (accumulator, currentValue, index) => {
+                if (index >= initialIndex) {
+                    return accumulator;
+                }
+
+                return accumulator + currentValue;
+            },
+            0,
+        );
+
+        flatListRef.current?.scrollToOffset({
+            offset: aboveOffset,
+            animated: true,
+        });
+    }, [initialIndex, itemHeights, flatListRef, postItems]);
 
     const isPostAlreadyLoaded = post && post.id === postId;
 
-    const { isLoading: postItemsIsLoading } = useGetPostItems(postId as string);
-    const { isLoading: postIsLoading } = useGetPost(postId as string);
+    const { isLoading: postItemsIsLoading } = useGetPostItems(postId);
+    const { isLoading: postIsLoading } = useGetPost(postId);
 
     const isLoading = postIsLoading || postItemsIsLoading;
 
@@ -56,7 +92,10 @@ export default function ViewPostPage() {
             renderItem={({ item }) => {
                 return (
                     <React.Fragment key={item.id}>
-                        <ItemCard item={item} />
+                        <ItemCard
+                            item={item}
+                            setItemHeight={handleSetItemHeight}
+                        />
                         {lastIndex !== item.index && (
                             <Divider className="h-1 flex-1 rounded-lg bg-gray-200" />
                         )}
@@ -75,11 +114,6 @@ export default function ViewPostPage() {
                 />
             }
             contentContainerClassName="bg-white"
-            onScroll={(event) =>
-                setScrollPosition(event.nativeEvent.contentOffset.y)
-            }
-            onLayout={scrollToPreviousPosition}
-            onContentSizeChange={scrollToPreviousPosition}
         />
     );
 }

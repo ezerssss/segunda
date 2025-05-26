@@ -1,13 +1,13 @@
 import { View, TouchableOpacity, ToastAndroid } from "react-native";
 import { Text, OverflowMenu, MenuItem, IndexPath } from "@ui-kitten/components";
-import { ItemType } from "@/types/item";
 import { Image } from "expo-image";
 import { Entypo } from "@expo/vector-icons";
 import { useState } from "react";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import ConfirmCancelModal from "../confirm-cancel-modal";
 import { deleteItem } from "@/firebase/functions";
-import { DeleteItemRequestType } from "@/types/item";
+import { DeleteItemRequestType, ItemType } from "@/types/item";
+import useResetStore from "@/hooks/useResetStore";
 
 interface SellerItemProps {
     sellerItem: ItemType;
@@ -15,12 +15,12 @@ interface SellerItemProps {
 
 export default function SellerItem(props: SellerItemProps) {
     const { sellerItem } = props;
-    const { id, name, imageUrl, price, blurHash, description } = sellerItem;
+    const { id, name, imageUrl, price, blurHash, description, postId, index } =
+        sellerItem;
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState<IndexPath | undefined>();
-
-    const router = useRouter();
+    const { resetPostStore } = useResetStore();
 
     function onMenuTap(index: IndexPath) {
         if (index.row === 0) {
@@ -44,8 +44,13 @@ export default function SellerItem(props: SellerItemProps) {
         }
     }
 
+    function navigateToPost() {
+        resetPostStore();
+        router.push(`/(protected)/view-post/${postId}?index=${index}`);
+    }
+
     return (
-        <View className="flex p-2">
+        <TouchableOpacity className="flex p-2" onPress={navigateToPost}>
             <View className="flex-row">
                 <Image
                     source={{ uri: imageUrl }}
@@ -111,6 +116,6 @@ export default function SellerItem(props: SellerItemProps) {
                     handleDeleteItem({ itemId: id } as DeleteItemRequestType)
                 }
             />
-        </View>
+        </TouchableOpacity>
     );
 }

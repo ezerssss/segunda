@@ -1,4 +1,4 @@
-import { Redirect, Slot } from "expo-router";
+import { Redirect, Stack } from "expo-router";
 import { useUserStore } from "@/states/user";
 import { ActivityIndicator, View } from "react-native";
 import useGetChatNotif from "@/hooks/useGetChatNotif";
@@ -19,5 +19,13 @@ export default function AppLayout() {
         return <Redirect href="/login" />;
     }
 
-    return <Slot />;
+    return (
+        <Stack
+            screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: "white" },
+                animation: "slide_from_right",
+            }}
+        />
+    );
 }
