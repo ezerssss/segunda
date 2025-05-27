@@ -1,41 +1,57 @@
-import { TouchableOpacity } from "react-native";
-import { Text, Divider, Icon } from "@ui-kitten/components";
-import { useRef } from "react";
-import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
+import { View, Pressable } from "react-native";
+import { Icon, Text } from "@ui-kitten/components";
+import { PostTagsEnum } from "@/enums/post";
+import clsx from "clsx";
 
-function Filters() {
-    const actionSheetRef = useRef<ActionSheetRef>(null);
+interface PropsInterface {
+    activeTags: string[];
+    setActiveTags: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+function Filters(props: PropsInterface) {
+    const { activeTags, setActiveTags } = props;
+    const sortedTags = [
+        ...activeTags,
+        ...PostTagsEnum.options.filter((tag) => !activeTags.includes(tag)),
+    ];
+
+    function handleToggle(value: string) {
+        const isSelected = activeTags.includes(value);
+
+        if (isSelected) {
+            setActiveTags((prev) => prev.filter((tag) => tag !== value));
+        } else {
+            setActiveTags((prev) => [...prev, value]);
+        }
+    }
 
     return (
-        <>
-            <TouchableOpacity
-                onPress={() => actionSheetRef.current?.show()}
-                className="items-center self-start rounded-2xl border border-gray-200 px-3 py-1"
-            >
-                <Text className="text-sm">Clothes</Text>
-            </TouchableOpacity>
-            <ActionSheet ref={actionSheetRef} gestureEnabled={true}>
-                <Text
-                    category="h6"
-                    className="border-b border-b-gray-100 p-3 text-center"
+        <View className="flex-row gap-2">
+            {sortedTags.map((tag) => (
+                <Pressable
+                    key={tag}
+                    onPress={() => handleToggle(tag)}
+                    className={clsx(
+                        "flex-row items-center gap-1 self-start rounded-2xl border px-3 py-1",
+                        activeTags.includes(tag)
+                            ? "border-gray-500"
+                            : "border-gray-200",
+                    )}
                 >
-                    Post Options
-                </Text>
-                <TouchableOpacity className="flex flex-row p-5">
-                    <Icon name="flag" fill="red" width={20} height={20} />
-                    <Text category="s1" className="ml-2 text-red-500">
-                        Report
+                    <Text
+                        className={clsx(
+                            "text-sm",
+                            activeTags.includes(tag) && "font-bold",
+                        )}
+                    >
+                        {tag}
                     </Text>
-                </TouchableOpacity>
-                <Divider />
-                <TouchableOpacity
-                    onPress={() => actionSheetRef.current?.hide()}
-                    className="p-5"
-                >
-                    <Text category="s1">Cancel</Text>
-                </TouchableOpacity>
-            </ActionSheet>
-        </>
+                    {activeTags.includes(tag) && (
+                        <Icon name="close" width={15} height={15} />
+                    )}
+                </Pressable>
+            ))}
+        </View>
     );
 }
 

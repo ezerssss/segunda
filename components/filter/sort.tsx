@@ -19,9 +19,21 @@ function SortBy() {
         <>
             <TouchableOpacity
                 onPress={() => actionSheetRef.current?.show()}
-                className="flex-row items-center gap-1 self-start rounded-2xl border border-gray-200 px-3 py-1"
+                className={clsx(
+                    "flex-row items-center gap-1 self-start rounded-2xl border px-3 py-1",
+                    sortBy === "Best match"
+                        ? "border-gray-200"
+                        : "border-gray-500",
+                )}
             >
-                <Text className="text-sm">{sortBy}</Text>
+                <Text
+                    className={clsx(
+                        "text-sm",
+                        sortBy !== "Best match" && "font-bold",
+                    )}
+                >
+                    {sortBy}
+                </Text>
                 <Icon name="arrow-ios-downward" width={15} height={15} />
             </TouchableOpacity>
             <ActionSheet ref={actionSheetRef} gestureEnabled={true}>

@@ -63,6 +63,7 @@ export default function AppLayout() {
                     tabBarShowLabel: false,
                     tabBarIndicatorStyle: { backgroundColor: indicatorColor },
                     sceneStyle: { backgroundColor: "white" },
+                    swipeEnabled: false,
                 }}
             >
                 <TopTabs.Screen

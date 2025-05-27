@@ -4,23 +4,21 @@ import {
     Configure,
     InstantSearch,
     useInfiniteHits,
+    UseInfiniteHitsProps,
 } from "react-instantsearch-core";
 import { ALGOLIA_INDEX_NAME } from "@/constants/algolia";
 import { searchClient } from "@/algolia";
 import { ItemType } from "@/types/item";
 import { Text } from "@ui-kitten/components";
-import Filters from "@/components/filter/filter";
-import SortBy from "@/components/filter/sort";
-import PriceRange from "@/components/filter/price";
+import { useState } from "react";
+import { REQUIRED_FILTER } from "@/constants/search";
+import FiltersAndSorts from "@/components/filter";
 
 export default function CataloguePage() {
+    const [filter, setFilter] = useState(REQUIRED_FILTER);
+
     return (
         <View className="flex-1">
-            <View className="mt-3 flex-row gap-2 px-3">
-                <SortBy />
-                <PriceRange />
-                <Filters />
-            </View>
             <InstantSearch
                 searchClient={searchClient}
                 indexName={ALGOLIA_INDEX_NAME}
@@ -28,15 +26,22 @@ export default function CataloguePage() {
                     preserveSharedStateOnUnmount: true,
                 }}
             >
-                <Configure filters="isDeleted:false AND isSold:false" />
-                <CatalogueList />
+                <Configure filters={filter} />
+                <CatalogueList
+                    onChange={(filterString) => setFilter(filterString)}
+                />
             </InstantSearch>
         </View>
     );
 }
 
-function CatalogueList() {
-    const { items, isLastPage, showMore } = useInfiniteHits();
+interface PropsInterface {
+    onChange: (filterString: string) => void;
+}
+
+function CatalogueList(props: PropsInterface & UseInfiniteHitsProps) {
+    const { onChange, ...infiniteHitProps } = props;
+    const { items, isLastPage, showMore } = useInfiniteHits(infiniteHitProps);
     const fetchedItems = items as unknown as ItemType[];
 
     return (
@@ -51,6 +56,7 @@ function CatalogueList() {
                 keyExtractor={(item) => item.id}
                 numColumns={2}
                 contentContainerClassName="flex justify-start gap-2 px-3 pb-6 pt-3"
+                ListHeaderComponent={<FiltersAndSorts onChange={onChange} />}
                 columnWrapperStyle={{
                     justifyContent: "space-between",
                     gap: 4,

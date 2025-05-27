@@ -4,9 +4,15 @@ import { useRef, useState } from "react";
 import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
 import Slider from "@react-native-community/slider";
 
-function PriceRange() {
-    const [lowerBound, setLowerBound] = useState(0);
-    const [upperBound, setUpperBound] = useState(1000000);
+interface PropsInterface {
+    lowerBound: number;
+    setLowerBound: React.Dispatch<React.SetStateAction<number>>;
+    upperBound: number;
+    setUpperBound: React.Dispatch<React.SetStateAction<number>>;
+}
+
+function PriceRange(props: PropsInterface) {
+    const { lowerBound, setLowerBound, upperBound, setUpperBound } = props;
     const [isChanged, setIsChanged] = useState(false);
     const actionSheetRef = useRef<ActionSheetRef>(null);
 
