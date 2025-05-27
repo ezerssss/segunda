@@ -8,6 +8,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button, Divider, Text } from "@ui-kitten/components";
 import SkeletonViewPost from "@/components/skeletons/view-post";
 import { usePostStore } from "@/states/post";
+import Back from "@/components/back";
 
 export default function ViewPostPage() {
     const { postId, index } = useLocalSearchParams<{
@@ -104,15 +105,18 @@ export default function ViewPostPage() {
                 );
             }}
             ListHeaderComponent={
-                <PostHeader
-                    postId={id}
-                    userName={sellerData.name}
-                    userImageUrl={sellerData.imageUrl ?? ""}
-                    caption={caption}
-                    tags={tags}
-                    date={dateCreated}
-                    campus={sellerData.campus}
-                />
+                <>
+                    <Back title="Post" />
+                    <PostHeader
+                        postId={id}
+                        userName={sellerData.name}
+                        userImageUrl={sellerData.imageUrl ?? ""}
+                        caption={caption}
+                        tags={tags}
+                        date={dateCreated}
+                        campus={sellerData.campus}
+                    />
+                </>
             }
             contentContainerClassName="bg-white"
         />
