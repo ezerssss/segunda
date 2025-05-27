@@ -19,15 +19,15 @@ function UserHeader(props: UserHeaderProps) {
                 ImageComponent={ImageBackground}
                 size="large"
             />
-            <View>
+            <View className="gap-[1px]">
                 <Text category="h6">{name ?? ""}</Text>
                 <View className="flex-row items-center gap-2">
-                    <View className="flex-row items-center gap-[1px] rounded-lg border border-gray-200 px-2 py-1">
+                    <View className="flex-row items-center gap-1 rounded-lg border border-gray-200 px-2 py-1">
                         <Icon
                             name="pin-outline"
                             fill="gray"
-                            width={16}
-                            height={16}
+                            width={14}
+                            height={14}
                         />
                         <Text className="text-xs">{campus}</Text>
                     </View>

@@ -32,7 +32,7 @@ function PostItem(props: PostItemProps) {
     }
 
     return (
-        <Pressable onPress={navigateToViewPost} className="my-3">
+        <Pressable onPress={navigateToViewPost} className="mt-2">
             <View className="mb-2 flex flex-col">
                 <PostHeader
                     postId={id}
@@ -52,7 +52,6 @@ function PostItem(props: PostItemProps) {
                     <PostHearts />
                 </View>
             </View>
-
             <Divider className="h-1 flex-1 rounded-lg bg-gray-200" />
         </Pressable>
     );

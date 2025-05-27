@@ -3,7 +3,7 @@ import { Text } from "@ui-kitten/components";
 
 export default function ComingSoon() {
     return (
-        <View className="min-h-screen flex-1 items-center justify-center bg-white">
+        <View className="mt-[40%] h-[350px] items-center justify-center bg-white">
             <Text>Coming Soon...</Text>
         </View>
     );
