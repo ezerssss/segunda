@@ -59,17 +59,17 @@ export default function Profile() {
                         <Icon name="settings-outline" />
                     </View>
                     <View className="flex-1 flex-row justify-between">
-                        <Text className="text-lg font-bold">Edit Profile</Text>
+                        <Text className="text-lg font-bold">Edit profile</Text>
                         <Icon name="chevron-right-outline" fill="gray" />
                     </View>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity className="w-full" onPress={() => auth.signOut()}>
-                <View className="flex flex-row items-center gap-4 p-2">
+                <View className="flex flex-row items-center gap-4 px-2">
                     <View className="rounded-full bg-gray-200 p-2">
                         <Icon name="log-out" />
                     </View>
-                    <Text className="text-lg font-bold">Log Out</Text>
+                    <Text className="text-lg font-bold">Log out</Text>
                 </View>
             </TouchableOpacity>
         </View>

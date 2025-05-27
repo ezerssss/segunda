@@ -1,5 +1,5 @@
 import { useRouter, withLayoutContext } from "expo-router";
-import { Icon, Avatar, useTheme } from "@ui-kitten/components";
+import { Icon, Avatar } from "@ui-kitten/components";
 import { TouchableOpacity, View, Text } from "react-native";
 
 import {
@@ -22,8 +22,7 @@ export const TopTabs = withLayoutContext<
 
 export default function AppLayout() {
     const router = useRouter();
-    const theme = useTheme();
-    const indicatorColor = theme["color-primary-500"];
+    const indicatorColor = "black";
     const { user } = useUserStore();
 
     const { hasBoughtFromNotif, hasSoldToNotif } = useChatNotifStore();
