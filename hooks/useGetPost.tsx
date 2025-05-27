@@ -1,7 +1,8 @@
 import {
-    doc,
-    FirebaseFirestoreTypes,
+    limit,
     onSnapshot,
+    query,
+    where,
 } from "@react-native-firebase/firestore";
 import { useEffect, useState } from "react";
 import { PostType } from "@/types/post";
@@ -17,11 +18,18 @@ export function useGetPost(postId: string) {
     useEffect(() => {
         if (!user) return;
 
+        const postQuery = query(
+            postsCollectionRef,
+            where("id", "==", postId),
+            where("isDeleted", "==", false),
+            limit(1),
+        );
+
         const unsubsribe = onSnapshot(
-            doc(postsCollectionRef, postId),
-            (postDocSnapshot: FirebaseFirestoreTypes.DocumentSnapshot) => {
-                if (postDocSnapshot.exists) {
-                    setPost(postDocSnapshot.data() as PostType);
+            postQuery,
+            (snapshot) => {
+                if (!snapshot.empty) {
+                    setPost(snapshot.docs[0].data() as PostType);
                 } else {
                     console.error("Failed getting post");
                 }

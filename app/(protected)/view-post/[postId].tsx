@@ -1,11 +1,11 @@
 import { View, FlatList } from "react-native";
 import ItemCard from "@/components/view-post/item-card";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import useGetPostItems from "@/hooks/useGetPostItems";
 import useGetPost from "@/hooks/useGetPost";
 import PostHeader from "@/components/post-header";
 import React, { useEffect, useRef, useState } from "react";
-import { Divider, Text } from "@ui-kitten/components";
+import { Button, Divider, Text } from "@ui-kitten/components";
 import SkeletonViewPost from "@/components/skeletons/view-post";
 import { usePostStore } from "@/states/post";
 
@@ -74,8 +74,9 @@ export default function ViewPostPage() {
 
     if (noContent && !isPostAlreadyLoaded) {
         return (
-            <View className="min-h-screen flex-1 items-center justify-center bg-white">
-                <Text>There are no posts currently.</Text>
+            <View className="min-h-screen flex-1 items-center justify-center gap-4 bg-white">
+                <Text>This post does not exist.</Text>
+                <Button onPress={router.back}>Go to Home Page</Button>
             </View>
         );
     }
