@@ -35,7 +35,12 @@ function CatalogueItem(props: Readonly<CatalogueItemProps>) {
             }
         >
             <View className="w-full px-2">
-                <Text category="h6">₱{price}</Text>
+                <Text category="h6">
+                    PHP{" "}
+                    {Number(price).toLocaleString("en-PH", {
+                        maximumFractionDigits: 0,
+                    })}
+                </Text>
                 <Text category="s1" numberOfLines={1} ellipsizeMode="tail">
                     {name}
                 </Text>
