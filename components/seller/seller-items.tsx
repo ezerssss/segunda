@@ -21,6 +21,7 @@ export default function SellerItem(props: SellerItemProps) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState<IndexPath | undefined>();
     const { resetPostStore } = useResetStore();
+    const [isDeleting, setIsDeleting] = useState(false);
 
     function onMenuTap(index: IndexPath) {
         if (index.row === 0) {
@@ -33,12 +34,14 @@ export default function SellerItem(props: SellerItemProps) {
     }
 
     async function handleDeleteItem(data: DeleteItemRequestType) {
+        setIsDeleting(true);
         try {
             await deleteItem(data);
             ToastAndroid.show("Item deleted.", ToastAndroid.SHORT);
         } catch (error) {
             console.error("Failed deleting item: ", error);
         } finally {
+            setIsDeleting(false);
             setIsModalVisible(false);
             setSelectedIndex(undefined);
         }
@@ -112,6 +115,7 @@ export default function SellerItem(props: SellerItemProps) {
                 confirmButtonText="Delete"
                 cancelButtonText="Cancel"
                 isDanger={true}
+                isLoading={isDeleting}
                 onConfirm={() =>
                     handleDeleteItem({ itemId: id } as DeleteItemRequestType)
                 }

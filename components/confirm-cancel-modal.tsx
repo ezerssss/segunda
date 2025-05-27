@@ -1,4 +1,4 @@
-import { Button, Text } from "@ui-kitten/components";
+import { Button, Spinner, Text } from "@ui-kitten/components";
 import React from "react";
 import Modal from "react-native-modal";
 import { View } from "react-native";
@@ -17,6 +17,7 @@ interface PropsInterface {
     onCancel?: (() => void) | (() => Promise<void>);
     isButtonsDisabled?: boolean;
     isDanger?: boolean;
+    isLoading?: boolean;
 }
 
 export default function ConfirmCancelModal(props: PropsInterface) {
@@ -34,6 +35,7 @@ export default function ConfirmCancelModal(props: PropsInterface) {
         onCancel,
         isButtonsDisabled = false,
         isDanger = false,
+        isLoading = false,
     } = props;
 
     async function handleConfirm() {
@@ -53,8 +55,8 @@ export default function ConfirmCancelModal(props: PropsInterface) {
     return (
         <Modal
             isVisible={isVisible}
-            onBackdropPress={() => setIsVisible(false)}
-            onBackButtonPress={() => setIsVisible(false)}
+            onBackdropPress={() => !isLoading && setIsVisible(false)}
+            onBackButtonPress={() => !isLoading && setIsVisible(false)}
             animationIn="fadeIn"
             animationOut="fadeOut"
             useNativeDriver={false}
@@ -62,37 +64,44 @@ export default function ConfirmCancelModal(props: PropsInterface) {
             backdropOpacity={0.5}
             className="items-center justify-center"
         >
-            <View className="w-[90%] max-w-[500px] items-center justify-center rounded-3xl bg-white p-4">
-                {icon}
-                <Text category="h5" className="mt-2 text-center">
-                    {title}
-                </Text>
-                <Text category="p2" className="mb-1 text-center">
-                    {body}
-                </Text>
-
-                <View className="mb-2 mt-4 flex-row gap-2">
-                    {showConfirmButton && (
-                        <Button
-                            status={isDanger ? "danger" : "primary"}
-                            appearance="filled"
-                            disabled={isButtonsDisabled}
-                            onPress={handleConfirm}
-                        >
-                            {confirmButtonText}
-                        </Button>
-                    )}
-                    {showCancelButton && (
-                        <Button
-                            status="basic"
-                            appearance="outline"
-                            disabled={isButtonsDisabled}
-                            onPress={handleCancel}
-                        >
-                            {cancelButtonText}
-                        </Button>
-                    )}
-                </View>
+            <View className="w-[90%] max-w-[500px] items-center rounded-3xl bg-white p-4">
+                {isLoading ? (
+                    <View className="min-h-[150px] items-center justify-center">
+                        <Spinner size="giant" status="danger" />
+                    </View>
+                ) : (
+                    <>
+                        {icon}
+                        <Text category="h5" className="mt-2 text-center">
+                            {title}
+                        </Text>
+                        <Text category="p2" className="mb-4 text-center">
+                            {body}
+                        </Text>
+                        <View className="flex-row gap-2">
+                            {showConfirmButton && (
+                                <Button
+                                    status={isDanger ? "danger" : "primary"}
+                                    appearance="filled"
+                                    disabled={isButtonsDisabled}
+                                    onPress={handleConfirm}
+                                >
+                                    {confirmButtonText}
+                                </Button>
+                            )}
+                            {showCancelButton && (
+                                <Button
+                                    status="basic"
+                                    appearance="outline"
+                                    disabled={isButtonsDisabled}
+                                    onPress={handleCancel}
+                                >
+                                    {cancelButtonText}
+                                </Button>
+                            )}
+                        </View>
+                    </>
+                )}
             </View>
         </Modal>
     );
