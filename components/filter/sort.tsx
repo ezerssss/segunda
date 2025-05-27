@@ -3,16 +3,32 @@ import { Text, Divider, Icon } from "@ui-kitten/components";
 import React, { useRef, useState } from "react";
 import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
 import clsx from "clsx";
+import { useSortBy } from "react-instantsearch-core";
 
 const sortByOptions = ["Best match", "Lowest price", "Highest price"];
+const useSortByItems = [
+    { label: "Best match", value: "prod_SEGUNDA" },
+    { label: "Lowest price", value: "prod_SEGUNDA_price_asc" },
+    { label: "Highest price", value: "prod_SEGUNDA_price_desc" },
+];
 
 function SortBy() {
+    const { refine } = useSortBy({
+        items: useSortByItems,
+    });
     const [sortBy, setSortBy] = useState("Best match");
     const actionSheetRef = useRef<ActionSheetRef>(null);
 
     function handleChangeSort(sort: string) {
         setSortBy(sort);
         actionSheetRef.current?.hide();
+
+        const sortByItem = useSortByItems.find(
+            (item) => item.label === sort,
+        )?.value;
+        if (sortByItem) {
+            refine(sortByItem);
+        }
     }
 
     return (
