@@ -1,6 +1,6 @@
 import { useRouter, withLayoutContext } from "expo-router";
-import { Icon, Avatar, useTheme, Text } from "@ui-kitten/components";
-import { TouchableOpacity, View } from "react-native";
+import { Icon, Avatar, useTheme } from "@ui-kitten/components";
+import { TouchableOpacity, View, Text } from "react-native";
 
 import {
     MaterialTopTabNavigationEventMap,
@@ -40,7 +40,9 @@ export default function AppLayout() {
     return (
         <>
             <View className="flex flex-row items-center justify-between px-4 py-1">
-                <Text category="h4">Segunda</Text>
+                <Text className="font-[FacebookSansBold] text-3xl">
+                    Segunda
+                </Text>
                 <View className="flex flex-row gap-4">
                     <TouchableOpacity onPress={navigateToSearch}>
                         <Icon name="search-outline" width={28} height={28} />

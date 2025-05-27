@@ -76,7 +76,7 @@ export default function ViewPostPage() {
         return (
             <View className="min-h-screen flex-1 items-center justify-center gap-4 bg-white">
                 <Text>This post does not exist.</Text>
-                <Button onPress={router.back}>Go to Home Page</Button>
+                <Button onPress={router.back}>Go back</Button>
             </View>
         );
     }
