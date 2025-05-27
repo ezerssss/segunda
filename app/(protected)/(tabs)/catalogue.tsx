@@ -9,10 +9,18 @@ import { ALGOLIA_INDEX_NAME } from "@/constants/algolia";
 import { searchClient } from "@/algolia";
 import { ItemType } from "@/types/item";
 import { Text } from "@ui-kitten/components";
+import Filters from "@/components/filter/filter";
+import SortBy from "@/components/filter/sort";
+import PriceRange from "@/components/filter/price";
 
 export default function CataloguePage() {
     return (
         <View className="flex-1">
+            <View className="mt-3 flex-row gap-2 px-3">
+                <SortBy />
+                <PriceRange />
+                <Filters />
+            </View>
             <InstantSearch
                 searchClient={searchClient}
                 indexName={ALGOLIA_INDEX_NAME}
