@@ -67,10 +67,7 @@ export default function SellerItem(props: SellerItemProps) {
                         {name}
                     </Text>
                     <Text category="s2" className="text-[14px]">
-                        PHP{" "}
-                        {Number(price).toLocaleString("en-PH", {
-                            maximumFractionDigits: 0,
-                        })}
+                        PHP {Number(price).toLocaleString("en-PH")}
                     </Text>
 
                     {description ? (

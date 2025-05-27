@@ -36,10 +36,7 @@ function CatalogueItem(props: Readonly<CatalogueItemProps>) {
         >
             <View className="w-full px-2">
                 <Text category="h6">
-                    PHP{" "}
-                    {Number(price).toLocaleString("en-PH", {
-                        maximumFractionDigits: 0,
-                    })}
+                    PHP {Number(price).toLocaleString("en-PH")}
                 </Text>
                 <Text category="s1" numberOfLines={1} ellipsizeMode="tail">
                     {name}
