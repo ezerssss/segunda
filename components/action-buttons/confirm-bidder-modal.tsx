@@ -77,7 +77,7 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
                     />
                 </View>
                 <Text className="my-4">
-                    PHP {Number(bidderPrice).toLocaleString("en-PH") ?? ""}
+                    ₱ {Number(bidderPrice).toLocaleString("en-PH") ?? ""}
                 </Text>
                 <View className="flex-row justify-between gap-2">
                     <Button

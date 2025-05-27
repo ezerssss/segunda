@@ -28,7 +28,7 @@ function BidderDetails(props: Readonly<BidderDetailsProps>) {
             <Avatar source={{ uri: imgURI }} size="large" />
             <View className="ml-3 flex-col">
                 <Text category="h5">
-                    PHP {Number(bid).toLocaleString("en-PH")}
+                    ₱ {Number(bid).toLocaleString("en-PH")}
                 </Text>
                 <Text category="s1">{name}</Text>
                 <Text category="s2">{formattedDate}</Text>
