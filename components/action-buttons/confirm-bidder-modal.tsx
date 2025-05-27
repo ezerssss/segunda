@@ -64,14 +64,19 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
                 <Text category="h4" className="mb-4 text-center">
                     Sell item to {bidderName ?? ""}?
                 </Text>
-                <View className="aspect-square w-1/2 items-center overflow-hidden rounded-full">
+                <View
+                    className="aspect-square items-center overflow-hidden rounded-full"
+                    style={{
+                        width: "37%",
+                    }}
+                >
                     <Image
                         source={{ uri: bidderImgURI ?? "" }}
                         className="h-full w-full"
                         resizeMode="cover"
                     />
                 </View>
-                <Text className="my-5">₱{bidderPrice ?? ""}</Text>
+                <Text className="my-4">₱{bidderPrice ?? ""}</Text>
                 <View className="flex-row justify-between gap-2">
                     <Button
                         className="mx-1 min-w-20"
@@ -80,7 +85,7 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
                             backgroundColor: "#E1306C",
                             borderWidth: 0,
                         }}
-                        size="small"
+                        size="medium"
                         appearance="filled"
                         accessoryLeft={
                             isLoading ? (
@@ -96,7 +101,7 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
                     <Button
                         className="mx-1 min-w-20"
                         onPress={() => setIsModalVisible(false)}
-                        size="small"
+                        size="medium"
                         appearance="filled"
                         status="basic"
                         disabled={isLoading}
