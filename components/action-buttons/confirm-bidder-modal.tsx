@@ -76,7 +76,9 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
                         resizeMode="cover"
                     />
                 </View>
-                <Text className="my-4">₱{bidderPrice ?? ""}</Text>
+                <Text className="my-4">
+                    ₱ {Number(bidderPrice).toLocaleString("en-PH") ?? ""}
+                </Text>
                 <View className="flex-row justify-between gap-2">
                     <Button
                         className="mx-1 min-w-20"

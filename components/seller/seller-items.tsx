@@ -67,7 +67,7 @@ export default function SellerItem(props: SellerItemProps) {
                         {name}
                     </Text>
                     <Text category="s2" className="text-[14px]">
-                        PHP {price}
+                        ₱ {Number(price).toLocaleString("en-PH")}
                     </Text>
 
                     {description ? (
