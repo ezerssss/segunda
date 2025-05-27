@@ -42,7 +42,7 @@ function CatalogueList() {
                 data={fetchedItems}
                 keyExtractor={(item) => item.id}
                 numColumns={2}
-                contentContainerClassName="flex justify-start gap-2 px-2 pb-6 pt-2"
+                contentContainerClassName="flex justify-start gap-2 px-3 pb-6 pt-3"
                 columnWrapperStyle={{
                     justifyContent: "space-between",
                     gap: 4,

@@ -5,7 +5,7 @@ import {
     UseInfiniteHitsProps,
 } from "react-instantsearch-core";
 import { ItemType } from "@/types/item";
-import NoSearchResults from "./no-search-results";
+import EmptyList from "@/components/empty-list";
 
 interface PropsInterface {
     listRef: React.RefObject<FlatList>;
@@ -20,7 +20,13 @@ export default function SearchResults(
 
     return (
         <View className="relative flex-1">
-            {items.length === 0 && <NoSearchResults />}
+            {items.length === 0 && (
+                <EmptyList
+                    iconName="search-outline"
+                    description="We cannot find the item you are looking for, maybe try
+                        changing your search query"
+                />
+            )}
             <FlatList
                 ref={listRef}
                 data={fetchedItems}
