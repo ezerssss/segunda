@@ -24,7 +24,7 @@ export default function SearchItemsPage() {
                         preserveSharedStateOnUnmount: true,
                     }}
                 >
-                    <Configure filters="isDeleted:false" />
+                    <Configure filters="isDeleted:false AND isSold:false" />
                     <SearchBar onChange={scrollToTop} />
                     <SearchResults listRef={listRef} />
                 </InstantSearch>

@@ -20,7 +20,7 @@ export default function CataloguePage() {
                     preserveSharedStateOnUnmount: true,
                 }}
             >
-                <Configure filters="isDeleted:false" />
+                <Configure filters="isDeleted:false AND isSold:false" />
                 <CatalogueList />
             </InstantSearch>
         </View>
