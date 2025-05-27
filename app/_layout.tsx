@@ -2,7 +2,6 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
 import { default as theme } from "../custom-theme.json";
@@ -19,6 +18,7 @@ import "../utils/native-wind-config";
 import "../global.css";
 import "react-native-reanimated";
 import "../components/action-buttons/sheet.tsx";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -56,10 +56,10 @@ export default function RootLayout() {
                             animation: "slide_from_right",
                         }}
                     />
-                    <View className="flex items-center align-bottom">
+                    <BottomSheetModalProvider>
                         <BuyerViewBiddersModal />
                         <SellerViewBiddersModal />
-                    </View>
+                    </BottomSheetModalProvider>
                 </SafeAreaView>
             </ApplicationProvider>
         </GestureHandlerRootView>

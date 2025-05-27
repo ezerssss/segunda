@@ -31,6 +31,7 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
     const { hideSellersModal } = useBidderModalStore();
 
     async function handleApproveBidder() {
+        setIsModalVisible(false);
         setIsLoading(true);
         try {
             const data: ConfirmBidRequestType = {
@@ -38,7 +39,6 @@ function ConfirmBidderModal(props: Readonly<ConfirmBidderModalProps>) {
                 itemId: itemID,
             } as ConfirmBidRequestType;
             const res = await confirmBid(data);
-            setIsModalVisible(false);
             hideSellersModal();
             router.push(`/(protected)/chat/${res.data.chatId}`);
         } catch (e) {

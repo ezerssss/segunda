@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { BidRequestSchema, BidRequestType } from "@/types/bidder";
 import { useEffect, useRef, useState } from "react";
 
-import { ScrollView, View, ActivityIndicator } from "react-native";
-import { Button, Icon, Input, Text, useTheme } from "@ui-kitten/components";
+import { View, ActivityIndicator } from "react-native";
+import { Button, Icon, Text, useTheme } from "@ui-kitten/components";
 import { bidItem } from "@/firebase/functions";
 
 import NoBidders from "./no-bidders";
@@ -14,17 +14,27 @@ import { doc, onSnapshot } from "@react-native-firebase/firestore";
 import { itemsCollectionRef } from "@/constants/collections";
 import { useUserStore } from "@/states/user";
 import { useBidderModalStore } from "@/states/modal";
-import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
+
+import {
+    BottomSheetTextInput,
+    BottomSheetView,
+    BottomSheetModal,
+    BottomSheetBackdrop,
+} from "@gorhom/bottom-sheet";
+import { ScrollView } from "react-native-gesture-handler";
+import { useBottomSheetBackHandler } from "@/hooks/useBottomSheetBackHandler";
 
 function BuyerViewBiddersModal() {
     const { user } = useUserStore();
     const { item, bidders, setShowBuyersModal } = useBidderModalStore();
-    const actionSheetRef = useRef<ActionSheetRef>(null);
+    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+    const { handleSheetPositionChange } =
+        useBottomSheetBackHandler(bottomSheetModalRef);
 
     useEffect(() => {
-        if (!actionSheetRef.current) return;
-        setShowBuyersModal(actionSheetRef.current.show);
-    }, [actionSheetRef]);
+        if (!bottomSheetModalRef.current) return;
+        setShowBuyersModal(bottomSheetModalRef.current.present);
+    }, [bottomSheetModalRef]);
 
     const itemId = item?.id ?? "";
     const hasConfirmedBidder = item?.confirmedBidder !== null;
@@ -96,20 +106,27 @@ function BuyerViewBiddersModal() {
     }, [itemId, user]);
 
     return (
-        <ActionSheet
-            ref={actionSheetRef}
-            enableGesturesInScrollView={true}
-            keyboardHandlerEnabled={false}
+        <BottomSheetModal
+            onChange={handleSheetPositionChange}
+            ref={bottomSheetModalRef}
+            keyboardBehavior="interactive"
+            keyboardBlurBehavior="restore"
+            android_keyboardInputMode="adjustResize"
+            enableContentPanningGesture={true}
+            backdropComponent={(props) => (
+                <BottomSheetBackdrop
+                    {...props}
+                    disappearsOnIndex={-1}
+                    appearsOnIndex={0}
+                />
+            )}
         >
-            <View className="flex max-h-[75vh] rounded-t-3xl p-4 align-bottom">
+            <BottomSheetView className="flex max-h-[50vh] rounded-t-3xl p-4 align-bottom">
                 <Text category="h4" className="mb-4 w-full text-left">
                     Active Bidders
                 </Text>
                 {bidders.length === 0 && <NoBidders />}
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                >
+                <ScrollView showsHorizontalScrollIndicator={false}>
                     {bidders.map(({ bidderData, dateCreated, price, id }) => (
                         <View className="my-4" key={id}>
                             <BidderDetails
@@ -130,19 +147,18 @@ function BuyerViewBiddersModal() {
                                 render={({
                                     field: { onChange, onBlur, value },
                                 }) => (
-                                    <Input
+                                    <BottomSheetTextInput
                                         keyboardType="numeric"
                                         placeholder="Place your bid"
                                         onChangeText={onChange}
                                         onBlur={onBlur}
                                         value={value?.toString()}
-                                        textClassName="mx-4"
-                                        className="flex-1"
-                                        status={
-                                            errors.price ? "danger" : "basic"
-                                        }
-                                        disabled={
-                                            isLoading || hasConfirmedBidder
+                                        className="border-hairline flex-1 rounded border-black pl-2"
+                                        importantForAutofill="no"
+                                        autoCorrect={false}
+                                        spellCheck={false}
+                                        editable={
+                                            !hasConfirmedBidder && !isLoading
                                         }
                                     />
                                 )}
@@ -197,16 +213,17 @@ function BuyerViewBiddersModal() {
                         </Button>
                     </View>
                 )}
-                <ConfirmBuyActionModal
-                    handleConfirm={handlePlaceBid}
-                    data={bidData}
-                    isSteal={isSteal}
-                    isModalVisible={isConfirmVisible}
-                    setIsModalVisible={setIsConfirmVisible}
-                />
-            </View>
-        </ActionSheet>
+                <View className="flex items-center align-bottom">
+                    <ConfirmBuyActionModal
+                        handleConfirm={handlePlaceBid}
+                        data={bidData}
+                        isSteal={isSteal}
+                        isModalVisible={isConfirmVisible}
+                        setIsModalVisible={setIsConfirmVisible}
+                    />
+                </View>
+            </BottomSheetView>
+        </BottomSheetModal>
     );
 }
-
 export default BuyerViewBiddersModal;

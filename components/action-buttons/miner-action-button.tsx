@@ -18,10 +18,11 @@ function MinerActionButton(props: Readonly<MinerActionButtonProp>) {
     const [isLoading, setIsLoading] = useState(false);
     const { getBidders, isModalInit } = useGetBidders();
 
-    const { setItem, showBuyersModal } = useBidderModalStore();
+    const { setItem, showBuyersModal, setBidders } = useBidderModalStore();
 
     async function handleShowBidders() {
         setItem(item);
+        setBidders([]);
         await getBidders(item);
         showBuyersModal();
     }
