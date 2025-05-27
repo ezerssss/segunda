@@ -45,6 +45,7 @@ function ConfirmBuyActionModal(props: Readonly<ConfirmBuyActionModalProps>) {
                                 ? "#E1306C"
                                 : theme["color-primary-500"],
                             borderWidth: 0,
+                            minWidth: 80,
                         }}
                         size="small"
                         appearance="filled"
