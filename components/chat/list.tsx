@@ -46,7 +46,7 @@ function ChatList(props: PropsInterface) {
                     <Text>You have no messages yet.</Text>
                 </View>
             }
-            contentContainerClassName="bg-white p-4"
+            contentContainerClassName="bg-white px-4 py-2"
         />
     );
 }
