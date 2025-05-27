@@ -6,6 +6,7 @@ import { ItemType } from "@/types/item";
 import { Image } from "expo-image";
 import { Zoomable } from "@likashefqet/react-native-image-zoom";
 import ActionButtons from "../action-buttons/action-buttons";
+import Back from "../back";
 
 interface PropsInterface {
     item: ItemType;
@@ -19,6 +20,7 @@ export function FullScreenItemCard(props: PropsInterface) {
 
     return (
         <View className="relative flex h-screen w-screen bg-black">
+            <Back iconFill="white" backgroundColor="transparent" />
             <Zoomable
                 isDoubleTapEnabled
                 style={{
