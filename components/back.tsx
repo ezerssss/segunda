@@ -1,21 +1,24 @@
-import { View, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { router } from "expo-router";
-import { Text, Icon } from "@ui-kitten/components";
+import { Icon } from "@ui-kitten/components";
 
 interface PropsInterface {
-    title: string;
+    title?: string;
+    backgroundColor?: string;
 }
 
 export default function Back(props: PropsInterface) {
-    const { title } = props;
+    const { title, backgroundColor = "white" } = props;
 
     return (
-        <View className="flex w-full flex-row items-center justify-between px-3">
+        <View
+            className={`absolute left-0 right-0 top-0 z-10 flex w-full flex-row items-center justify-between bg-${backgroundColor} px-2 py-3`}
+        >
             <TouchableOpacity onPress={router.back}>
-                <Icon name="arrow-ios-back-outline" />
+                <Icon name="close-outline" width={30} height={30} />
             </TouchableOpacity>
-            <Text category="h6">{title}</Text>
+            <Text className="text-[20px] font-medium">{title}</Text>
             <View></View>
         </View>
     );
