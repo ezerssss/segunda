@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useUserStore } from "@/states/user";
 import { CampusEnum } from "@/enums/campus";
 import useUploadImage from "@/hooks/useUploadImage";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { AVATAR_IMAGES_FOLDER } from "@/constants/storage";
 import { STARTS_WITH_HTTPS } from "@/constants/regex";
 
@@ -18,11 +18,13 @@ import AvatarOptions from "../../components/user/avatar-options";
 import CampusSelectionButtons from "../../components/user/campus-buttons";
 
 function UserSetupPage() {
-    const { user } = useUserStore();
+    const { user, setUser } = useUserStore();
     const [isLoading, setIsLoading] = useState(false);
     const { uploadImages } = useUploadImage();
     const router = useRouter();
-
+    const { prevRoute } = useLocalSearchParams<{
+        prevRoute: string;
+    }>();
     const {
         handleSubmit,
         watch,
@@ -89,7 +91,9 @@ function UserSetupPage() {
     }
 
     async function handleSetupUser(data: SetUpUserRequestType) {
+        if (!user) return;
         setIsLoading(true);
+
         try {
             if (data.imageUrl && !STARTS_WITH_HTTPS.test(data.imageUrl)) {
                 data.imageUrl = (
@@ -97,7 +101,10 @@ function UserSetupPage() {
                 )[0];
             }
             await setUpUser(data);
-            router.back();
+            setUser({ ...user, ...data, isSetup: true });
+            if (prevRoute === "login")
+                router.replace("/(protected)/(tabs)/home");
+            else router.back();
         } catch (error) {
             console.error("Setup Failed:", error);
         } finally {

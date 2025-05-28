@@ -27,7 +27,8 @@ function useLogin() {
     useEffect(() => {
         if (user) {
             setIsLoading(false);
-            router.push("/(protected)/(tabs)/home");
+            if (user.isSetup) router.replace("/(protected)/(tabs)/home");
+            else router.replace("/(protected)/user-setup?prevRoute=login");
         }
     }, [user]);
 
