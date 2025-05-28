@@ -29,5 +29,6 @@ export const SetUpUserRequestSchema = UserDataSchema.omit({
     id: true,
     dateCreated: true,
     dateUpdated: true,
+    isSetup: true,
 });
 export type SetUpUserRequestType = z.infer<typeof SetUpUserRequestSchema>;

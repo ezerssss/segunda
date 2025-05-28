@@ -27,7 +27,7 @@ export default function Profile() {
                         size="large"
                     />
                     <View>
-                        <Text category="h6">{user?.displayName ?? ""}</Text>
+                        <Text category="h6">{user?.name ?? ""}</Text>
                         <View className="flex-row items-center">
                             <Icon name="pin-outline" width={15} fill="gray" />
                             <Text category="c1"> {user?.campus ?? ""}</Text>
