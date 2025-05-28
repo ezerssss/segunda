@@ -1,5 +1,5 @@
-import { withLayoutContext } from "expo-router";
-import { useTheme, Text } from "@ui-kitten/components";
+import { router, withLayoutContext } from "expo-router";
+import { useTheme, Text, Icon } from "@ui-kitten/components";
 
 import {
     MaterialTopTabBarProps,
@@ -96,9 +96,12 @@ export default function AppLayout() {
 
     return (
         <>
-            <Text category="h4" className="px-4 py-1">
-                Chats
-            </Text>
+            <View className="flex flex-row items-center gap-2 px-4 pt-2">
+                <TouchableOpacity onPress={router.back}>
+                    <Icon name="arrow-ios-back-outline" />
+                </TouchableOpacity>
+                <Text category="h4">Chats</Text>
+            </View>
             <TopTabs
                 screenOptions={{
                     animationEnabled: false,

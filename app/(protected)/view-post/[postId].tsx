@@ -8,6 +8,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button, Divider, Text } from "@ui-kitten/components";
 import SkeletonViewPost from "@/components/skeletons/view-post";
 import { usePostStore } from "@/states/post";
+import Back from "@/components/back";
 
 export default function ViewPostPage() {
     const { postId, index } = useLocalSearchParams<{
@@ -76,7 +77,7 @@ export default function ViewPostPage() {
         return (
             <View className="min-h-screen flex-1 items-center justify-center gap-4 bg-white">
                 <Text>This post does not exist.</Text>
-                <Button onPress={router.back}>Go to Home Page</Button>
+                <Button onPress={router.back}>Go back</Button>
             </View>
         );
     }
@@ -85,36 +86,41 @@ export default function ViewPostPage() {
     const lastIndex = postItems.length - 1;
 
     return (
-        <FlatList
-            data={postItems}
-            ref={flatListRef}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => {
-                return (
-                    <React.Fragment key={item.id}>
-                        <ItemCard
-                            item={item}
-                            setItemHeight={handleSetItemHeight}
+        <View>
+            <Back title={sellerData.name} />
+            <FlatList
+                data={postItems}
+                ref={flatListRef}
+                showsVerticalScrollIndicator={false}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => {
+                    return (
+                        <React.Fragment key={item.id}>
+                            <ItemCard
+                                item={item}
+                                setItemHeight={handleSetItemHeight}
+                            />
+                            {lastIndex !== item.index && (
+                                <Divider className="h-1 flex-1 rounded-lg bg-gray-200" />
+                            )}
+                        </React.Fragment>
+                    );
+                }}
+                ListHeaderComponent={
+                    <View className="mt-16">
+                        <PostHeader
+                            postId={id}
+                            userName={sellerData.name}
+                            userImageUrl={sellerData.imageUrl ?? ""}
+                            caption={caption}
+                            tags={tags}
+                            date={dateCreated}
+                            campus={sellerData.campus}
                         />
-                        {lastIndex !== item.index && (
-                            <Divider className="h-1 flex-1 rounded-lg bg-gray-200" />
-                        )}
-                    </React.Fragment>
-                );
-            }}
-            ListHeaderComponent={
-                <PostHeader
-                    postId={id}
-                    userName={sellerData.name}
-                    userImageUrl={sellerData.imageUrl ?? ""}
-                    caption={caption}
-                    tags={tags}
-                    date={dateCreated}
-                    campus={sellerData.campus}
-                />
-            }
-            contentContainerClassName="bg-white"
-        />
+                    </View>
+                }
+                contentContainerClassName="bg-white"
+            />
+        </View>
     );
 }

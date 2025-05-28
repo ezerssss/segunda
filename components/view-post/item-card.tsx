@@ -45,7 +45,7 @@ export function ItemCard(props: PropsInterface) {
                     </Text>
                 )}
                 <Text category="h6" style={{ color }}>
-                    PHP{price}
+                    ₱ {Number(price).toLocaleString("en-PH")}
                 </Text>
                 <Text category="s1" style={{ color }}>
                     {name}
