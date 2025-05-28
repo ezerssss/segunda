@@ -18,6 +18,7 @@ interface PropsInterface {
     isButtonsDisabled?: boolean;
     isDanger?: boolean;
     isLoading?: boolean;
+    status?: string;
 }
 
 export default function ConfirmCancelModal(props: PropsInterface) {
@@ -36,6 +37,7 @@ export default function ConfirmCancelModal(props: PropsInterface) {
         isButtonsDisabled = false,
         isDanger = false,
         isLoading = false,
+        status,
     } = props;
 
     async function handleConfirm() {
@@ -67,7 +69,7 @@ export default function ConfirmCancelModal(props: PropsInterface) {
             <View className="w-[90%] max-w-[500px] items-center rounded-3xl bg-white p-4">
                 {isLoading ? (
                     <View className="min-h-[150px] items-center justify-center">
-                        <Spinner size="giant" status="danger" />
+                        <Spinner size="giant" status={status} />
                     </View>
                 ) : (
                     <>

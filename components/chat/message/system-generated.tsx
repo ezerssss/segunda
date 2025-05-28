@@ -80,6 +80,8 @@ function SystemGeneratedMessage(props: PropsInterface) {
                 body="This action cannot be undone."
                 isButtonsDisabled={isLoading}
                 onConfirm={handleCancelBid}
+                isLoading={isLoading}
+                status="warning"
             />
             <View className="mt-2 items-center">
                 <Text className="text-center text-xs text-gray-400">

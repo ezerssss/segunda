@@ -119,6 +119,7 @@ export default function SellerItem(props: SellerItemProps) {
                 onConfirm={() =>
                     handleDeleteItem({ itemId: id } as DeleteItemRequestType)
                 }
+                status="danger"
             />
         </TouchableOpacity>
     );
