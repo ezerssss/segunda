@@ -79,7 +79,7 @@ function SellerViewBiddersModal() {
                     Active Bidders
                 </Text>
                 {bidders.length === 0 ? (
-                    <NoBidders></NoBidders>
+                    <NoBidders />
                 ) : (
                     <ScrollView showsHorizontalScrollIndicator={false}>
                         {bidders.map((bidder) => (
