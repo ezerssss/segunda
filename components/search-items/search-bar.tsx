@@ -25,7 +25,7 @@ export default function SearchBar(props: PropsInterface & UseSearchBoxProps) {
     }
 
     return (
-        <View className="mx-2 my-4 flex-row items-center gap-2">
+        <View className="mx-2 mb-3 mt-4 flex-row items-center gap-2">
             <Pressable onPress={() => router.back()}>
                 <Icon name="arrow-ios-back-outline" />
             </Pressable>

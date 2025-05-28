@@ -6,15 +6,17 @@ import {
 } from "react-instantsearch-core";
 import { ItemType } from "@/types/item";
 import EmptyList from "@/components/empty-list";
+import FiltersAndSorts from "../filter";
 
 interface PropsInterface {
     listRef: React.RefObject<FlatList>;
+    onChange: (filterString: string) => void;
 }
 
 export default function SearchResults(
     props: PropsInterface & UseInfiniteHitsProps,
 ) {
-    const { listRef, ...infiniteHitProps } = props;
+    const { listRef, onChange, ...infiniteHitProps } = props;
     const { items, isLastPage, showMore } = useInfiniteHits(infiniteHitProps);
     const fetchedItems = items as unknown as ItemType[];
 
@@ -32,11 +34,12 @@ export default function SearchResults(
                 data={fetchedItems}
                 keyExtractor={(item) => item.id}
                 numColumns={2}
-                contentContainerClassName="flex justify-start gap-2 px-2 pt-2 pb-6"
+                contentContainerClassName="flex justify-start gap-2 px-2 pb-6"
                 columnWrapperStyle={{
                     justifyContent: "space-between",
                     gap: 4,
                 }}
+                ListHeaderComponent={<FiltersAndSorts onChange={onChange} />}
                 onEndReached={() => {
                     if (!isLastPage) {
                         showMore();
