@@ -49,7 +49,7 @@ export function FullScreenItemCard(props: PropsInterface) {
                         </Text>
                     )}
                     <Text category="h6" style={{ color }}>
-                        PHP{price}
+                        ₱ {Number(price).toLocaleString("en-PH")}
                     </Text>
                     <Text style={{ color }}>{name}</Text>
                     {!!description && (
