@@ -33,6 +33,7 @@
     "@expo/vector-icons": "^14.0.2",
     "@hookform/resolvers": "^5.0.1",
     "@likashefqet/react-native-image-zoom": "^4.3.0",
+    "@ptomasroos/react-native-multi-slider": "^2.2.2",
     "@react-native-firebase/app": "^22.0.0",
     "@react-native-firebase/auth": "^22.0.0",
     "@react-native-firebase/firestore": "^22.0.0",
@@ -91,9 +92,9 @@
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
     "tailwindcss": "^3.4.17",
+    "use-debounce": "^10.0.4",
     "zod": "^3.24.3",
-    "zustand": "^5.0.4",
-    "@react-native-community/slider": "4.5.5"
+    "zustand": "^5.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

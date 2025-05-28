@@ -33,9 +33,7 @@ function FiltersAndSorts(props: PropsInterface) {
             >
                 <SortBy />
                 <PriceRange
-                    lowerBound={lowerBound}
                     setLowerBound={setLowerBound}
-                    upperBound={upperBound}
                     setUpperBound={setUpperBound}
                 />
                 <Filters
