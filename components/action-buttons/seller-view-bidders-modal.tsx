@@ -1,6 +1,6 @@
 import BidderDetails from "./bidder-details";
 import { useEffect, useRef, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 import { Button, Text, useTheme } from "@ui-kitten/components";
 import ConfirmBidderModal from "./confirm-bidder-modal";
 import { BidType } from "@/types/bidder";
@@ -10,7 +10,13 @@ import { itemsCollectionRef } from "@/constants/collections";
 import { ItemType } from "@/types/item";
 import { useUserStore } from "@/states/user";
 import { useBidderModalStore } from "@/states/modal";
-import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
+import {
+    BottomSheetView,
+    BottomSheetModal,
+    BottomSheetBackdrop,
+} from "@gorhom/bottom-sheet";
+import { ScrollView } from "react-native-gesture-handler";
+import { useBottomSheetBackHandler } from "@/hooks/useBottomSheetBackHandler";
 
 function SellerViewBiddersModal() {
     const { user } = useUserStore();
@@ -24,13 +30,15 @@ function SellerViewBiddersModal() {
     const [approvedBidder, setApprovedBidder] = useState<BidType>();
     const theme = useTheme();
 
-    const actionSheetRef = useRef<ActionSheetRef>(null);
+    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+    const { handleSheetPositionChange } =
+        useBottomSheetBackHandler(bottomSheetModalRef);
 
     useEffect(() => {
-        if (!actionSheetRef.current) return;
-        setShowSellersModal(actionSheetRef.current.show);
-        setHideSellersModal(actionSheetRef.current.hide);
-    }, [actionSheetRef]);
+        if (!bottomSheetModalRef.current) return;
+        setShowSellersModal(bottomSheetModalRef.current.present);
+        setHideSellersModal(bottomSheetModalRef.current.close);
+    }, [bottomSheetModalRef]);
 
     function handleApprove(bidder: BidType) {
         setApprovedBidder(bidder);
@@ -54,23 +62,26 @@ function SellerViewBiddersModal() {
     }, [itemId, user]);
 
     return (
-        <ActionSheet
-            ref={actionSheetRef}
-            enableGesturesInScrollView={true}
-            keyboardHandlerEnabled={false}
+        <BottomSheetModal
+            onChange={handleSheetPositionChange}
+            ref={bottomSheetModalRef}
+            enableContentPanningGesture={true}
+            backdropComponent={(props) => (
+                <BottomSheetBackdrop
+                    {...props}
+                    disappearsOnIndex={-1}
+                    appearsOnIndex={0}
+                />
+            )}
         >
-            <View className="max-h-[75vh] min-h-60 rounded-t-3xl bg-white p-4">
-                <Text category="h4" className="mb-4">
+            <BottomSheetView className="flex max-h-[50vh] rounded-t-3xl p-4 align-bottom">
+                <Text category="h4" className="mb-4 w-full text-left">
                     Active Bidders
                 </Text>
-
                 {bidders.length === 0 ? (
-                    <NoBidders></NoBidders>
+                    <NoBidders />
                 ) : (
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                    >
+                    <ScrollView showsHorizontalScrollIndicator={false}>
                         {bidders.map((bidder) => (
                             <View
                                 className="my-4 flex-row items-center justify-between"
@@ -105,19 +116,24 @@ function SellerViewBiddersModal() {
                         ))}
                     </ScrollView>
                 )}
-            </View>
-            {approvedBidder && item?.id && (
-                <ConfirmBidderModal
-                    isModalVisible={isConfirmModalVisible}
-                    setIsModalVisible={setIsConfirmModalVisible}
-                    bidderImgURI={approvedBidder.bidderData.imageUrl ?? ""}
-                    bidderName={approvedBidder.bidderData.name}
-                    bidderPrice={approvedBidder.price}
-                    bidderID={approvedBidder.id}
-                    itemID={item.id}
-                />
-            )}
-        </ActionSheet>
+
+                <View className="flex items-center align-bottom">
+                    {approvedBidder && item?.id && (
+                        <ConfirmBidderModal
+                            isModalVisible={isConfirmModalVisible}
+                            setIsModalVisible={setIsConfirmModalVisible}
+                            bidderImgURI={
+                                approvedBidder.bidderData.imageUrl ?? ""
+                            }
+                            bidderName={approvedBidder.bidderData.name}
+                            bidderPrice={approvedBidder.price}
+                            bidderID={approvedBidder.id}
+                            itemID={item.id}
+                        />
+                    )}
+                </View>
+            </BottomSheetView>
+        </BottomSheetModal>
     );
 }
 
