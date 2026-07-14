@@ -1,50 +1,28 @@
 # Segunda
 Segunda is a student-first marketplace app designed for college communities in the Philippines. Tired of cluttered Facebook groups and irrelevant listings on mainstream platforms? Segunda gives students a trusted, university-exclusive space to buy, sell, and trade second-hand items, dorm essentials, handmade goods, and more.
 
-Built with features tailored to student life—like the "Mine/Steal" reservation system, verified university-only access, and a familiar, mobile-first UI—Segunda makes it easier (and safer) for students to declutter, hustle, and save money.
+🏷️ **Status:** Archived \
+🤖 **Vibe Coded:** No
+
+---
+
+## What it does
+
+- Facebook-like UI so navigation is simple and familiar.
+- Mine/Steal reservation system where the seller ultimately determines who gets the product.
+- Chat messaging system so sellers and buyers can communicate in-app.
+- Product search with advanced filtering and sorting using Algolia.
+
+## Demo / Screenshot
+
+<!-- Add if you can. If the project can't run anymore, just leave a note: -->
+<!-- ⚠️ Can't currently run this to generate a fresh screenshot — README text stands in for now. -->
+
+<img width="1920" height="1080" alt="segunda" src="https://github.com/user-attachments/assets/e0afd162-c077-4a85-ae0c-91c4f140e27f" />
+<img width="1920" height="1080" alt="mine" src="https://github.com/user-attachments/assets/e4fd100a-5775-4d6f-a1af-b331c6f6a679" />
+<img width="1920" height="1080" alt="posting" src="https://github.com/user-attachments/assets/203dce56-decc-4e8b-9a50-b3d4470dae94" />
+<img width="1920" height="1080" alt="message" src="https://github.com/user-attachments/assets/7bd1b837-7d2b-486d-9677-5252555e4083" />
 
 ## Tech Stack
-- React Native using Expo
-- Firebase
-- TailwindCSS
-- Algolia
-- Typescript
-- Zod
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Install eas
-
-   ```bash
-   npm install -g eas-cli
-   ```
-
-3. Log in with your [Expo account](https://expo.dev/)
-   
-   ```bash
-   eas login
-   ```
-
-4. Pull env variables using eas
-
-   ```bash
-   eas env:pull --environment development
-   ```
-
-5. Download the [latest](https://expo.dev/accounts/segunda/projects/segunda/development-builds) development build
-
-6. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-## How to install packages?
-https://docs.expo.dev/workflow/using-libraries/
-
+Typescript · React Native · Expo · Firebase
