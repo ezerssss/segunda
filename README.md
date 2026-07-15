@@ -26,3 +26,4 @@ Segunda is a student-first marketplace app designed for college communities in t
 ## Tech Stack
 
 Typescript · React Native · Expo · Firebase
+
